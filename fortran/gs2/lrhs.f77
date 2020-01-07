@@ -1,4 +1,5 @@
-      subroutine LRHS (A, B, R, T, ROLD, U, KOD, LQ, M, IB, JB, A3, A2, MAXNA, MAXMA, MAXNB, MAXMB, IR, ILQ, KK)
+      subroutine LRHS (A, B, R, T, ROLD, U, KOD, LQ, M, IB, JB, A3, A2, MAXNA,
+     & MAXMA, MAXNB, MAXMB, IR, ILQ, KK)
 
 C
 C   Purpose: 
@@ -13,7 +14,7 @@ C
       LEVEL 2, KOD, LQ
        
       dimension A(MAXNA,MAXMA), B(MAXNB,MAXMB), R(IR), T(IR), ROLD(IR),
-     1    U(IR), KOD(ILQ), LQ(ILQ)
+     &    U(IR), KOD(ILQ), LQ(ILQ)
 
       MQ = M - LQ(M)
       M2 = MQ - 1
