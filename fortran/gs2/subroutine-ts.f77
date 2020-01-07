@@ -64,9 +64,10 @@ C     Update old
       call UPD (PHI, OLD, LR, LC, MAXNN, MAXM1, NN)
           if (MOD(IT, ITCHNG).EQ.0) GO TO 35
           do 30 I = 1, MM
-      EST(I) = OLD(I) + DELT/OLDT/2.0 * (OLD(I) - EST(I))
+      EST(I) = OLD(I) + DELT / OLDT / 2.0 * (OLD(I) - EST(I))
   30  continue
-          GO TO 53 5
+          GO TO 535
+
 C
 C     Time step modification
   35  DELT = CHNG * DELT
@@ -75,7 +76,7 @@ C     Time step modification
       DELT = DELT * 3600.
   52  write (6, 534) DELT
           do 40 I = 1, MM
-  40  EST(I) = OLD(I) + DELT/OLDT/2.0 * (OLD(I)-EST(I))
+  40  EST(I) = OLD(I) + DELT / OLDT / 2.0 * (OLD(I) - EST(I))
           if (STATP.EQ.0.) GO TO 538
           GO TO 580
   535     if (STATP.NE.0.) GO TO 580
@@ -91,6 +92,7 @@ C     Time step modification
       write (6, 1900)
       write (6, 1080)
       write (6, 1090) (LP(I), EST(I), I = 1, MM)
+
 C
 C     Select approximation for time derivative
   581 DELTGO = DELT * IGO
@@ -100,6 +102,7 @@ C
   2   NIT = NIT + 1
           if (KTCAL.EQ.0) GO TO 540
           if (ISPL(1).EQ.0) GO TO 541
+
 C
 C     Generate coef. matrices for flow
   540 JTEST = 1
@@ -112,6 +115,7 @@ C     Generate coef. matrices for flow
           if (ISTOP.GT.0) GO TO 821
       JTEST = -1
           GO TO 543
+
 C
 C     Add time-dependent parts
   541 Rewind 11
@@ -132,6 +136,7 @@ C     Add time-dependent parts
 C
       call LRHS (S, P, FM, RT, OLD, U, LR, LC, NN, NB, MB, A3,
      & 0.0, MAXBW2, MAXS, MAXS, MAXBW, MAXM1, MAXNN, 3)
+
 C
 C     Apply boundary conditions
           do 1675 I = 1, NN
@@ -169,6 +174,7 @@ C
       if (KOD8.LT.1) GO TO 563
       write (6, 1320)
       write (6, 1398) (FM(I), I = 1, MM)
+
 C
 C     Solve for pressure
  563  if (KKK.GT.1) GO TO 565
@@ -179,6 +185,7 @@ C     Solve for pressure
       GO TO 821
  565  KKK = KKK + 1
       call SBAND (P, FM, U, MM, MB, MAXS, MAXBW, MAXM1)
+
 C
 C     Determine boundary flux
       if (NSDN.GT.0.AND.COEFI.EQ.1.) GO TO 105
@@ -190,6 +197,7 @@ C     Determine boundary flux
  150  continue
 C
  155  continue
+
 C
 C     Modify surface flux boundaries
       if (NSDN.EQ.0.OR.COEFI.NE.1) GO TO 292
@@ -238,6 +246,7 @@ C     Modify surface flux boundaries
           if (LR(I).EQ.-4) write (6, 1879) I, LR(I), FQ(I), COEF(K)
  285  continue
  290  continue
+
 C
 C     Modify conditions on seepage faces
           if (NSEEP.EQ.0) GO TO 350
@@ -293,6 +302,7 @@ C
       EST(I) = 0.5 * (TDR * U(I) + (1. - TDR) * OLD(I) + OLD(I))
  57   continue
           GO TO 2
+
 C
 C     Calculate new values
  567      Do 572 I = 1, NN
@@ -317,6 +327,7 @@ C     Select approximation for time derivative
       Rewind 4
 C
           if (ADVANC.EQ.NO) GO TO 600
+
 C
 C     Generate matrices for concentration
       JTEST = 0
@@ -335,6 +346,7 @@ C     Update COLD
           if (KTCAL.EQ.0) GO TO 610
       call UPD (CONC, COLD, KLR, KLC, MAXNN, MAXM2, NN)
  610  continue
+
 C
 C     Add time-dependent part
           if (ADVANC.EQ.NO.AND.MOD(IT, ITCHNG).NE.0) GO TO 680
@@ -376,6 +388,7 @@ C
       write (6, 1320)
       write (6, 1398) (CFM(I), I = 1, KM)
  686  continue
+
 C
 C     Solve concentration equations
       call GELB (CFM, W, KM, 1, KMB - 1, KMB - 1, 1.E-20, IER,
@@ -392,6 +405,7 @@ C
       SMIN = SSEC / 60.
       STIME = SMIN / 60.
       IT = IT + 1
+
 C
 C     Calculate new values
           Do 710 I = 1, NN
@@ -401,8 +415,7 @@ C     Calculate new values
           GO TO 710
  709  CONC(I) = CONCI(I)
  710  continue
-C
-C
+
 C
 C     write computed values
       DELT1 = DELT / 3600.
