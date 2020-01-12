@@ -34,7 +34,7 @@ C
       IP = 2
       IQ = 2
       ID = 2*KN(1) + 2
-          DO 20 J=l,2
+          DO 20 J=1,2
       IP = IP + 1
       ID = ID + 1
       JN(IP) = IN(ID,L)
@@ -56,7 +56,7 @@ C
       XI2 = 1.0 + XI
 C
 C     CORNER NODE SHAPE FUNCTION, BASIC PART
-      ALF(l) = 0.5*XI1
+      ALF(1) = 0.5*XI1
       ALF(2) = 0.5*XI2
 C
 C	  DETERMINE IF SIDE	IS LINEAR, QUADRATIC, OR CUBIC
@@ -64,7 +64,7 @@ C	  DETERMINE IF SIDE	IS LINEAR, QUADRATIC, OR CUBIC
           IF (MS.EQ.3) GO TO 40
 C
 C	  LINEAR SIDE
-      G(1,K) = ALF(l)
+      G(1,K) = ALF(1)
       G(2,K) = ALF(2)
       DLX(1,K) = -0.5
       DLX(2,K) * 0.5
