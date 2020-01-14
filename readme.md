@@ -10,7 +10,11 @@ This creates a directory called `env`. Note that this directory is in the `.giti
 After creating this directory the following workflow should be used:
 ```
 # enable vitual env
+# on mac/linux
 $ source env/bin/activate
+
+# on windows
+$ \env\Scripts\activate.bat
 
 # program as one normally would
 
