@@ -16,6 +16,9 @@ $ source env/bin/activate
 # on windows
 $ \env\Scripts\activate.bat
 
+# make sure the virtual env has all the required libraries
+$ pip install -r requirements.txt
+
 # program as one normally would
 
 # when finisihed programming, make sure any new libraries are added to the requirements.txt
