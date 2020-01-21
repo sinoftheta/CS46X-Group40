@@ -2,3 +2,4 @@
 .DS_Store
 python/env/
 python/capstone/__pycache__/
+python/__pycache__/
