@@ -3,6 +3,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+parameters = ['Import', 'Basic Parameters', 'Multipliers',
+            'Nodes', 'Node Types', 'Elements', 'Materials']
+
 class ParametersPage(QGroupBox):
     def __init__(self, *args, **kwargs):
         super(ParametersPage, self).__init__('Parameters')
@@ -30,8 +33,7 @@ class ParametersPage(QGroupBox):
 
         #   Add navigation buttons (widgets) to
         #       button container 'self.parametersPageStack'
-        for i, parameter in enumerate(['Import', 'Basic Parameters', 'Multipliers',
-            'Nodes', 'Node Types', 'Elements', 'Materials']):
+        for i, parameter in enumerate(parameters):
             pbtn = QPushButton(str(parameter))
             pbtn.setGeometry(0, 0, 150, 100)
 
