@@ -3,8 +3,10 @@
 
 #include "../capstone/Array.h"
 #include "../capstone/Matrix.h"
+#include "../capstone/MathUtil.h"
 
-void gs2Array(Matrix*, Array*, int, int, int, int, int, int, int, int);
+
+void gs2Array(Matrix*, Array*, int, int, int, int, int, int, int, int*);
 
 int min(int, int);
 int max(int, int);

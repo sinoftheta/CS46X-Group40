@@ -2,7 +2,7 @@
 
 void gs2Array(
     Matrix* a, Array* z, int neq, int ib, int jb, 
-    int jb2, int mdim, int ndim, int mx, int jx ){
+    int jb2, int mdim, int ndim, int mx, int* jx ){
 
     int j = 0, k, lim, k0, k1;
 
@@ -15,15 +15,6 @@ void gs2Array(
                 z->elements[j] = *matrixAt(a, m, n);
             }
     }
-    jx = j;
+    *jx = j;
 }
 
-int min(int a, int b){
-    if(a > b) return b;
-    else return a;
-}
-
-int max(int a, int b){
-    if(a < b) return b;
-    else return a;
-}
