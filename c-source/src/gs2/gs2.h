@@ -87,9 +87,9 @@ typedef struct gs2State {
     double chng, tdr, stat, statp, oldt, delt, 
            dprdt, betap, clos1, delp, difusn,
            pchng, vmax, stime, ssec, h1, h2,
-           pl;
+           pl, coefi, ei, itmax, iter1, itchng;
 
-    int ne, np, nk, nseep, inc, me,
+    int ne, np, nk, nseep, inc, me, igo, 
         kod1, kod2, kod3, kod4, kod7, 
         kod8, kod9, kod10, kod11, kod12;
 
