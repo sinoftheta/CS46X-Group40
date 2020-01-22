@@ -3,3 +3,4 @@
 python/env/
 python/capstone/__pycache__/
 python/__pycache__/
+c-source/build/**
