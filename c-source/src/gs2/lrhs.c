@@ -5,8 +5,8 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* T, Array* rold,
           double a2, int MAXNA, int MAXMA, int MAXNB, int MAXMB,
           int IR, int ILQ, int kk){
    int iter, iter2, l1, ll, jm, jn;
-   int mq = m - lq(m)
-   int m2 = mq - 1
+   int mq = m - *arrayAt(lq, m);
+   int m2 = mq - 1;
 
 
     if (kk - 2 < 0){
