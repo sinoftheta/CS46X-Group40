@@ -21,7 +21,7 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
 
     if (kk - 2 < 0){
      // kk = 1 : Form right-hand side of equations
-      for(int iter = 1; iter < mq; iter++){
+      for(int iter = 1; iter <= mq; iter++){
        *arrayAt(r, iter) = 0.0;
       }
 
@@ -29,14 +29,14 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
                         *arrayAt(u, mq) * a2);
 
       if (m2 > 0){
-        for(int iter = 1; iter < m2; iter++){
+        for(int iter = 1; iter <= m2; iter++){
 
          l1 = min(jb, mq + 1 - iter);
 
          *arrayAt(r, iter) += (*matrixAt(b, iter, 1) * (*arrayAt(rold, iter) *
             a3 + *arrayAt(u, iter) * a2));
 
-            for(int iter2 = 2; iter2 < l1; iter++){
+            for(int iter2 = 2; iter2 <= l1; iter++){
 
               ll = iter + iter2 - 1;
 
@@ -55,13 +55,13 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
       // kk = 2 : Form left-hand side of equations for mass transport
       *matrixAt(a, ib, mq) += (*matrixAt(b, mq, 1) * a3);
       if(m2 > 0){
-        for(int iter = 1; iter < m2; iter++){
+        for(int iter = 1; iter <= m2; iter++){
 
           l1 = min(jb, (mq + 1 - iter));
 
           *matrixAt(a, ib, iter) += (*matrixAt(b, iter, 1) * a3);
 
-          for(int iter2 = 2; iter2 < l1; iter2++){
+          for(int iter2 = 2; iter2 <= l1; iter2++){
 
             ll = (iter + iter2 - 1);
             jm = ib - iter2 + 1;
@@ -80,14 +80,14 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
       *matrixAt(b, mq, 1) = (*matrixAt(a, 1, mq) + (*matrixAt(b, mq, 1) * a3));
 
       if(m2 > 0){
-        for(int iter = 1; iter < m2; iter++){
+        for(int iter = 1; iter <= m2; iter++){
 
           l1 = min(jb, mq + 1 - iter);
 
           *matrixAt(b, iter, 1) = *matrixAt(a, 1, iter) +
             (*matrixAt(b, iter, 1) * a3);
 
-          for(int iter2 = 2; iter2 < l1; iter2++){
+          for(int iter2 = 2; iter2 <= l1; iter2++){
             *matrixAt(b, iter, iter2) = (*matrixAt(a, iter2, iter) +
                 (*matrixAt(b, iter, iter2) * a3));
           }
