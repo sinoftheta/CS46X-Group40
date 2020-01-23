@@ -4,6 +4,15 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* T, Array* rold,
           Array* u, Array* lq, int m, int ib, int jb, double a3,
           double a2, int MAXNA, int MAXMA, int MAXNB, int MAXMB,
           int IR, int ILQ, int kk){
+          
+   matrixAssertNotNull(a, "Matrix 'a' NULL in gs2Lrhs");
+   matrixAssertNotNull(b, "Matrix 'b' NULL in gs2Lrhs");
+   arrayAssertNotNull(r, "Array 'r' NULL in gs2Lrhs");
+   arrayAssertNotNull(T, "Array 'T' NULL in gs2Lrhs");
+   arrayAssertNotNull(rold, "Array 'rold' NULL in gs2Lrhs");
+   arrayAssertNotNull(u, "Array 'u' NULL in gs2Lrhs");
+   arrayAssertNotNull(lq, "Array 'lq' NULL in gs2Lrhs");
+
    int iter, iter2, l1, ll, jm, jn;
    int mq = m - *arrayAt(lq, m);
    int m2 = mq - 1;
