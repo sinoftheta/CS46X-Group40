@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
-void gs2Dband(Matrix* s, int n, int nb, int ndim, int mdim, int* iex){
+void gs2Dband(Matrix* s, int n, int nb, int* iex){
 
     *iex = 0;
     int ip, iq, ii, jz;
