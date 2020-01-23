@@ -5,10 +5,9 @@
 #include "../capstone/Array.h"
 #include "../capstone/MathUtil.h"
 
-void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* T, Array* rold,
+void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
           Array* u, Array* lq, int m, int ib, int jb, double a3,
-          double a3, int MAXNA, int MAXMA, int MAXNB, int MAXMB,
-          int IR, int ILQ, int KK);
+          double a2, int kk);
 
 
 #endif /* __GS2_LRHS_H__ */
