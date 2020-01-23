@@ -17,21 +17,23 @@ typedef struct {
     CSVRow* currentRow;
 } CSVFile;
 
-extern const CSVRow CSV_NULL_ROW;
-extern CSVRow const* CSV_NULL_ROW_PTR;
+extern CSVRow CSV_NULL_ROW;
+extern CSVRow* CSV_NULL_ROW_PTR;
 
 CSVFile csvLoadFile(const char* filepath);
 
-CSVRow const* csvNextRow(CSVFile* csvFile);
-CSVRow const* csvPrevRow(CSVFile* csvFile);
+CSVRow* csvNextRow(CSVFile* csvFile);
+CSVRow* csvPrevRow(CSVFile* csvFile);
 
-CSVRow const* csvSeekEnd(CSVFile* csvFile);
-CSVRow const* csvSeekBegin(CSVFile* csvFile);
+CSVRow* csvSeekEnd(CSVFile* csvFile);
+CSVRow* csvSeekBegin(CSVFile* csvFile);
 
+char** csvTokenizeLine(char* linebase, int* tokenCount);
+
+// calling csvFreeRow should be avoided; let the CSVFile handle
+// management of the rows
 void csvFreeRow(CSVRow* row);
 void csvFreeFile(CSVFile* csvFile);
 
-// stdio.h getline is POSIX, need portable version
-int csvGetline(char** oLine, int* oLength, FILE* fp);
 
 #endif /* __CAP_CSVFILE_H__ */

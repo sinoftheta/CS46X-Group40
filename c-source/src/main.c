@@ -3,27 +3,40 @@
 
 #include "capstone/Matrix.h"
 #include "capstone/Array.h"
-
+#include "capstone/FileUtil.h"
 #include "capstone/CSVFile.h"
 
 int main(int argc, char** argv) {
 
+    CSVFile csv = csvLoadFile("res/example.txt");
 
-    FILE* fp;
-    fp = fopen("res/example.txt", "r");
-    if (fp == NULL) {
-        puts("failed to read");
-    }
+    for (CSVRow* row = csv.currentRow; row != CSV_NULL_ROW_PTR; row = csvNextRow(&csv)) {
+        printf("row\n");
+        for (int i = 0; i < row->entryCount; i++) {
+            printf("\t%s\n", row->entries[i]);
+        }    
+    } 
+
+    csvSeekBegin(&csv);
+
+     for (CSVRow* row = csv.currentRow; row != CSV_NULL_ROW_PTR; row = csvNextRow(&csv)) {
+        printf("row\n");
+        for (int i = 0; i < row->entryCount; i++) {
+            printf("\t%s\n", row->entries[i]);
+        }    
+    } 
+
+    csvSeekEnd(&csv);
     
-    char* line = NULL;
-    int length = 0;
-    while (csvGetline(&line, &length, fp) != -1) {
-        printf("%s\n", line);
-        free(line);
-        line = NULL;
-    }
+    for (CSVRow* row = csv.currentRow; row != CSV_NULL_ROW_PTR; row = csvNextRow(&csv)) {
+        printf("row\n");
+        for (int i = 0; i < row->entryCount; i++) {
+            printf("\t%s\n", row->entries[i]);
+        }    
+    } 
 
 
-    fclose(fp);
+    csvFreeFile(&csv);
+
     return 0;
 }
