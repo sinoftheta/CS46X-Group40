@@ -1,4 +1,6 @@
 #include "dband.h"
+#include <stdio.h>
+#include <math.h>
 
 void gs2Dband(Matrix* s, int n, int nb, int ndim, int mdim, int* iex){
 
@@ -7,48 +9,55 @@ void gs2Dband(Matrix* s, int n, int nb, int ndim, int mdim, int* iex){
 
     double siik, siijz, sum, temp;
 
-    for(int i = 1; i <= n; i++){ // unsure if logic should be: i <= n, or i < n 
+    sum = 0.0f;
+    temp = 1.0f;
+
+    for(int i = 1; i <= n; i++){ 
 
         ip = n - i + 1;
-        if(nb < ip) ip = nb;
+        if(nb < ip) 
+            ip = nb;
 
-        for(int j = 1; j <= ip; j++){ // again, unsure
+        for(int j = 1; j <= ip; j++){ 
 
             iq = nb - j;
             if((i - 1) < iq) iq = i - 1;
 
             sum = *matrixAt(s, i, j);
 
-            if(!(iq < 1)){ // if(iq < 1) go to 20
+            if(iq >= 1){ // if(iq < 1) go to 20
 
-                for(int k = 1; k <= iq; k++){ // again, unsure
+                for(int k = 1; k <= iq; k++){
 
                     ii = i - k;
                     siik = *matrixAt(s, ii, k+1);
 
                     jz = j + k;
                     siijz = *matrixAt(s, ii, jz);
+                    // matches if(siijz == 0.0) go to 10 in the fortran source
+                    if(siijz != 0.0){ 
 
-                        if(!(siijz == 0.0)){ // if(siijz == 0.0) go to 10
-
-                            sum = sum - siik * siijz;
-                        }
+                        sum = sum - siik * siijz;
+                    }
                 }
                 //10
             }
             // 20
         
-            if(!(j != 1)){ // if(j != 1) go to 40
+            // captures behavior of, if(j != 1) go to 40, in the fortran source
+            if(j == 1){ 
                         
-                if(!(sum <= 0.0 )){ // if(sum <= 0.0) go to 30
-                    temp = 1 / sqrt(sum);
+                // captures behavior of, if(sum <= 0.0) go to 30, in the fortran source
+                if(sum > 0.0){ 
+                    temp = 1.0 / sqrt(sum);
+                    *matrixAt(s, i, j) = temp;
                 }
                 //30
 
                 //write error messages
                 //change to fprintf? write to stderr? need file pointer
-                printf("Dband fails at row %d\n", i); 
-                printf("N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
+                fprintf(stderr, "Dband fails at row %d\n", i); 
+                fprintf(stderr, "N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
                     n, nb, ip, iq, i, j, sum
                 );
                 
@@ -56,7 +65,7 @@ void gs2Dband(Matrix* s, int n, int nb, int ndim, int mdim, int* iex){
                 return;
             }
             //40
-            *matrixAt(s, i, j) = temp;
+            *matrixAt(s, i, j) = sum * temp;
         }
     }
     // 50
