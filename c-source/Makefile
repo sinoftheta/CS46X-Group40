@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS := -pedantic -Wall -Werror -g
+CFLAGS := -lm -pedantic -Wall -Werror -g
 CLIBS :=
 
 SRCDIR := src
@@ -13,13 +13,13 @@ TARGET := build/gs2
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(CLIBS) $^ -o $@
+	$(CC) $(CFLAGS) $(CLIBS) $^ -o $@ -lm
 
 
 $(BUILDDIR)/%.o: %.c
 	mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(CLIBS) -c $< -o $@
-
+ 
 clean: 
 	rm -r $(BUILDDIR)
 	rm $(TARGET)
