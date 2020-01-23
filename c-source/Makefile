@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS := -lm -pedantic -Wall -Werror -g
+CFLAGS := -lm -pedantic -Wall -Werror -g -std=c99
 CLIBS :=
 
 SRCDIR := src
