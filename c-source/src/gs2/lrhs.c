@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "lrhs.h"
 
 void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
