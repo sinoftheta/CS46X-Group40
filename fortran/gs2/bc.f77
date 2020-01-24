@@ -8,7 +8,7 @@ C
        NST = 0
    80      if (NST.GE.LN) go to 150
        read (5, 40) (LRT(ITT), ITT=1,20)
-       IA = I
+       IA = 0
        J = LRT(I)
        NST = NST + 1
            if (J.LE.NEQ) go to 90
@@ -22,7 +22,8 @@ C
                  ISTOP = ISTOP + 1
    40  format (20I4)
    50  format (11X, 10(1H*), 14H BOUNDARY NODE, I4, 15H, DOES NOT EXIST)
-   60  format (1H0, 5(1H*), 30H NUMBER OF BOUNDARY NODES READ, I10,
+   60  format (11X, 20I5)
+   70  format (1H0, 5(1H*), 30H NUMBER OF BOUNDARY NODES READ, I10,
       1    34H DISAGREES WITH NUMBER ANTICIPATED, I10)
    10  return   
        end

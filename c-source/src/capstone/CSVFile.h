@@ -1,5 +1,5 @@
-#ifndef __CAP_CSVFILE_H__
-#define __CAP_CSVFILE_H__
+#ifndef __CAP_CSV_FILE_H__
+#define __CAP_CSV_FILE_H__
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,4 +36,4 @@ void csvFreeRow(CSVRow* row);
 void csvFreeFile(CSVFile* csvFile);
 
 
-#endif /* __CAP_CSVFILE_H__ */
+#endif /* __CAP_CSV_FILE_H__ */
