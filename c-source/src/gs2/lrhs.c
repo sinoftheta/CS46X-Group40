@@ -42,10 +42,10 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
 
               if(ll <= mq){
                 *arrayAt(r, iter) += (*matrixAt(b, iter, iter2) *
-                  (*arrayAt(rold, ll) * a3 + arrayAt(u, ll) * a2));
+                  (*arrayAt(rold, ll) * a3 + *arrayAt(u, ll) * a2));
 
                 *arrayAt(r, ll) += (*matrixAt(b, iter, iter2) *
-                  (*arrayAt(rold, iter) * a3 + arrayAt(u, iter) * a2));
+                  (*arrayAt(rold, iter) * a3 + *arrayAt(u, iter) * a2));
               }
             }
         } // 50

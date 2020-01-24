@@ -43,7 +43,7 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
               if (jc > ib){
                 fprintf(stderr,
                   "Insufficient half-bandwidth\n\t\tElement %5d requires %5d instead of %5d", l, jc, ib);
-                *ISTOP++;
+                (*ISTOP)++;
                 return;
               }
               else { // jc <= ib
@@ -53,12 +53,12 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
                   if (jc > jb) jb = jc;
                 }
 
-                nc = (ih + jc - 1); // 30
+                int nc = (ih + jc - 1); // 30
 
                 if (nc > ib2){
                   fprintf(stderr,
                     "Insufficient bandwidth\n\t\tElement %5d requires %5d instead of %5d", l, nc, ib2);
-                    *ISTOP++;
+                    (*ISTOP)++;
                     return;
                 }
 
@@ -73,10 +73,10 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
         else if(*arrayAt(k0d, jdi) == 1){
 
           for(int iter2 = 1; iter2 <= m; iter2++){ // inner loop if k0d(jdi) == 1
-            jdj = *arrayAt(jd, j);
+            jdj = *arrayAt(jd, iter2);
             if(*arrayAt(k0d, jdj) <= 0){
               jc = jdj - *arrayAt(lq, jdj);
-              *arrayAt(u, jc) -= (*matrixAt(iter2, iter) * *arrayAt(f, jdi));
+              *arrayAt(u, jc) -= (*matrixAt(ea, iter2, iter) * *arrayAt(F, jdi));
             }
           } // 70
         }
