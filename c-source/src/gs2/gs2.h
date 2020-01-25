@@ -69,7 +69,7 @@ typedef struct gs2State {
     // must be dimensoned to MAXNN
     // MAXNN must be greater than or equal to NN
     Array cfq, conc, conci, fq, klc, klr,
-          ls, lr, phi, phii, x, y;
+          lc, lr, phi, phii, x, y;
 
     // Common BLK3
     // must be dimensioned to MAXNE
