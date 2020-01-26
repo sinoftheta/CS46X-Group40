@@ -87,11 +87,12 @@ typedef struct gs2State {
     double chng, tdr, stat, statp, oldt, delt, 
            dprdt, betap, clos1, delp, difusn,
            pchng, vmax, stime, ssec, h1, h2,
-           pl, coefi, ei, itmax, iter1, itchng;
+           pl, coefi, ei;
 
     int ne, np, nk, nseep, inc, me, igo, 
         kod1, kod2, kod3, kod4, kod7, 
-        kod8, kod9, kod10, kod11, kod12;
+        kod8, kod9, kod10, kod11, kod12,
+        itmax, itchng, iter1;
 
     
     // Common TWO
@@ -113,8 +114,8 @@ typedef struct gs2State {
     Array ipsl;
 
     // Common Three
-    int nn, mm, it, nsdn, istop;
-    double km, nb, knb, knb2, mb, mb2, 
+    int nn, mm, it, nsdn, nb, knb, knb2, istop;
+    double km, mb, mb2, 
            kmb, kmb2;
 
    // Common Four

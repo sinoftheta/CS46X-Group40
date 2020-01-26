@@ -22,6 +22,11 @@ CSVFile csvLoadFile(const char* filepath) {
     FILE* fp;
     fp = fopen(filepath, "r");
 
+    if (fp == NULL) {
+        fprintf(stderr, "Failed To read file: %s\n", filepath);
+        exit(1);
+    }
+
     char* line = NULL;
     int length = 0;
 
