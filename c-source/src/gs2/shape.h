@@ -4,7 +4,7 @@
 #include "../capstone/Matrix.h"
 #include "../capstone/Array.h"
 
-void gs2Shape(Array* X, Array*  Y, Matrix* IN, int L, int M, double XI, double YI, Array* F,
-              Array* DGX, Array* DGY, int MAXNN, int MAXNE, int MXC, int ME);
+void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double yi, Array* f,
+              double* det, Array* dgx, Array* dgy, int maxnn, int maxne, int mxc, int me);
 
 #endif /* __GS2_SHAPE_H__ */
