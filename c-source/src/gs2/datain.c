@@ -140,6 +140,9 @@ void gs2Datain(
             case GROUP_D:
                 gs2ReadGroupD(&row, state);
                 break;
+            case GROUP_E:
+                gs2ReadGroupE(&row, state, xfact, yfact);
+                break;
             default:
                 //fprintf(stderr, "Reached default case in gs2Datain!\n");
                 break;
@@ -369,11 +372,9 @@ void gs2ReadGroupC(
 
 }
 
-void gs2ReadGroupD(
-    CSVRow** csvRow,
-    gs2State* state
-) {
+void gs2ReadGroupD(CSVRow** csvRow, gs2State* state) {
 
+    // card 1: group, kod1, kod2, kod3, kod4, kody, kod8, kod9, kod9, kod10, kod11, kod12
     if ((*csvRow)->entryCount < 11)
         croak("Group D, Card 1 too few entries");
 
@@ -398,4 +399,30 @@ void gs2ReadGroupD(
     fprintf(stdout, "\tkod10: %d\n", state->kod10);
     fprintf(stdout, "\tkod11: %d\n", state->kod11);
     fprintf(stdout, "\tkod12: %d\n", state->kod12);
+}
+
+void gs2ReadGroupE(CSVRow** csvRow, gs2State* state, double xfact, double yfact) {
+    if ((*csvRow)->entryCount < 4) 
+        croak("Group E, too few entries");
+    
+    // card: group, index, X[index], Y[index]
+    
+    int index;
+    sscanf((*csvRow)->entries[1], "%d", &index);
+
+    // fortran starts at 1, c does not
+    index--;
+
+    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->x), index));
+    sscanf((*csvRow)->entries[3], "%lf", arrayAt(&(state->y), index));
+
+    *arrayAt(&(state->x), index) *= xfact;
+    *arrayAt(&(state->y), index) *= yfact;
+
+    fprintf(
+        stdout, 
+        "Node at: %16.4lf, %16.4lf\n", 
+        *arrayAt(&(state->x), index), 
+        *arrayAt(&(state->y), index)
+    );
 }

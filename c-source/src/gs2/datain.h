@@ -108,4 +108,11 @@ void gs2ReadGroupD(
     gs2State* state
 );
 
+void gs2ReadGroupE(
+    CSVRow** csvRow,
+    gs2State* state,
+    double xfact,
+    double yfact
+);
+
 #endif /* __CAP_DATAIN_H__ */

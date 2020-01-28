@@ -20,8 +20,8 @@ void arrayFree(Array* array) {
 
 double* arrayAt(Array* array, int index) {
     arrayAssertNotNull(array, "array null in arrayAt!");
-
-    if (index >= array->size) {
+    
+    if (index >= array->size || index < 0) {
         fprintf(stderr, "arrayAt index out of bounds: %d\n", index);
         exit(1);
     }
