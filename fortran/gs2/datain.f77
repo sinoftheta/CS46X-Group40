@@ -71,6 +71,7 @@ C
       if (STATP.EQ.0.) write (6, 943)
       TDR = 2.0
           if (TYPE.EQ.BWD) TDR = 1.0
+C       END GROUP B
 C
       read (5, 1440) AFMOBX, AFMOBY, APOR, AELONG, AETRAN, APHII,
      & ACONCI, XFACT, YFACT, ATETA, AAL, AKD, ALAM, ARHO

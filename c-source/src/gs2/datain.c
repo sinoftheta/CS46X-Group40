@@ -102,7 +102,12 @@ void gs2Datain(
     Array wxpsi, wxm, wxk;
     Matrix cc;
 
+    // group B extra parameters
     int ns, kns, nf, mq4, knsdn, nvs;
+
+    // group C extra parameters
+    double afmobx, afmoby, apor, aelong, aetran, aphii, 
+           aconci, xfact, yfact, ateta, aal, akd, alam, arho;
 
     CSVFile csvFile = csvLoadFile(csvPath);
     gs2DataGroup dataGroup = NUM_DATA_GROUP;
@@ -124,7 +129,16 @@ void gs2Datain(
             case GROUP_B:
                 // moves row
                 gs2ReadGroupB(&row, state, &ns, &kns, &nf, &mq4, &knsdn, &nvs);
-                // exit(1);
+                break;
+            case GROUP_C:
+                // moves row
+                gs2ReadGroupC(
+                    &row, state, &afmobx, &afmoby, &apor, &aelong, &aetran, &aphii,
+                    &aconci, &xfact, &yfact, &ateta, &aal, &akd, &alam, &arho
+                );
+                break;
+            case GROUP_D:
+                gs2ReadGroupD(&row, state);
                 break;
             default:
                 //fprintf(stderr, "Reached default case in gs2Datain!\n");
@@ -260,7 +274,7 @@ void gs2ReadGroupB(
 
     fprintf(stdout, "Time parameters:\n");
     fprintf(stdout, "\tInitial time step in hours: %lf\n", state->delt);
-    fprintf(stdout, "\tMultipler for increasing time step: %lf", state->chng);
+    fprintf(stdout, "\tMultipler for increasing time step: %lf\n", state->chng);
     fprintf(stdout, "\tMaximum permitted number of time steps: %d\n", state->itmax);
     fprintf(stdout, "\tNumber of time steps between changes in delt: %d\n", state->itchng);
     fprintf(stdout, "\tPressure change criterion: %lf\n", state->pchng);
@@ -290,4 +304,98 @@ void gs2ReadGroupB(
     if (state->statp == 0.0)
         fprintf(stdout, "Steady-state flow quation\n");
 
+}
+
+void gs2ReadGroupC(
+    CSVRow** csvRow,
+    gs2State* state,
+    double* afmobx,
+    double* afmoby,
+    double* apor,
+    double* aelong,
+    double* aetrans,
+    double* aphii,
+    double* aconci,
+    double* xfact,
+    double* yfact,
+    double* ateta,
+    double* aal,
+    double* akd,
+    double* alam,
+    double* arho
+) {
+    // card 1: group, afmobx, afmoby, apor, aelong, aetrans, aphii, aconci, xfact
+    if ((*csvRow)->entryCount < 9)
+        croak("Group C, Card 1 too few entries");
+    
+    sscanf((*csvRow)->entries[1], "%lf", afmobx);
+    sscanf((*csvRow)->entries[2], "%lf", afmoby);
+    sscanf((*csvRow)->entries[3], "%lf", apor);
+    sscanf((*csvRow)->entries[4], "%lf", aelong);
+    sscanf((*csvRow)->entries[5], "%lf", aetrans);
+    sscanf((*csvRow)->entries[6], "%lf", aphii);
+    sscanf((*csvRow)->entries[7], "%lf", aconci);
+    sscanf((*csvRow)->entries[8], "%lf", xfact);
+
+    // card 2: group, yfact, ateta, aal, akd, alam, arho
+    *csvRow = (*csvRow)->next;
+    if ((*csvRow)->entryCount < 7)
+        croak("Group C, Card 2 too few entries");
+
+    sscanf((*csvRow)->entries[1], "%lf", yfact);
+    sscanf((*csvRow)->entries[2], "%lf", ateta);
+    sscanf((*csvRow)->entries[3], "%lf", aal);
+    sscanf((*csvRow)->entries[4], "%lf", akd);
+    sscanf((*csvRow)->entries[5], "%lf", alam);
+    sscanf((*csvRow)->entries[6], "%lf", arho);
+
+    fprintf(stdout, "Parameter Multipliers:\n");
+    fprintf(stdout, "\tafombx: %lf\n", *afmobx);
+    fprintf(stdout, "\tafomby: %lf\n", *afmoby);
+    fprintf(stdout, "\tapor: %lf\n", *apor);
+    fprintf(stdout, "\taelong: %lf\n", *aelong);
+    fprintf(stdout, "\taetrans: %lf\n", *aetrans);
+
+    fprintf(stdout, "\taphii: %lf\n", *aphii);
+    fprintf(stdout, "\taconci: %lf\n", *aconci);
+    fprintf(stdout, "\txfact: %lf\n", *xfact);
+    fprintf(stdout, "\tyfact: %lf\n", *yfact);
+    fprintf(stdout, "\tateta: %lf\n", *ateta);
+
+    fprintf(stdout, "\taal: %lf\n", *aal);
+    fprintf(stdout, "\takd: %lf\n", *akd);
+    fprintf(stdout, "\talam: %lf\n", *alam);
+    fprintf(stdout, "\tarho: %lf\n", *arho);
+
+}
+
+void gs2ReadGroupD(
+    CSVRow** csvRow,
+    gs2State* state
+) {
+
+    if ((*csvRow)->entryCount < 11)
+        croak("Group D, Card 1 too few entries");
+
+    sscanf((*csvRow)->entries[1], "%d", &(state->kod1));
+    sscanf((*csvRow)->entries[2], "%d", &(state->kod2));
+    sscanf((*csvRow)->entries[3], "%d", &(state->kod3));
+    sscanf((*csvRow)->entries[4], "%d", &(state->kod4));
+    sscanf((*csvRow)->entries[5], "%d", &(state->kod7));
+    sscanf((*csvRow)->entries[6], "%d", &(state->kod8));
+    sscanf((*csvRow)->entries[7], "%d", &(state->kod9));
+    sscanf((*csvRow)->entries[8], "%d", &(state->kod10));
+    sscanf((*csvRow)->entries[9], "%d", &(state->kod11));
+    sscanf((*csvRow)->entries[10], "%d", &(state->kod12));
+
+    fprintf(stdout, "Print options: \n");
+    fprintf(stdout, "\tkod1: %d\n", state->kod1);
+    fprintf(stdout, "\tkod3: %d\n", state->kod3);
+    fprintf(stdout, "\tkod4: %d\n", state->kod4);
+    fprintf(stdout, "\tkod7: %d\n", state->kod7);
+    fprintf(stdout, "\tkod8: %d\n", state->kod8);
+    fprintf(stdout, "\tkod9: %d\n", state->kod9);
+    fprintf(stdout, "\tkod10: %d\n", state->kod10);
+    fprintf(stdout, "\tkod11: %d\n", state->kod11);
+    fprintf(stdout, "\tkod12: %d\n", state->kod12);
 }

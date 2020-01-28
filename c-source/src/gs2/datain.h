@@ -84,4 +84,28 @@ void gs2ReadGroupB(
     int* nvs
 );
 
+void gs2ReadGroupC(
+    CSVRow** csvRow,
+    gs2State* state,
+    double* afmobx,
+    double* afmoby,
+    double* apor,
+    double* aelong,
+    double* aetrans,
+    double* aphii,
+    double* aconci,
+    double* xfact,
+    double* yfact,
+    double* ateta,
+    double* aal,
+    double* akd,
+    double* alam,
+    double* arho
+);
+
+void gs2ReadGroupD(
+    CSVRow** csvRow,
+    gs2State* state
+);
+
 #endif /* __CAP_DATAIN_H__ */
