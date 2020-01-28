@@ -55,6 +55,7 @@ void qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Arr
      * Global variables:
      * - np
      * - tdr
+     * - det
      * 
      * Global array:
      * - ispl
