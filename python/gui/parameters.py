@@ -1,7 +1,9 @@
-import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
+from parameters_basic import BasicParameters
+from multipliers import Multipliers
 
 parameters = ['Import', 'Basic Parameters', 'Multipliers',
             'Nodes', 'Node Types', 'Elements', 'Materials']
@@ -15,9 +17,13 @@ class ParametersPage(QGroupBox):
         self.parametersPageNav.setAlignment(Qt.AlignRight | Qt.AlignTop)
         self.parametersPageStack = QStackedLayout()
 
+        # Attach navigation buttons layout and layout for contents 
+        self.parametersPageLayout.addLayout(self.parametersPageNav)
+        self.parametersPageLayout.addLayout(self.parametersPageStack)
+
         self.parametersPageHome = QWidget()
-        self.parametersPageBasic = QGroupBox('Basic Parameters')
-        self.parametersPageMult = QGroupBox('Multipliers')
+        self.parametersPageBasic = BasicParameters()
+        self.parametersPageMult = Multipliers()
         self.parametersPageNodes = QGroupBox('Nodes')
         self.parametersPageNodesT = QGroupBox('Node Types')
         self.parametersPageElem = QGroupBox('Elements')
@@ -44,6 +50,3 @@ class ParametersPage(QGroupBox):
 
         self.parametersPageNav.setContentsMargins(0, 0, 0, 0)
         self.parametersPageNav.setSpacing(20)
-
-        self.parametersPageLayout.addLayout(self.parametersPageNav)
-        self.parametersPageLayout.addLayout(self.parametersPageStack)
