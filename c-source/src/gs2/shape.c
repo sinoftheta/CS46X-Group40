@@ -142,16 +142,16 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
 
         if (*matrixAt(in, 4, l) != 0) {
             if (*matrixAt(in, 5, l) == 0) {
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = -xi * yi1;
                 *arrayAt(&dfy, j) = -0.5 * xeq;
                 *arrayAt(f, j) = 0.5 * xeq * yi1;
             } else {
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = -0.28125 * yi1 * (3.0 * xeq + 2.0 * xi * xe1);
                 *arrayAt(&dfy, j) = -0.28125 * xeq * xe1;
                 *arrayAt(f, j) = 0.28125 * yi1 * xeq * xe1;
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = 0.28125 * yi1 * (3.0 * xeq - 2.0 * xi * xe2);
                 *arrayAt(&dfy, j) = -0.28125 * xeq * xe2;
                 *arrayAt(f, j) = 0.28125 * yi1 * xeq * xe2;
@@ -160,16 +160,16 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
 
         if (*matrixAt(in, 6, l) != 0) {
             if (*matrixAt(in, 7, l) == 0) {
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = 0.5 * yeq;
                 *arrayAt(&dfy, j) = -yi * xi2;
                 *arrayAt(f, j) = 0.5 * xi2 * yeq;
             } else {
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = 0.28125 * yeq * ye1;
                 *arrayAt(&dfy, j) = -0.28125 * xi2 * (3.0 * yeq + 2.0 * yi * ye1);
                 *arrayAt(f, j) = 0.28125 * xi2 * yeq * ye1;
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = 0.28125 * yeq * ye2;
                 *arrayAt(&dfy, j) = 0.28125 * xi2 * (3.0 * yeq - 2.0 * yi * ye2);
                 *arrayAt(f, j) = 0.28125 * xi2 * yeq * ye2;
@@ -178,16 +178,16 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
 
         if (*matrixAt(in, 8, l) != 0) {
             if (*matrixAt(in, 9, l) == 0) {
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = -xi * yi2;
                 *arrayAt(&dfy, j) = 0.5 * xeq;
                 *arrayAt(f, j) = 0.5 * xeq * yi2;
             } else {
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = 0.28125 * yi2 * (3.0 * xeq - 2.0 * xi * xe2);
                 *arrayAt(&dfy, j) = 0.28125 * xeq * xe2;
                 *arrayAt(f, j) = 0.28125 * yi2 * xeq * xe2;
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = -0.28125 * yi2 * (3.0 * xeq + 2.0 * xi * xe1);
                 *arrayAt(&dfy, j) = 0.28125 * xeq * xe1;
                 *arrayAt(f, j) = 0.28125 * yi2 * xeq * xe1;
@@ -196,16 +196,16 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
 
         if (*matrixAt(in, 10, l) != 0) {
             if (*matrixAt(in, 11, l) == 0) {
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = -0.5 * yeq;
                 *arrayAt(&dfy, j) = -yi * xi1;
                 *arrayAt(f, j) = 0.5 * xi1 * yeq;
             } else {
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = -0.28125 * yeq * ye2;
                 *arrayAt(&dfy, j) = 0.28125 * xi1 * (3.0 * yeq - 2.0 * yi * ye2);
                 *arrayAt(f, j) = 0.28125 * xi1 * yeq * ye2;
-                j += 1;
+                j++;
                 *arrayAt(&dfx, j) = -0.28125 * yeq * ye1;
                 *arrayAt(&dfy, j) = -0.28125 * xi1 * (3.0 * yeq + 2.0 * yi * ye1);
                 *arrayAt(f, j) = 0.28125 * xi1 * yeq * ye1;
@@ -223,7 +223,7 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
     for (i = 0; i < m; i++) {
 
         do {
-            k += 1;
+            k++;
         } while (*matrixAt(in, k, l) == 0);
 
         ki = *matrixAt(in, k, l) - 1;
