@@ -59,8 +59,6 @@ void qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Arr
      * Global array:
      * - ispl
      * - psio
-     * - u
-     * - old
      * 
      * Global matrix:
      * - xpsi
@@ -134,7 +132,7 @@ void qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Arr
                 
                 if (*arrayAt(lr, jdi) != 1) {
                     j = jdi - *arrayAt(lc, jdi);
-                    phi = tdr * *arrayAt(&u, j) + (1.0 - tdr) * *arrayAt(&old, j);
+                    phi = tdr * *arrayAt(u, j) + (1.0 - tdr) * *arrayAt(old, j);
                 } else {
                     phi = *arrayAt(phii, jdi);
                 }
@@ -178,7 +176,7 @@ void qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Arr
 
                 if (*arrayAt(lr, jdi) != 1) {
                     j = jdi - *arrayAt(lc, jdi);
-                    phi = tdr * *arrayAt(&u, j) + (1.0 - tdr) * *arrayAt(&old, j);
+                    phi = tdr * *arrayAt(u, j) + (1.0 - tdr) * *arrayAt(old, j);
                 } else {
                     phi = *arrayAt(phii, jdi);
                 }
