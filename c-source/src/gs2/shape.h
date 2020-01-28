@@ -5,6 +5,6 @@
 #include "../capstone/Array.h"
 
 void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double yi, Array* f,
-              double* det, Array* dgx, Array* dgy, int maxnn, int maxne, int mxc, int me);
+              double* det, Array* dgx, Array* dgy);
 
 #endif /* __GS2_SHAPE_H__ */
