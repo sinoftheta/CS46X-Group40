@@ -115,4 +115,12 @@ void gs2ReadGroupE(
     double yfact
 );
 
+
+// this function differs from the fortran source
+// however, i believe it does the same thing
+void gs2ReadSubGroupF1(
+    CSVRow** csvRow,
+    gs2State* state
+);
+
 #endif /* __CAP_DATAIN_H__ */
