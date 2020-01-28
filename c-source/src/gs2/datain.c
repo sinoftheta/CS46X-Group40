@@ -144,7 +144,12 @@ void gs2Datain(
                 gs2ReadGroupE(&row, state, xfact, yfact);
                 break;
             case GROUP_F_1:
+                if (nf == 0) croak("Group F is not supported when nf == 0");
                 gs2ReadSubGroupF1(&row, state);
+                break;
+            case GROUP_F_2:
+                if (nf == 0) croak("Group F is not supported when nf == 0");
+                gs2ReadSubGroupF2(&row, state);
                 break;
             default:
                 //fprintf(stderr, "Reached default case in gs2Datain!\n");
@@ -449,4 +454,25 @@ void gs2ReadSubGroupF1(CSVRow** csvRow, gs2State* state) {
 
     for (int i = 0; i < 4; i++)
         fprintf(stdout, "Node %d source and sink discharge: %lf\n", index[i], *arrayAt(&(state->fq), index[i]-1));
+}
+
+void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
+    if ((*csvRow)->entryCount < 9)
+        croak("SubGroup F2, too few entries");
+
+    int index[4];   
+    sscanf((*csvRow)->entries[1], "%d", &index[0]);
+    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->cfq), index[0]-1));
+
+    sscanf((*csvRow)->entries[3], "%d", &index[1]);
+    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->cfq), index[1]-1));
+
+    sscanf((*csvRow)->entries[5], "%d", &index[2]);
+    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->cfq), index[2]-1));
+
+    sscanf((*csvRow)->entries[7], "%d", &index[3]);
+    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->cfq), index[3]-1));
+
+    for (int i = 0; i < 4; i++)
+        fprintf(stdout, "Node %d source and sink concentration: %lf\n", index[i], *arrayAt(&(state->cfq), index[i]-1));
 }

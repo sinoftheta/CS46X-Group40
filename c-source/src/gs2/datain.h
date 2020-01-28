@@ -123,4 +123,22 @@ void gs2ReadSubGroupF1(
     gs2State* state
 );
 
+// this function differs from the fortran source
+// however, i believe it does the same thing
+void gs2ReadSubGroupF2(
+    CSVRow** csvRow,
+    gs2State* state
+);
+
+void gs2ReadSubGroupG1(
+    CSVRow** csvRow,
+    gs2State* state
+);
+
+void gs2ReadSubGroupG2(
+    CSVRow** csvRow,
+    gs2State* state
+);
+
+
 #endif /* __CAP_DATAIN_H__ */
