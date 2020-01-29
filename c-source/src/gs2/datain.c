@@ -158,7 +158,7 @@ void gs2Datain(
                 gs2ReadSubGroupG1(&row, state);
                 break;
             case GROUP_G_2:
-                gs2ReadSubGroupG2(&row, state);
+                gs2ReadSubGroupG2(&row, state, aconci);
                 break;
             case GROUP_H_1:
                 gs2ReadSubGroupH1(&row, state);
@@ -167,7 +167,7 @@ void gs2Datain(
                 gs2ReadSubGroupH2(&row, state, &hone);
                 break;
             case GROUP_H_3:
-                gs2ReadSubGroupH3(&row, state, hone, ns);
+                gs2ReadSubGroupH3(&row, state, hone, ns, aphii);
                 break;
             default:
                 //fprintf(stderr, "Reached default case in gs2Datain!\n");
@@ -502,7 +502,7 @@ void gs2ReadSubGroupG1(CSVRow** csvRow, gs2State* state) {
     sscanf((*csvRow)->entries[1], "%lf", &(state->stime));
 }
 
-void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state) {
+void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
     if ((*csvRow)->entryCount < 9)
         croak("Sub Group G2, too few entries!");
     
@@ -519,6 +519,12 @@ void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state) {
 
     sscanf((*csvRow)->entries[7], "%d", &index[3]);
     sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->conci), index[3]-1));
+
+    if (state->stime > 0.0) {
+        for (int i = 0; i < 4; i++) {
+            state->conci.elements[index[i] - 1] *= aconci;
+        }
+    } 
 }
 
 void gs2ReadSubGroupH1(CSVRow** csvRow, gs2State* state) {
@@ -543,7 +549,7 @@ void gs2ReadSubGroupH2(CSVRow** csvRow, gs2State* state, double* hone) {
 }
 
 // the hone != 9999 is handled elsewhere
-void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns) {
+void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, double aphii) {
     if ((*csvRow)->entryCount < 9)
         croak("Sub Group H3 too few entries");
 
@@ -559,4 +565,10 @@ void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns) {
 
     sscanf((*csvRow)->entries[7], "%d", &index[3]);
     sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->phii), index[3]-1));
+
+    if (state->stime > 0.0) {
+        for (int i = 0; i < 4; i++) {
+            state->phii.elements[index[i] - 1] *= aphii;
+        }
+    } 
 }

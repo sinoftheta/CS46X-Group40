@@ -137,7 +137,8 @@ void gs2ReadSubGroupG1(
 
 void gs2ReadSubGroupG2(
     CSVRow** csvRow,
-    gs2State* state
+    gs2State* state,
+    double aconci
 );
 
 void gs2ReadSubGroupH1(
@@ -155,7 +156,8 @@ void gs2ReadSubGroupH3(
     CSVRow** csvRow,
     gs2State* state,
     double hone,
-    int ns
+    int ns,
+    double aphii
 );
 
 

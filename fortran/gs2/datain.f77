@@ -154,7 +154,7 @@ C****************************************************************
             do 1470 I = 1, NN
       CONCI(I) = CONCI(I) * ACONCI
 C     if (HONE.NE.9999.) then
-          PHII(I) = PHII(I) APHII
+          PHII(I) = PHII(I) * APHII
 C     endif
  1470 continue
    80 write (6, 1070)
