@@ -4,12 +4,13 @@ from PyQt5.QtGui import *
 
 from parameters_basic import BasicParameters
 from multipliers import Multipliers
+from nodes import Nodes
 
 parameters = ['Import', 'Basic Parameters', 'Multipliers',
             'Nodes', 'Node Types', 'Elements', 'Materials']
 
 class ParametersPage(QGroupBox):
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         super(ParametersPage, self).__init__('Parameters')
         self.parametersPageLayout = QHBoxLayout()
         self.setLayout(self.parametersPageLayout)
@@ -17,14 +18,14 @@ class ParametersPage(QGroupBox):
         self.parametersPageNav.setAlignment(Qt.AlignRight | Qt.AlignTop)
         self.parametersPageStack = QStackedLayout()
 
-        # Attach navigation buttons layout and layout for contents 
+        # Attach navigation buttons layout and layout for contents
         self.parametersPageLayout.addLayout(self.parametersPageNav)
         self.parametersPageLayout.addLayout(self.parametersPageStack)
 
         self.parametersPageHome = QWidget()
         self.parametersPageBasic = BasicParameters()
         self.parametersPageMult = Multipliers()
-        self.parametersPageNodes = QGroupBox('Nodes')
+        self.parametersPageNodes = Nodes()
         self.parametersPageNodesT = QGroupBox('Node Types')
         self.parametersPageElem = QGroupBox('Elements')
         self.parametersPageMat = QGroupBox('Materials')
