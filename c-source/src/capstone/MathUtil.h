@@ -8,5 +8,6 @@ int min(int, int);
 
 int max(int, int);
 
+double abs(double);
 
 #endif /*__CAP_MATHUTIL_H__*/
