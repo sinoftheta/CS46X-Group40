@@ -109,6 +109,9 @@ void gs2Datain(
     double afmobx, afmoby, apor, aelong, aetran, aphii, 
            aconci, xfact, yfact, ateta, aal, akd, alam, arho;
 
+    // group H extra parameters
+    double hone;
+
     CSVFile csvFile = csvLoadFile(csvPath);
     gs2DataGroup dataGroup = NUM_DATA_GROUP;
 
@@ -150,6 +153,21 @@ void gs2Datain(
             case GROUP_F_2:
                 if (nf == 0) croak("Group F is not supported when nf == 0");
                 gs2ReadSubGroupF2(&row, state);
+                break;
+            case GROUP_G_1:
+                gs2ReadSubGroupG1(&row, state);
+                break;
+            case GROUP_G_2:
+                gs2ReadSubGroupG2(&row, state);
+                break;
+            case GROUP_H_1:
+                gs2ReadSubGroupH1(&row, state);
+                break;
+            case GROUP_H_2:
+                gs2ReadSubGroupH2(&row, state, &hone);
+                break;
+            case GROUP_H_3:
+                gs2ReadSubGroupH3(&row, state, hone, ns);
                 break;
             default:
                 //fprintf(stderr, "Reached default case in gs2Datain!\n");
@@ -475,4 +493,70 @@ void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
 
     for (int i = 0; i < 4; i++)
         fprintf(stdout, "Node %d source and sink concentration: %lf\n", index[i], *arrayAt(&(state->cfq), index[i]-1));
+}
+
+void gs2ReadSubGroupG1(CSVRow** csvRow, gs2State* state) {
+    if ((*csvRow)->entryCount < 2)
+        croak("Sub Group G1, too few entries!");   
+
+    sscanf((*csvRow)->entries[1], "%lf", &(state->stime));
+}
+
+void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state) {
+    if ((*csvRow)->entryCount < 9)
+        croak("Sub Group G2, too few entries!");
+    
+    int index[4];   
+    
+    sscanf((*csvRow)->entries[1], "%d", &index[0]);
+    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->conci), index[0]-1));
+
+    sscanf((*csvRow)->entries[3], "%d", &index[1]);
+    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->conci), index[1]-1));
+
+    sscanf((*csvRow)->entries[5], "%d", &index[2]);
+    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->conci), index[2]-1));
+
+    sscanf((*csvRow)->entries[7], "%d", &index[3]);
+    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->conci), index[3]-1));
+}
+
+void gs2ReadSubGroupH1(CSVRow** csvRow, gs2State* state) {
+    if ((*csvRow)->entryCount < 2)
+        croak("Sub Group H1, too few entries");
+    
+    sscanf((*csvRow)->entries[1], "%lf", &(state->stime));
+}
+
+void gs2ReadSubGroupH2(CSVRow** csvRow, gs2State* state, double* hone) {
+    if ((*csvRow)->entryCount < 2)
+        croak("Sub Group H2, too few entries");
+
+    sscanf((*csvRow)->entries[1], "%lf", hone);
+    fprintf(stdout, "Hone: %lf\n", *hone);
+
+    if (*hone != 9999.0) {
+        for (int i = 0; i < state->nn; i++) {
+            state->phii.elements[i] = *hone - state->y.elements[i];
+        }
+    }
+}
+
+// the hone != 9999 is handled elsewhere
+void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns) {
+    if ((*csvRow)->entryCount < 9)
+        croak("Sub Group H3 too few entries");
+
+    int index[4];
+    sscanf((*csvRow)->entries[1], "%d", &index[0]);
+    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->phii), index[0]-1));
+
+    sscanf((*csvRow)->entries[3], "%d", &index[1]);
+    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->phii), index[1]-1));
+
+    sscanf((*csvRow)->entries[5], "%d", &index[2]);
+    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->phii), index[2]-1));
+
+    sscanf((*csvRow)->entries[7], "%d", &index[3]);
+    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->phii), index[3]-1));
 }

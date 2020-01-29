@@ -140,5 +140,23 @@ void gs2ReadSubGroupG2(
     gs2State* state
 );
 
+void gs2ReadSubGroupH1(
+    CSVRow** csvRow,
+    gs2State* state
+);
+
+void gs2ReadSubGroupH2(
+    CSVRow** csvRow,
+    gs2State* state,
+    double* hone
+);
+
+void gs2ReadSubGroupH3(
+    CSVRow** csvRow,
+    gs2State* state,
+    double hone,
+    int ns
+);
+
 
 #endif /* __CAP_DATAIN_H__ */
