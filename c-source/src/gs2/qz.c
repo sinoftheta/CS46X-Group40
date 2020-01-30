@@ -1,4 +1,5 @@
 #include "qz.h"
+#include <stdlib.h>
 
 void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Array* fmoby, Matrix* f,
        Matrix* dx, Matrix* dy, Array* detj, Array* cphi, Array* vkx, Array* vky, Array* dgx, Array* dgy,
