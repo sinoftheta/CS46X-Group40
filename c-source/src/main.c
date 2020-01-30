@@ -12,6 +12,7 @@
 
 int main(int argc, char** argv) {
 
+
     gs2MemoryRequirements memReqs;
     memReqs.mxc = 12;
     memReqs.mxt = 16;
@@ -33,6 +34,8 @@ int main(int argc, char** argv) {
     state.memoryRequirements = memReqs;
     state.istop = 0;
 
+    double a = 0.0;
+
     gs2Datain(
         &state,
         "res/example1.csv",
@@ -47,7 +50,8 @@ int main(int argc, char** argv) {
         NULL,
         NULL,
         NULL,
-        NULL
+        NULL, 
+        &a
     );
 
     return 0;

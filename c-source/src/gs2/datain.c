@@ -5,6 +5,7 @@
 #include "../capstone/Debug.h"
 
 #include <string.h>
+#include <stdlib.h>
 
 
 #define DEFAULT(cond, data, value) do { if (!cond) { data = value; } } while(0) 
@@ -58,7 +59,8 @@ void gs2Datain(
     Array* nsf,
     Array* nsk,
     Matrix* nsp,
-    Array* msp
+    Array* msp,
+    double* maxdif
 ) {
     arrayDimension(&(state->phi), state->memoryRequirements.maxnn);
     arrayDimension(&(state->phii), state->memoryRequirements.maxnn);
@@ -85,7 +87,9 @@ void gs2Datain(
     arrayDimension(&(state->kd), state->memoryRequirements.maxne);
     arrayDimension(&(state->lambda), state->memoryRequirements.maxne);
     arrayDimension(&(state->rho), state->memoryRequirements.maxne);
-    // state->me should be 13
+    // state->me should be 13, needs extra value to store more info
+    // elements are defined as having at most 12 incident nodes.
+    state->me = 13;
     matrixDimension(&(state->in), state->me, state->memoryRequirements.maxne);
     matrixDimension(&(state->ie), 2, state->memoryRequirements.maxne);
     arrayDimension(&(state->kf), state->memoryRequirements.maxne);
@@ -170,7 +174,7 @@ void gs2Datain(
                 gs2ReadSubGroupH3(&row, state, hone, ns, aphii);
                 break;
             case GROUP_I:
-                gs2ReadGroupI(&row, state);
+                gs2ReadGroupI(&row, state, maxdif);
                 break;
             default:
                 //fprintf(stderr, "Reached default case in gs2Datain!\n");
@@ -265,7 +269,7 @@ void gs2ReadGroupB(
     fprintf(stdout, "\tSource or Sink nodes: %d\n", *nf);
     fprintf(stdout, "\tEstimated half-bandwidth for pressure: %d\n", state->nb);
     fprintf(stdout, "\tEstimated half-bandwidth for concentration: %d\n", state->knb);
-    fprintf(stdout, "\tMaximum number of element nodes %d\n", state->inc);
+    fprintf(stdout, "\tMaximum number of nodes per element %d:\n", state->inc);
 
     fprintf(stdout, "\tboundary nodes with specified flux: %d\n", state->nsdn);
     fprintf(stdout, "\tInitial value: %d\n", *mq4);
@@ -576,13 +580,98 @@ void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, do
     } 
 }
 
-void gs2ReadGroupI(CSVRow** csvRow, gs2State* state) {
+void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
     do {
         // group I: group, element index, n1, n2, n3, n4, n5, n6, n7, n8, 9n, n10, n11, n12
-        if ((*csvRow)->entryCount < 13) 
-            croak("Group I, too few entries");
       
+        int elementIndex;
+        sscanf((*csvRow)->entries[1], "%d", &elementIndex);
+        // map to zero based indexing.
+        elementIndex--;
+
+        int activeNodesForElement = 0;
+
+        for (int i = 0; i < state->inc; i++) {
+            // incidences start in the 3rd row
+            int incident;
+            sscanf((*csvRow)->entries[i + 2], "%d", &incident);
+            *matrixAt(&(state->in), i, elementIndex) = (double)incident;
+
+            if (incident != 0)
+                activeNodesForElement++;
+        }
+
+        *matrixAt(&(state->in), state->me-1, elementIndex) = activeNodesForElement;
+
+        *csvRow = (*csvRow)->next;
     } while (gs2GetGroup(*csvRow, GROUP_I) == GROUP_I);
     // the main datain func will move csvRow
     *csvRow = (*csvRow)->prev;
+
+
+    fprintf(stdout, "Element Incidences:\n");
+    fprintf(stdout, "\tElement\t\tMaximum Nodal Difference\tIncidences\n");
+
+    Matrix* stateInRef = &(state->in);
+    double nd, mnd = 0.0;
+
+    for (int l = 0; l < state->ne; l++) {
+        int m = (int)(*matrixAt(stateInRef, state->me-1, l));
+        int m1 = m - 1;
+        mnd = 0.0;
+        
+        for (int i = 0; i < m1; i++) {
+            if (*matrixAt(stateInRef, i, l) == 0.0)
+                break;
+            
+           
+            for (int j = i + 1; j < m; j++) {
+                if (*matrixAt(stateInRef, j, l) == 0.0)
+                    break;
+                
+                nd = abs(*matrixAt(stateInRef, i, l) - *matrixAt(stateInRef, j, l));
+
+                //printf("l = %d, i = %d, j = %d, nd = %lf\n", l, i, j, nd);
+                mnd = maxd(nd, mnd);
+                *maxdif = maxd(nd, *maxdif);
+                
+            } // 202
+        } // 205
+        fprintf(stdout, "\t%d\t\t%lf\t\t\t", l+1, mnd);
+        for (int i = 0; i < state->inc; i++) 
+            fprintf(stdout, "%d  ", (int)(*matrixAt(stateInRef, i, l)));
+        fprintf(stdout, "\n");
+        
+    }  // 210
+
+    nd = (*maxdif) + 1;
+    if (nd - state->nb < 0.0) {
+        state->nb = nd;
+    } else if (nd - state->nb > 0.0) {
+        warnf("Warning: maxium half-bandwidth exceeds space provided. nd = %lf, nb = %lf\n", nd, state->nb);
+    }
+
+    if (nd - state->knb < 0.0) {
+        state->knb = nd;
+    } else if (nd - state->knb > 0.0) {
+        warnf("Warning: maximum half-bandwidth greater than estimate. nd = %lf, knb = %lf\n", nd, state->knb);
+    }
+
+    if (state->nb > state->memoryRequirements.maxbw || state->knb > state->memoryRequirements.maxbw) {
+        croakf(
+            "Error: maximum half-bandwidth greater than estimate. nd = %lf, knb = %lf, maxbw = %lf", 
+             nd, 
+             state->knb, 
+             state->memoryRequirements.maxbw
+        );
+        state->istop++;
+    }
+
+    state->mb = 0;
+    state->mb2 = 0;
+    state->kmb = 0;
+    state->kmb2 = 0;
+
+    fprintf(stdout, "Half-bandwidth for pressure %d\n", state->nb);
+    fprintf(stdout, "Half-bandwidth for concentration %d\n", state->knb);
 }

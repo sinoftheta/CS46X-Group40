@@ -194,7 +194,8 @@ C     Count active nodes and compute max nodal difference
           do 202 J = IP, M
           if (IN(J, L).EQ.0) go to 202
       ND = IABS(IN(I, L) - IN(J, L))
-      MND = MAX0(ND, MAXDIF)
+      MND = MAX0(ND, MND)
+      MAXDIF = MAX0(ND, MAXDIF)
   202 continue
   205 continue
       write (6, 1160) L, MND, (IN(I, L), I = 1, INC)
@@ -554,7 +555,7 @@ C
      & 23H EXCEEDS SPACE PROVIDED/11X, 5HNB = , I3, 10X, 6HKNB = ,
      & I3, 9H MAXBW = , I3)
  2003 format (////11X, 31HWARNING: MAXIMUM HALF-BANDWIDTH,
-     & 22H GREATER THAN ESTIMATE/11X, 5HND = , I3, 10X, 6HKNB = ,
+     & 22H GREATER THAN ESTIMATE/11X, 5HND = , I3, 10X, 6HNB = ,
      & I3)
  2004 format (////11X, 31HWARNING: MAXIMUM HALF-BANDWIDTH,
      & 22H GREATER THAN ESTIMATE/11X, 5HND = , I3, 10X, 6HKNB = ,

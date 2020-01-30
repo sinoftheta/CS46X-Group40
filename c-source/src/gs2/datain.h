@@ -56,7 +56,8 @@ void gs2Datain(
     Array* nsf,
     Array* nsk,
     Matrix* nsp,
-    Array* msp
+    Array* msp,
+    double* maxdif
 );
 
 gs2DataGroup gs2GetGroup(CSVRow* csvRow, gs2DataGroup defaultTo);
@@ -162,7 +163,8 @@ void gs2ReadSubGroupH3(
 
 void gs2ReadGroupI(
     CSVRow** csvRow,
-    gs2State* state
+    gs2State* state,
+    double* maxdif
 );
 
 #endif /* __CAP_DATAIN_H__ */

@@ -27,7 +27,7 @@ double* matrixAt(Matrix* matrix, int row, int col) {
     int index = col + matrix->columns * row;
 
     if (index >= matrix->columns * matrix->rows) {
-        fprintf(stderr, "matrixAt index out of bounds: %d\n", index);
+        fprintf(stderr, "matrixAt index out of bounds: row = %d, col = %d\n", row, col);
         exit(1);
     }
 
