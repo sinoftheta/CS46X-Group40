@@ -50,7 +50,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
     *arrayAt(&bg, 3) = -1.0;
 
     int is1, is, i, j, k, j1, jj, jdi;
-    double xi, yi, phi, ppk, hmz, x1, x2, x3, pp, xcond, ycond;
+    double xi, yi, phi, ppk, hmz, x1, x2, x3, pp, xcond, ycond, det;
 
     *ispk = *arrayAt(&(state->ispl), ik);
     *psik = *arrayAt(&(state->psio), ik);
@@ -99,7 +99,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
                 yi = *arrayAt(&bg, is);
             }
 
-            gs2Shape(x, y, in, l, m, xi, yi, ff, dgx, dgy);
+            gs2Shape(x, y, in, l, m, xi, yi, ff, &det, dgx, dgy);
 
             for (jj = 0; jj < m; jj++) {
                 *matrixAt(f, jj, k) = *arrayAt(ff, jj);
