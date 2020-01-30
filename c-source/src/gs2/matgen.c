@@ -1,4 +1,5 @@
 #include "matgen.h"
+#include <stdio.h>
 
 /*
  * Purpose: To perform surface integrations
