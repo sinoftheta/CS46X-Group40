@@ -12,6 +12,11 @@ void matgen1(Matrix* pe, Matrix* se, Array* q, Array* qp, int i, int j) {
      * - h2
      * - np
      */
+
+    arrayAssertNotNull(q, "Array 'q' NULL in gs2Matgen!");
+    arrayAssertNotNull(qp, "Array 'qp' NULL in gs2Matgen!");
+    matrixAssertNotNull(pe, "Matrix 'pe' NULL in gs2Shape!");
+    matrixAssertNotNull(se, "Matrix 'se' NULL in gs2Shape!");
     
     double h11, h12, h22;
 
@@ -42,6 +47,9 @@ void matgen2(Array* srcr, Array* srcrt, int i) {
      * - np
      */
 
+    arrayAssertNotNull(srcr, "Array 'srcr' NULL in gs2Matgen!");
+    arrayAssertNotNull(srcrt, "Array 'srcrt' NULL in gs2Matgen!");
+
     double h11, h12, h22;
 
     h11 = h1 * h1;
@@ -63,6 +71,9 @@ void matgen3(Matrix* pe, Matrix* se) {
      * Global variables:
      * - m
      */
+
+    matrixAssertNotNull(pe, "Matrix 'pe' NULL in gs2Shape!");
+    matrixAssertNotNull(se, "Matrix 'se' NULL in gs2Shape!");
 
     int mm2, k1, k2, im, jm;
 
