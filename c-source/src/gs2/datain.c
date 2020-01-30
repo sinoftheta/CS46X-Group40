@@ -169,6 +169,9 @@ void gs2Datain(
             case GROUP_H_3:
                 gs2ReadSubGroupH3(&row, state, hone, ns, aphii);
                 break;
+            case GROUP_I:
+                gs2ReadGroupI(&row, state);
+                break;
             default:
                 //fprintf(stderr, "Reached default case in gs2Datain!\n");
                 break;
@@ -571,4 +574,15 @@ void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, do
             state->phii.elements[index[i] - 1] *= aphii;
         }
     } 
+}
+
+void gs2ReadGroupI(CSVRow** csvRow, gs2State* state) {
+    do {
+        // group I: group, element index, n1, n2, n3, n4, n5, n6, n7, n8, 9n, n10, n11, n12
+        if ((*csvRow)->entryCount < 13) 
+            croak("Group I, too few entries");
+      
+    } while (gs2GetGroup(*csvRow, GROUP_I) == GROUP_I);
+    // the main datain func will move csvRow
+    *csvRow = (*csvRow)->prev;
 }

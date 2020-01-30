@@ -160,5 +160,9 @@ void gs2ReadSubGroupH3(
     double aphii
 );
 
+void gs2ReadGroupI(
+    CSVRow** csvRow,
+    gs2State* state
+);
 
 #endif /* __CAP_DATAIN_H__ */
