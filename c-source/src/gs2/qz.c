@@ -1,7 +1,7 @@
 #include "qz.h"
 #include <stdlib.h>
 
-void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Array* fmoby, Matrix* f,
+void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Array* fmoby, Matrix* f,
        Matrix* dx, Matrix* dy, Array* detj, Array* cphi, Array* vkx, Array* vky, Array* dgx, Array* dgy,
        Array* ff, Matrix* in, Array* kf, Array* jd, Array* ieq, Array* lc, Array* lr, int* ms, int* kase,
        int l, int m, int ik, int* ispk, int* ispm, int* psik, int* istop) {
@@ -52,24 +52,8 @@ void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, 
     int is1, is, i, j, k, j1, jj, jdi;
     double xi, yi, phi, ppk, hmz, x1, x2, x3, pp, xcond, ycond;
 
-    /* 
-     * Global variables:
-     * - np
-     * - tdr
-     * - det
-     * 
-     * Global array:
-     * - ispl
-     * - psio
-     * 
-     * Global matrix:
-     * - xpsi
-     * - ckt
-     * - xk
-     */
-
-    *ispk = *arrayAt(&ispl, ik);
-    *psik = *arrayAt(&psio, ik);
+    *ispk = *arrayAt(&(state->ispl), ik);
+    *psik = *arrayAt(&(state->psio), ik);
     *ispm = *ispk - 1;
     is1 = 0;
 
@@ -82,9 +66,9 @@ void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, 
         is1++;
         if (*kase != 0) {
 
-            np = 2;
+            state->np = 2;
             if (m > 4) {
-                np = 4;
+                state->np = 4;
             }
 
             k = -1;
@@ -98,12 +82,12 @@ void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, 
             }
         }
 
-        gs2Green(x, y, detj, &ag, in, kf, jd, ieq, ms, np, l, istop);
+        gs2Green(x, y, detj, &ag, in, kf, jd, ieq, ms, state->np, l, istop);
 
-        for (k = 0; k < np; k++) {
+        for (k = 0; k < state->np; k++) {
             
             j1 = k;
-            if (np == 4) {
+            if (state->np == 4) {
                 j1 = k + 2;
             }
 
@@ -134,7 +118,7 @@ void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, 
                 
                 if (*arrayAt(lr, jdi) != 1) {
                     j = jdi - *arrayAt(lc, jdi);
-                    phi = tdr * *arrayAt(u, j) + (1.0 - tdr) * *arrayAt(old, j);
+                    phi = state->tdr * *arrayAt(u, j) + (1.0 - state->tdr) * *arrayAt(old, j);
                 } else {
                     phi = *arrayAt(phii, jdi);
                 }
@@ -150,20 +134,20 @@ void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, 
 
                 hmz = abs(*arrayAt(cphi, k));
                 hmz = log10(hmz);
-                if (hmz > *matrixAt(&xpsi, 0, ik)) {
-                    hmz = *matrixAt(&xpsi, 0, ik);
+                if (hmz > *matrixAt(&(state->xpsi), 0, ik)) {
+                    hmz = *matrixAt(&(state->xpsi), 0, ik);
                 }
 
                 j = 0;
-                while (hmz < *matrixAt(&xpsi, j+1, ik) && j < ispm-1) {
+                while (hmz < *matrixAt(&(state->xpsi), j+1, ik) && j < ispm-1) {
                     j++;
                 }
 
-                x1 = hmz - *matrixAt(&xpsi, j, ik);
+                x1 = hmz - *matrixAt(&(state->xpsi), j, ik);
                 x2 = x1 * x1;
                 x3 = x2 * x1;
-                pp = *matrixAt(&ckt[2], j, ik) * x3 + *matrixAt(&ckt[1], j, ik) * x2 + *matrixAt(&ckt[0], j, ik) * x1 + *matrixAt(&xk, j, ik);
-                ppk = pow(10.0, pp - *matrixAt(&xk, ik, ik));
+                pp = *matrixAt(&(state->ckt[2]), j, ik) * x3 + *matrixAt(&(state->ckt[1]), j, ik) * x2 + *matrixAt(&(state->ckt[0]), j, ik) * x1 + *matrixAt(&(state->xk), j, ik);
+                ppk = pow(10.0, pp - *matrixAt(&(state->xk), ik, ik));
                 if (ppk > 1.0) {
                     ppk = 1.0;
                 }
@@ -178,7 +162,7 @@ void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, 
 
                 if (*arrayAt(lr, jdi) != 1) {
                     j = jdi - *arrayAt(lc, jdi);
-                    phi = tdr * *arrayAt(u, j) + (1.0 - tdr) * *arrayAt(old, j);
+                    phi = state->tdr * *arrayAt(u, j) + (1.0 - state->tdr) * *arrayAt(old, j);
                 } else {
                     phi = *arrayAt(phii, jdi);
                 }
