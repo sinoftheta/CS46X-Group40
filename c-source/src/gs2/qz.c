@@ -115,7 +115,7 @@ void gs2Qz(Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, 
                 yi = *arrayAt(&bg, is);
             }
 
-            gs2Shape(x, y, in, l, m, xi, yi, ff, &det, dgx, dgy);
+            gs2Shape(x, y, in, l, m, xi, yi, ff, dgx, dgy);
 
             for (jj = 0; jj < m; jj++) {
                 *matrixAt(f, jj, k) = *arrayAt(ff, jj);
