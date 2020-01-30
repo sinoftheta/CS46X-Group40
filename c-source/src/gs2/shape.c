@@ -1,6 +1,6 @@
 #include "shape.h"
 
-void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double yi, Array* f, Array* dgx, Array* dgy) {
+void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double yi, Array* f, double* det, Array* dgx, Array* dgy) {
 
     // Purpose: To evaluate 2-D shape functions and determinant
     
@@ -27,7 +27,7 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
     double xc1, xc2, yc1, yc2;
     double xeq, yeq, xe1, xe2, ye1, ye2;
     double sum1, sum2, sum3, sum4;
-    double det, det1, c11, c12, c21, c22;
+    double det1, c11, c12, c21, c22;
     int i, j, k, ki;
     int j1, j2, j3;
 
