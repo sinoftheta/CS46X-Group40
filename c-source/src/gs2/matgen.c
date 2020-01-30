@@ -65,11 +65,11 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m) {
 
     for (k1 = 0; k1 < mm2; k1 += 8) {
         k2 = k1 + 7;
-        if (k1 == mm2) {
-            k2 = m-1;
+        if (k1 == mm2 - 1) {
+            k2 = m - 1;
         }
         for (im = 0; im < m; im++) {
-            printf("%d", im);
+            printf("%5d", im);
             for (jm = k1; jm <= k2; jm++) {
                 printf("%15.6f", *matrixAt(se, im, jm));
             }
@@ -81,11 +81,11 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m) {
 
     for (k1 = 0; k1 < mm2; k1 += 8) {
         k2 = k1 + 7;
-        if (k1 == mm2) {
-            k2 = m-1;
+        if (k1 == mm2 - 1) {
+            k2 = m - 1;
         }
         for (im = 0; im < m; im++) {
-            printf("%d", im);
+            printf("%5d", im);
             for (jm = k1; jm <= k2; jm++) {
                 printf("%15.6f", *matrixAt(pe, im, jm));
             }
