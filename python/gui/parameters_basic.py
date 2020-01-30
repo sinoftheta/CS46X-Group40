@@ -191,3 +191,9 @@ class BasicParameters(QGroupBox):
 
     def getNumNodes(self):
         return self.NN.value()
+
+    def getNumElements(self):
+        return self.NE.value()
+
+    def getNumMaterials(self):
+        return self.NK.value()
