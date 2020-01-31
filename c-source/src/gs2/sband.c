@@ -1,6 +1,6 @@
 #include "sband.h"
 
-void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb, int ndim, int mdim, int nu){
+void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb){
 
     int j, k1, k2, ii, kk;
     double sum, ski;

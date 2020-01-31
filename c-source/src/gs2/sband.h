@@ -17,6 +17,6 @@
 * @param nu p and u dimension, unused
 */
 
-void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb, int ndim, int mdim, int nu); 
+void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb); 
 
 #endif /*__CAP_GS2_SBAND_H__*/
