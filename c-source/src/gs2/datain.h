@@ -167,4 +167,36 @@ void gs2ReadGroupI(
     double* maxdif
 );
 
+void gs2ReadSubGroupJ1(
+    CSVRow** csvRow,
+    gs2State* state,
+    int* i1, 
+    int* i2,
+    int* itype
+);
+
+void gs2ReadSubGroupJ2(
+    CSVRow** csvRow, 
+    gs2State* state, 
+    int i1, 
+    int i2, 
+    int itype,
+    double afmobx,
+    double afmoby,
+    double aelong,
+    double aetran,
+    double apor,
+    double ateta,
+    double aal,
+    double akd,
+    double alam,
+    double arho
+);
+
+// called when subgroup j-2 is the sentinal value described in CH5
+void gs2FinalizeGroupJ(
+    CSVRow** csvRow, 
+    gs2State* state
+);
+
 #endif /* __CAP_DATAIN_H__ */

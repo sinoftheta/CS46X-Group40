@@ -62,6 +62,12 @@ void gs2Datain(
     Array* msp,
     double* maxdif
 ) {
+
+    // init state constants
+    // state->me should be 13, needs extra value to store more info
+    // elements are defined as having at most 12 incident nodes.
+    state->me = 13;
+
     arrayDimension(&(state->phi), state->memoryRequirements.maxnn);
     arrayDimension(&(state->phii), state->memoryRequirements.maxnn);
     // old should already be dimensioned
@@ -87,9 +93,7 @@ void gs2Datain(
     arrayDimension(&(state->kd), state->memoryRequirements.maxne);
     arrayDimension(&(state->lambda), state->memoryRequirements.maxne);
     arrayDimension(&(state->rho), state->memoryRequirements.maxne);
-    // state->me should be 13, needs extra value to store more info
-    // elements are defined as having at most 12 incident nodes.
-    state->me = 13;
+   
     matrixDimension(&(state->in), state->me, state->memoryRequirements.maxne);
     matrixDimension(&(state->ie), 2, state->memoryRequirements.maxne);
     arrayDimension(&(state->kf), state->memoryRequirements.maxne);
@@ -115,6 +119,9 @@ void gs2Datain(
 
     // group H extra parameters
     double hone;
+
+    // subgroup J1 extra parameters
+    int i1, i2, itype;
 
     CSVFile csvFile = csvLoadFile(csvPath);
     gs2DataGroup dataGroup = NUM_DATA_GROUP;
@@ -175,6 +182,17 @@ void gs2Datain(
                 break;
             case GROUP_I:
                 gs2ReadGroupI(&row, state, maxdif);
+                break;
+            case GROUP_J_1:
+                gs2ReadSubGroupJ1(&row, state, &i1, &i2, &itype);
+                break;
+            case GROUP_J_2:
+                gs2ReadSubGroupJ2(
+                    &row, state, i1, i2, itype, afmobx, afmoby,
+                    aelong, aetran, apor, ateta, aal, akd, alam, arho
+                );
+                if (row->next != CSV_NULL_ROW_PTR && gs2GetGroup(row->next, GROUP_J_2) != GROUP_J_1 && gs2GetGroup(row->next, GROUP_J_2) != GROUP_J_2)
+                    gs2FinalizeGroupJ(&row, state);
                 break;
             default:
                 //fprintf(stderr, "Reached default case in gs2Datain!\n");
@@ -608,7 +626,6 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
     // the main datain func will move csvRow
     *csvRow = (*csvRow)->prev;
 
-
     fprintf(stdout, "Element Incidences:\n");
     fprintf(stdout, "\tElement\t\tMaximum Nodal Difference\tIncidences\n");
 
@@ -637,11 +654,11 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
                 
             } // 202
         } // 205
+
         fprintf(stdout, "\t%d\t\t%lf\t\t\t", l+1, mnd);
         for (int i = 0; i < state->inc; i++) 
             fprintf(stdout, "%d  ", (int)(*matrixAt(stateInRef, i, l)));
         fprintf(stdout, "\n");
-        
     }  // 210
 
     nd = (*maxdif) + 1;
@@ -674,4 +691,104 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
 
     fprintf(stdout, "Half-bandwidth for pressure %d\n", state->nb);
     fprintf(stdout, "Half-bandwidth for concentration %d\n", state->knb);
+}
+
+void gs2ReadSubGroupJ1(CSVRow** csvRow, gs2State* state, int* i1, int* i2, int* itype) {
+    // card 1: group, i1, i2, itype
+    if ((*csvRow)->entryCount < 4)
+        croak("Sub Group J1, too few entries");
+    
+    sscanf((*csvRow)->entries[1], "%d", i1);
+    sscanf((*csvRow)->entries[1], "%d", i2);
+    sscanf((*csvRow)->entries[1], "%d", itype);
+}
+
+void gs2ReadSubGroupJ2(
+    CSVRow** csvRow, 
+    gs2State* state, 
+    int i1, 
+    int i2, 
+    int itype,
+    double afmobx,
+    double afmoby,
+    double aelong,
+    double aetran,
+    double apor,
+    double ateta,
+    double aal,
+    double akd,
+    double alam,
+    double arho
+) {
+
+    double tx, ty, dsl, dst, heta, teta, al, dist, decay, dens;
+    // card 1: group, fmobx(l), fmoby(l), elong(l), etrans(l), por(l), tta(l), alpha(l), kd(l)
+    if ((*csvRow)->entryCount < 9)
+        croak("Sub Group J2, too few entries");
+
+    sscanf((*csvRow)->entries[1], "%lf", &tx);
+    sscanf((*csvRow)->entries[2], "%lf", &ty);
+    sscanf((*csvRow)->entries[3], "%lf", &dsl);
+    sscanf((*csvRow)->entries[4], "%lf", &dst);
+    sscanf((*csvRow)->entries[5], "%lf", &heta);
+    sscanf((*csvRow)->entries[6], "%lf", &teta);
+    sscanf((*csvRow)->entries[7], "%lf", &al);
+    sscanf((*csvRow)->entries[8], "%lf", &dist);
+
+    // card 2: group, lambda(l), rho(l)
+    *csvRow = (*csvRow)->next;
+    if ((*csvRow)->entryCount < 3)
+        croak("Sub Group J2, too few entries");
+   
+    sscanf((*csvRow)->entries[1], "%lf", &decay);
+    sscanf((*csvRow)->entries[2], "%lf", &dens);
+
+    for (int i = i1; i < i2; i++) {
+        *arrayAt(&(state->fmobx), i) = tx * afmobx;
+        *arrayAt(&(state->fmoby), i) = ty * afmoby;
+        *arrayAt(&(state->elong), i) = dsl * aelong;
+        *arrayAt(&(state->etrans), i) = dst * aetran;
+        *arrayAt(&(state->por), i) = heta * apor;
+        *arrayAt(&(state->tta), i) = teta * ateta;
+        *arrayAt(&(state->alpha), i) = al * aal;
+        *arrayAt(&(state->kd), i) = akd * dist;
+        *arrayAt(&(state->lambda), i) = alam * dist;
+        *arrayAt(&(state->rho), i) = arho * dens;
+
+        *matrixAt(&(state->ie), 2, i) = itype;
+
+    }
+}
+
+void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
+    for (int n = 0; n < state->nk; n++) {
+        int k = 0;
+        int ll = 0;
+        for (int l = 0; l < state->ne; l++) {
+            if ((int)(*matrixAt(&(state->ie), 2, l)) != n)
+                continue;
+            
+            k++;
+            *arrayAt(&(state->lr), k) = l;
+            ll = l;
+        }
+
+        fprintf(stdout, "Dispersivity\n");
+        fprintf(stdout, "\tX-Mobility: %lf\n", *arrayAt(&(state->fmobx), ll));
+        fprintf(stdout, "\tY-Mobility: %lf\n", *arrayAt(&(state->fmoby), ll));
+        fprintf(stdout, "\tPorosity: %lf\n", *arrayAt(&(state->por), ll));
+        fprintf(stdout, "\tLongitudinal Transverse: %lf, %lf\n", *arrayAt(&(state->elong), ll), *arrayAt(&(state->etrans), ll));
+        fprintf(stdout, "\tMoisture: %lf\n", *arrayAt(&(state->tta), ll));
+        fprintf(stdout, "\tCompressibliity: %lf\n", *arrayAt(&(state->alpha), ll));
+        fprintf(stdout, "\tDistributivity: %lf\n", *arrayAt(&(state->kd), ll));
+        fprintf(stdout, "\tDecay Constant: %lf\n", *arrayAt(&(state->lambda), ll));
+        fprintf(stdout, "\tDensity: %lf\n", *arrayAt(&(state->rho), ll));
+
+        fprintf(stdout, "\tValid for Elements: \n\t");
+        for (int i = 0; i < k; i++) {
+            fprintf(stdout, "%d\t", *arrayAt(&(state->lr), i));
+            if (i % 10 == 0)
+                fprintf(stdout, "\n\t");
+        } 
+    }
 }

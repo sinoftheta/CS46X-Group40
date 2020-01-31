@@ -30,8 +30,8 @@ void gs2BoundaryCondition(Array* lx, Array* lrt, int ln, double kbc, int neq, in
         }
 
         for (int i = 0; i < lrt->size; i++)
-            fprintf(stderr, "%4d ", (int)(lrt->elements[i]));
-        fprintf(stderr, "\n");
+            fprintf(stdout, "%4d ", (int)(lrt->elements[i]));
+        fprintf(stdout, "\n");
 
         if (ia != 20) 
             break;
