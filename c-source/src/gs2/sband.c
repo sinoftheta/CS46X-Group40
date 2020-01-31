@@ -7,27 +7,32 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb, int ndim, int mdim, 
 
     for(int i = 1; i <= n; i++){
 
+        matrixAssertNotNull(s, "matrix s in gs2Sband is null");
+        arrayAssertNotNull(p, "array p in gs2Sband is null");
+        arrayAssertNotNull(u, "array u in gs2Sband is null");
+
         j = i - nb + 1;
         if((i  + 1) <= nb) j = 1;
         sum = *arrayAt(p, i);
         k1 = i - 1;
-            if(!(j > k1)){ // if(j > k1) go to 20
 
-                for(int k = j; k <= k1; k++){
+        if(!(j > k1)){ // if(j > k1) go to 20
 
-                    ii = i - k + 1;
-                    ski = *matrixAt(s, k, ii);
+            for(int k = j; k <= k1; k++){
 
-                    //10
-                    if(ski != 0.0) sum = sum - ski * *arrayAt(u, k);
-                }
+                ii = i - k + 1;
+                ski = *matrixAt(s, k, ii);
+
+                //10
+                if(ski != 0.0) sum = sum - ski * *arrayAt(u, k);
             }
-            //20
+        }
+        //20
             
-            *arrayAt(u, i) = sum* *matrixAt(s, i, 1);
+        *arrayAt(u, i) = sum* *matrixAt(s, i, 1);
 
-            //30
-            for(int i1 = 1; i1 <= n; i1++){
+        //30
+        for(int i1 = 1; i1 <= n; i1++){
 
             i = n - i1 + 1;
             j = i + nb - 1;
@@ -49,7 +54,7 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb, int ndim, int mdim, 
             }
             //50
 
-            //60
+        //60
         }
     }
 }
