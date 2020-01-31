@@ -6,14 +6,14 @@
 void matrixDimension(Matrix* oMatrix, int rows, int columns) {
     matrixAssertNotNull(oMatrix, "matrix null in matrixDimension!");
 
-    oMatrix->elements = calloc(columns, sizeof(double *));
+    oMatrix->elements = calloc(rows, sizeof(double*));
     if(oMatrix->elements == NULL){
         fprintf(stderr, "Matrix memory allocation failed in matrixDimension!");
         exit(1);
     }
 
-    for(int i = 0; i < columns; ++i){
-        oMatrix->elements[i] = calloc(rows, sizeof(double));
+    for(int i = 0; i < rows; ++i){
+        oMatrix->elements[i] = calloc(columns, sizeof(double));
         if(oMatrix->elements[i] == NULL){
             fprintf(stderr, "Matrix allocation failed in matrixDimension!");
             exit(1);
@@ -28,7 +28,7 @@ void matrixFree(Matrix* oMatrix) {
     matrixAssertNotNull(oMatrix, "matrix null in matrixFree!");
 
 
-    for(int i = 0; i < oMatrix->columns; ++i){
+    for(int i = 0; i < oMatrix->rows; ++i){
         free(oMatrix->elements[i]);
     }
 

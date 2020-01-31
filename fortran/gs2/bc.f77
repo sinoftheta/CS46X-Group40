@@ -9,6 +9,9 @@ C
    80      if (NST.GE.LN) go to 150
        read (5, 40) (LRT(ITT), ITT=1,20)
        IA = 0
+           do 90 I=1,20
+           if (LRT(I).EQ.0) go to 100
+       IA = I       
        J = LRT(I)
        NST = NST + 1
            if (J.LE.NEQ) go to 90

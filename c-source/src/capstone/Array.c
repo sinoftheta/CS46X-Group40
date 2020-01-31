@@ -8,6 +8,7 @@ void arrayDimension(Array* array, int size) {
     array->elements = calloc(size, sizeof(double));
     if(array->elements == NULL){
         fprintf(stderr, "Memory allocation failed in arrayDimension!\n");
+        exit(-1);
     }
     array->size = size;
 }
@@ -36,6 +37,6 @@ double* arrayAt(Array* array, int index) {
 void arrayAssertNotNull(Array* array, const char* message) {
     if (array == NULL) {
         fprintf(stderr, "%s\n", message);
-        exit(1);
+        exit(-1);
     }
 }

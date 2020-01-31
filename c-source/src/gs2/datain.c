@@ -198,6 +198,9 @@ void gs2Datain(
                 if (row->next != CSV_NULL_ROW_PTR && gs2GetGroup(row->next, GROUP_J_2) != GROUP_J_1 && gs2GetGroup(row->next, GROUP_J_2) != GROUP_J_2)
                     gs2FinalizeGroupJ(&row, state);
                 break;
+            case GROUP_K:
+                gs2ReadGroupK(&row, state, ns);
+                break;
             default:
                 break;
         };
@@ -618,11 +621,11 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
 
         int activeNodesForElement = 0;
 
-        for (int i = 1; i <= state->inc; i++) {
+        for (int i = 0; i < state->inc; i++) {
             // incidences start in the 3rd row
             int incident;
             sscanf((*csvRow)->entries[i + 2], "%d", &incident);
-            *matrixAt(&(state->in), i, elementIndex) = (double)incident;
+            *matrixAt(&(state->in), i+1, elementIndex) = (double)incident;
 
             if (incident != 0)
                 activeNodesForElement++;
@@ -641,7 +644,7 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
     Matrix* stateInRef = &(state->in);
     double nd, mnd = 0.0;
 
-    for (int l = 0; l < state->ne; l++) {
+    for (int l = 1; l <= state->ne; l++) {
         int m = (int)(*matrixAt(stateInRef, state->me, l));
         int m1 = m - 1;
         mnd = 0.0;
@@ -656,15 +659,14 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
                     break;
                 
                 nd = abs(*matrixAt(stateInRef, i, l) - *matrixAt(stateInRef, j, l));
-
-                //printf("l = %d, i = %d, j = %d, nd = %lf\n", l, i, j, nd);
+                // printf("l = %d, i = %d, j = %d, nd = %lf\n", l, i, j, nd);
                 mnd = maxd(nd, mnd);
                 *maxdif = maxd(nd, *maxdif);
                 
             } // 202
         } // 205
 
-        fprintf(stdout, "\t%d\t\t%lf\t\t\t", l+1, mnd);
+        fprintf(stdout, "\t%d\t\t%lf\t\t\t", l, mnd);
         for (int i = 1; i <= state->inc; i++) 
             fprintf(stdout, "%d  ", (int)(*matrixAt(stateInRef, i, l)));
         fprintf(stdout, "\n");
@@ -802,4 +804,35 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
         } 
         fprintf(stdout, "\n");
     }
+}
+
+void gs2ReadGroupK(CSVRow** csvRow, gs2State* state, int ns) {
+    if (ns == 0)
+        return;
+
+    fprintf(stdout, "Dirichlet Boundary Nodes for Flow:\n");
+    Array lrt;
+    arrayDimension(&lrt, 20);
+
+    do {
+        for (int i = 1; i < (*csvRow)->entryCount; i++) {
+            int node = 0;
+            sscanf((*csvRow)->entries[i], "%d", &node);
+            *arrayAt(&lrt, i) = (double)node;
+        }
+
+        gs2BoundaryCondition(
+            &(state->lr), 
+            &lrt, 
+            ns, 
+            1, 
+            state->nn, 
+            &(state->istop)
+        );
+        
+        *csvRow = (*csvRow)->next;
+    } while (gs2GetGroup(*csvRow, GROUP_K) == GROUP_K);
+
+    *csvRow = (*csvRow)->prev;
+    arrayFree(&lrt);
 }

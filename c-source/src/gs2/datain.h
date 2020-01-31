@@ -199,4 +199,10 @@ void gs2FinalizeGroupJ(
     gs2State* state
 );
 
+void gs2ReadGroupK(
+    CSVRow** csvRow,
+    gs2State* state,
+    int ns
+);
+
 #endif /* __CAP_DATAIN_H__ */
