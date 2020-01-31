@@ -473,9 +473,6 @@ void gs2ReadGroupE(CSVRow** csvRow, gs2State* state, double xfact, double yfact)
     int index;
     sscanf((*csvRow)->entries[1], "%d", &index);
 
-    // fortran starts at 1, c does not
-    index--;
-
     sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->x), index));
     sscanf((*csvRow)->entries[3], "%lf", arrayAt(&(state->y), index));
 
@@ -496,19 +493,19 @@ void gs2ReadSubGroupF1(CSVRow** csvRow, gs2State* state) {
 
     int index[4];   
     sscanf((*csvRow)->entries[1], "%d", &index[0]);
-    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->fq), index[0]-1));
+    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->fq), index[0]));
 
     sscanf((*csvRow)->entries[3], "%d", &index[1]);
-    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->fq), index[1]-1));
+    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->fq), index[1]));
 
     sscanf((*csvRow)->entries[5], "%d", &index[2]);
-    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->fq), index[2]-1));
+    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->fq), index[2]));
 
     sscanf((*csvRow)->entries[7], "%d", &index[3]);
-    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->fq), index[3]-1));
+    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->fq), index[3]));
 
     for (int i = 0; i < 4; i++)
-        fprintf(stdout, "Node %d source and sink discharge: %lf\n", index[i], *arrayAt(&(state->fq), index[i]-1));
+        fprintf(stdout, "Node %d source and sink discharge: %lf\n", index[i], *arrayAt(&(state->fq), index[i]));
 }
 
 void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
@@ -517,16 +514,16 @@ void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
 
     int index[4];   
     sscanf((*csvRow)->entries[1], "%d", &index[0]);
-    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->cfq), index[0]-1));
+    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->cfq), index[0]));
 
     sscanf((*csvRow)->entries[3], "%d", &index[1]);
-    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->cfq), index[1]-1));
+    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->cfq), index[1]));
 
     sscanf((*csvRow)->entries[5], "%d", &index[2]);
-    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->cfq), index[2]-1));
+    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->cfq), index[2]));
 
     sscanf((*csvRow)->entries[7], "%d", &index[3]);
-    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->cfq), index[3]-1));
+    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->cfq), index[3]));
 
     for (int i = 0; i < 4; i++)
         fprintf(stdout, "Node %d source and sink concentration: %lf\n", index[i], *arrayAt(&(state->cfq), index[i]-1));
@@ -546,20 +543,20 @@ void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
     int index[4];   
     
     sscanf((*csvRow)->entries[1], "%d", &index[0]);
-    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->conci), index[0]-1));
+    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->conci), index[0]));
 
     sscanf((*csvRow)->entries[3], "%d", &index[1]);
-    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->conci), index[1]-1));
+    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->conci), index[1]));
 
     sscanf((*csvRow)->entries[5], "%d", &index[2]);
-    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->conci), index[2]-1));
+    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->conci), index[2]));
 
     sscanf((*csvRow)->entries[7], "%d", &index[3]);
-    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->conci), index[3]-1));
+    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->conci), index[3]));
 
     if (state->stime > 0.0) {
         for (int i = 0; i < 4; i++) {
-            state->conci.elements[index[i] - 1] *= aconci;
+            state->conci.elements[index[i]] *= aconci;
         }
     } 
 }
@@ -592,20 +589,20 @@ void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, do
 
     int index[4];
     sscanf((*csvRow)->entries[1], "%d", &index[0]);
-    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->phii), index[0]-1));
+    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->phii), index[0]));
 
     sscanf((*csvRow)->entries[3], "%d", &index[1]);
-    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->phii), index[1]-1));
+    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->phii), index[1]));
 
     sscanf((*csvRow)->entries[5], "%d", &index[2]);
-    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->phii), index[2]-1));
+    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->phii), index[2]));
 
     sscanf((*csvRow)->entries[7], "%d", &index[3]);
-    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->phii), index[3]-1));
+    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->phii), index[3]));
 
     if (state->stime > 0.0) {
         for (int i = 0; i < 4; i++) {
-            state->phii.elements[index[i] - 1] *= aphii;
+            state->phii.elements[index[i]] *= aphii;
         }
     } 
 }
@@ -631,7 +628,7 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
                 activeNodesForElement++;
         }
 
-        *matrixAt(&(state->in), state->me-1, elementIndex) = activeNodesForElement;
+        *matrixAt(&(state->in), state->me, elementIndex) = activeNodesForElement;
 
         *csvRow = (*csvRow)->next;
     } while (gs2GetGroup(*csvRow, GROUP_I) == GROUP_I);
@@ -645,16 +642,16 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
     double nd, mnd = 0.0;
 
     for (int l = 0; l < state->ne; l++) {
-        int m = (int)(*matrixAt(stateInRef, state->me-1, l));
+        int m = (int)(*matrixAt(stateInRef, state->me, l));
         int m1 = m - 1;
         mnd = 0.0;
         
-        for (int i = 0; i < m1; i++) {
+        for (int i = 1; i <= m1; i++) {
             if (*matrixAt(stateInRef, i, l) == 0.0)
                 break;
             
            
-            for (int j = i + 1; j < m; j++) {
+            for (int j = i + 1; j <= m; j++) {
                 if (*matrixAt(stateInRef, j, l) == 0.0)
                     break;
                 
@@ -668,7 +665,7 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
         } // 205
 
         fprintf(stdout, "\t%d\t\t%lf\t\t\t", l+1, mnd);
-        for (int i = 0; i < state->inc; i++) 
+        for (int i = 1; i <= state->inc; i++) 
             fprintf(stdout, "%d  ", (int)(*matrixAt(stateInRef, i, l)));
         fprintf(stdout, "\n");
     }  // 210
@@ -755,7 +752,7 @@ void gs2ReadSubGroupJ2(
     sscanf((*csvRow)->entries[1], "%lf", &decay);
     sscanf((*csvRow)->entries[2], "%lf", &dens);
 
-    for (int i = i1-1; i < i2-1; i++) {
+    for (int i = i1; i <= i2; i++) {
         *arrayAt(&(state->fmobx), i) = tx * afmobx;
         *arrayAt(&(state->fmoby), i) = ty * afmoby;
         *arrayAt(&(state->elong), i) = dsl * aelong;
@@ -776,12 +773,12 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
     for (int n = 0; n < state->nk; n++) {
         int k = 0;
         int ll = 0;
-        for (int l = 0; l < state->ne; l++) {
+        for (int l = 1; l <= state->ne; l++) {
             if ((int)(*matrixAt(&(state->ie), 1, l)) != n)
                 continue;
             
             
-            *arrayAt(&(state->lr), k) = l+1;
+            *arrayAt(&(state->lr), k) = l;
             k++;
             ll = l;
         }
