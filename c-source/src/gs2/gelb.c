@@ -99,20 +99,100 @@ void gs2Gelb(
         piv = 0.0;
 
         for(int i = k; i <= ilr; ++i){
-            
+            tb = abs(*arrayAt(a, ii));
+            if(tb - piv > 0){ 
+                piv = tb;
+                j = i;
+                jj = ii;    
+            }
+            if(i - mr > 0) id--;
+
+            ii += id;
         }
         // 22
 
+        // test on singularity
+        if(piv <= 0) ERR
+        if(ier == 0 && piv - tol <= 0) ier = k - 1; 
+        piv = 1.0 / *arrayAt(a, jj);
+
+        // pivot row reduction and row interchange in right hand side r
+        id = j - k;
+
+        for(int i = k; i < nm; i += m){ //not sure if "i < nm" or "i <= nm"
+            ii = i + id;
+            tb = piv * *arrayAt(r, ii);
+            *arrayAt(r, ii) = *arrayAt(r, i);
+            *arrayAt(r, i) = tb;
+        }
+        //27
+
+        //pivot row reduction and interchange in coefficent matrix a
+        ii = kst;
+        j = jj + ic;
+        for(int i = jj; i <= j; j++){
+            tb = piv * *arrayAt(a, i);
+            *arrayAt(a, i) = *arrayAt(a, ii);
+            *arrayAt(a, ii) = tb;
+            ii++;
+        }
+        //28
+
+        // element reduction
+        if(k - ilr < 0){
+            id = kst;
+            ii = k+1;
+            mu = kst + 1;
+            mz = kst + ic;
+            for(int i = ii; i <= ii; i++){
+                // in matrix a
+                id += mc;
+                jj = i - mr - 1;
+                if(jj >0) id -= jj;
+                piv = -1 * *arrayAt(a, id);
+                j = id + 1;
+                for(jj = mu; jj <= mz; ++jj){
+                    *arrayAt(a, j - 1) = *arrayAt(a, j) + piv * *arrayAt(a, jj);
+                    j++;
+                }
+                *arrayAt(a, j - 1) = 0.0;
+
+                // in matrix r
+                j = k;
+                for(jj = i; jj <= nm; jj+=m){
+                    *arrayAt(r, jj) = *arrayAt(r, jj) + piv * *arrayAt(r, j);
+                    j += m;
+                }
+            }
+            //33
+
+            kst += mc;
+            if(ilr - mr >= 0) --ic;
+            id = k - mr;
+            if(id > 0) kst -= id;
+        }
     }
     // 38
 
-
-
-
-
-
-
-
-
-
+    // back substitution
+    if(mc - 1 <= 0) return;
+    ic = 2;
+    kst = ma + ml - mc + 2;
+    ii = m;
+    for(int i = 2; i <= m; ++i){
+        kst -=mc;
+        --ii;
+        j = ii - mr;
+        if(j > 0) kst += j;
+        for(j = ii; j <= nm; j+= m){
+            tb = *arrayAt(r, j);
+            mz = kst + ic - 2;
+            id = j;
+            for(jj = kst; jj <= mz; ++jj){
+                ++id;
+                tb -= *arrayAt(a, jj) * *arrayAt(r, id);
+            }
+            if(ic - mc < 0) ++ic;
+        }
+    }
 }
