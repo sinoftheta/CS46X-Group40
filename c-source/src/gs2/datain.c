@@ -126,6 +126,7 @@ void gs2Datain(
     int i1, i2, itype;
 
     CSVFile csvFile = csvLoadFile(csvPath);
+    printf("csvfile: %s\n", csvFile.currentRow->entries[0]);
     gs2DataGroup dataGroup = NUM_DATA_GROUP;
 
     arrayDimension(&wxpsi, 20);
@@ -134,6 +135,7 @@ void gs2Datain(
     matrixDimension(&cc, 3, 19);
 
     CSVRow* row = csvFile.currentRow;
+    printf("row: %s\n", row->entries[0]);
     do {
         dataGroup = gs2GetGroup(row, dataGroup);
         
@@ -225,7 +227,6 @@ gs2DataGroup gs2GetGroup(CSVRow* csvRow, gs2DataGroup defaultTo) {
         return defaultTo;
 
     char* firstCell = csvRow->entries[0];
-
     for (int i = 0; i < NUM_DATA_GROUP; i++) {
         if (!strcmp(firstCell, gs2DataGroupNames[i])) {
             return (gs2DataGroup)(i);
@@ -613,12 +614,11 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
       
         int elementIndex;
         sscanf((*csvRow)->entries[1], "%d", &elementIndex);
-        // map to zero based indexing.
-        elementIndex--;
+        
 
         int activeNodesForElement = 0;
 
-        for (int i = 0; i < state->inc; i++) {
+        for (int i = 1; i <= state->inc; i++) {
             // incidences start in the 3rd row
             int incident;
             sscanf((*csvRow)->entries[i + 2], "%d", &incident);

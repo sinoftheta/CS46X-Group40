@@ -39,7 +39,7 @@ CSVFile csvLoadFile(const char* filepath) {
         row->prev = result.currentRow;
         result.currentRow->next = row;
         result.currentRow = result.currentRow->next;
-        
+       
         free(line);
         line = NULL;
         length = 0;
