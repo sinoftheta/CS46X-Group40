@@ -201,6 +201,9 @@ void gs2Datain(
             case GROUP_K:
                 gs2ReadGroupK(&row, state, ns);
                 break;
+            case GROUP_L:
+                gs2ReadGroupL(&row, state, kns);
+                break;
             default:
                 break;
         };
@@ -832,6 +835,37 @@ void gs2ReadGroupK(CSVRow** csvRow, gs2State* state, int ns) {
         
         *csvRow = (*csvRow)->next;
     } while (gs2GetGroup(*csvRow, GROUP_K) == GROUP_K);
+
+    *csvRow = (*csvRow)->prev;
+    arrayFree(&lrt);
+}
+
+void gs2ReadGroupL(CSVRow** csvRow, gs2State* state, int kns) {
+    if (kns == 0)
+        return;
+
+    fprintf(stdout, "Dirichlet Boundary Nodes for Concentration:\n");
+    Array lrt;
+    arrayDimension(&lrt, 20);
+
+    do {
+        for (int i = 1; i < (*csvRow)->entryCount; i++) {
+            int node = 0;
+            sscanf((*csvRow)->entries[i], "%d", &node);
+            *arrayAt(&lrt, i) = (double)node;
+        }
+
+        gs2BoundaryCondition(
+            &(state->klr), 
+            &lrt, 
+            kns, 
+            1, 
+            state->nn, 
+            &(state->istop)
+        );
+        
+        *csvRow = (*csvRow)->next;
+    } while (gs2GetGroup(*csvRow, GROUP_L) == GROUP_L);
 
     *csvRow = (*csvRow)->prev;
     arrayFree(&lrt);

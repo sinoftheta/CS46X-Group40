@@ -205,4 +205,11 @@ void gs2ReadGroupK(
     int ns
 );
 
+void gs2ReadGroupL(
+    CSVRow** csvRow, 
+    gs2State* state, 
+    int kns
+);
+
+
 #endif /* __CAP_DATAIN_H__ */
