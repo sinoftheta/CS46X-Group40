@@ -4,6 +4,8 @@
 #include "../capstone/MathUtil.h"
 #include "../capstone/Debug.h"
 
+#include "bc.h"
+
 #include <string.h>
 #include <stdlib.h>
 
@@ -195,11 +197,21 @@ void gs2Datain(
                     gs2FinalizeGroupJ(&row, state);
                 break;
             default:
-                //fprintf(stderr, "Reached default case in gs2Datain!\n");
                 break;
         };
         row = row->next;
     } while (row != CSV_NULL_ROW_PTR);
+
+
+
+    // fprintf(stdout, "Dirichlet boundary nodes for flow\n");
+    // for (int i = 0; i < state->nn; i++) {
+    //     state->lr.elements[i] = 0;
+    //     state->klr.elements[i] = 0;
+    // }
+
+    // if (ns != 0)
+    //     gs2BoundaryCondition(&(state->lr), &ns, 1, state->nn, state->memoryRequirements.maxnn, &(state->istop));
 
     arrayFree(&wxpsi);
     arrayFree(&wxm);
@@ -743,7 +755,7 @@ void gs2ReadSubGroupJ2(
     sscanf((*csvRow)->entries[1], "%lf", &decay);
     sscanf((*csvRow)->entries[2], "%lf", &dens);
 
-    for (int i = i1; i < i2; i++) {
+    for (int i = i1-1; i < i2-1; i++) {
         *arrayAt(&(state->fmobx), i) = tx * afmobx;
         *arrayAt(&(state->fmoby), i) = ty * afmoby;
         *arrayAt(&(state->elong), i) = dsl * aelong;
@@ -765,11 +777,12 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
         int k = 0;
         int ll = 0;
         for (int l = 0; l < state->ne; l++) {
-            if ((int)(*matrixAt(&(state->ie), 2, l)) != n)
+            if ((int)(*matrixAt(&(state->ie), 1, l)) != n)
                 continue;
             
+            
+            *arrayAt(&(state->lr), k) = l+1;
             k++;
-            *arrayAt(&(state->lr), k) = l;
             ll = l;
         }
 
@@ -786,9 +799,10 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
 
         fprintf(stdout, "\tValid for Elements: \n\t");
         for (int i = 0; i < k; i++) {
-            fprintf(stdout, "%d\t", *arrayAt(&(state->lr), i));
-            if (i % 10 == 0)
+            fprintf(stdout, "%d\t", (int)(*arrayAt(&(state->lr), i)));
+            if ((i+1) % 5 == 0)
                 fprintf(stdout, "\n\t");
         } 
+        fprintf(stdout, "\n");
     }
 }
