@@ -211,5 +211,11 @@ void gs2ReadGroupL(
     int kns
 );
 
+void gs2FinalizeGroupsKL(
+    CSVRow** csvRow, 
+    gs2State* state,
+    int ns,
+    int kns
+);
 
 #endif /* __CAP_DATAIN_H__ */

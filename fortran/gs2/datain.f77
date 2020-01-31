@@ -307,7 +307,7 @@ C     LC and KLC
           go to 520
   360 continue
 
-C
+C     Group M  
 C     Neumann boundary nodes for flow
       write (6, 1250)
           if (NSDN.EQ.0) go to 340

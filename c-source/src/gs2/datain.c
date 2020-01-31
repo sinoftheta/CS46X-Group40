@@ -200,9 +200,13 @@ void gs2Datain(
                 break;
             case GROUP_K:
                 gs2ReadGroupK(&row, state, ns);
+                if (row->next != CSV_NULL_ROW_PTR && gs2GetGroup(row->next, GROUP_K) != GROUP_L && gs2GetGroup(row->next, GROUP_K) != GROUP_K)
+                    gs2FinalizeGroupsKL(&row, state, ns, kns);
                 break;
             case GROUP_L:
                 gs2ReadGroupL(&row, state, kns);
+                if (row->next != CSV_NULL_ROW_PTR && gs2GetGroup(row->next, GROUP_L) != GROUP_L && gs2GetGroup(row->next, GROUP_L) != GROUP_K)
+                    gs2FinalizeGroupsKL(&row, state, ns, kns);
                 break;
             default:
                 break;
@@ -713,8 +717,8 @@ void gs2ReadSubGroupJ1(CSVRow** csvRow, gs2State* state, int* i1, int* i2, int* 
         croak("Sub Group J1, too few entries");
     
     sscanf((*csvRow)->entries[1], "%d", i1);
-    sscanf((*csvRow)->entries[1], "%d", i2);
-    sscanf((*csvRow)->entries[1], "%d", itype);
+    sscanf((*csvRow)->entries[2], "%d", i2);
+    sscanf((*csvRow)->entries[3], "%d", itype);
 }
 
 void gs2ReadSubGroupJ2(
@@ -757,6 +761,9 @@ void gs2ReadSubGroupJ2(
     sscanf((*csvRow)->entries[1], "%lf", &decay);
     sscanf((*csvRow)->entries[2], "%lf", &dens);
 
+
+    decay /= (365.25 * 24.0 * 3600.0);
+
     for (int i = i1; i <= i2; i++) {
         *arrayAt(&(state->fmobx), i) = tx * afmobx;
         *arrayAt(&(state->fmoby), i) = ty * afmoby;
@@ -766,7 +773,7 @@ void gs2ReadSubGroupJ2(
         *arrayAt(&(state->tta), i) = teta * ateta;
         *arrayAt(&(state->alpha), i) = al * aal;
         *arrayAt(&(state->kd), i) = akd * dist;
-        *arrayAt(&(state->lambda), i) = alam * dist;
+        *arrayAt(&(state->lambda), i) = alam * decay;
         *arrayAt(&(state->rho), i) = arho * dens;
 
         *matrixAt(&(state->ie), 2, i) = itype;
@@ -775,16 +782,16 @@ void gs2ReadSubGroupJ2(
 }
 
 void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
-    for (int n = 0; n < state->nk; n++) {
+    for (int n = 1; n <= state->nk; n++) {
         int k = 0;
         int ll = 0;
         for (int l = 1; l <= state->ne; l++) {
-            if ((int)(*matrixAt(&(state->ie), 1, l)) != n)
+            if ((int)(*matrixAt(&(state->ie), 2, l)) != n)
                 continue;
             
             
-            *arrayAt(&(state->lr), k) = l;
             k++;
+            *arrayAt(&(state->lr), k) = l;
             ll = l;
         }
 
@@ -800,7 +807,7 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
         fprintf(stdout, "\tDensity: %lf\n", *arrayAt(&(state->rho), ll));
 
         fprintf(stdout, "\tValid for Elements: \n\t");
-        for (int i = 0; i < k; i++) {
+        for (int i = 1; i <= k; i++) {
             fprintf(stdout, "%d\t", (int)(*arrayAt(&(state->lr), i)));
             if ((i+1) % 5 == 0)
                 fprintf(stdout, "\n\t");
@@ -810,10 +817,14 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
 }
 
 void gs2ReadGroupK(CSVRow** csvRow, gs2State* state, int ns) {
+    for (int i = 0; i < state->lr.size; i++)
+        state->lr.elements[i] = 0;
+
     if (ns == 0)
         return;
 
     fprintf(stdout, "Dirichlet Boundary Nodes for Flow:\n");
+
     Array lrt;
     arrayDimension(&lrt, 20);
 
@@ -841,10 +852,14 @@ void gs2ReadGroupK(CSVRow** csvRow, gs2State* state, int ns) {
 }
 
 void gs2ReadGroupL(CSVRow** csvRow, gs2State* state, int kns) {
+     for (int i = 0; i < state->klr.size; i++)
+        state->klr.elements[i] = 0;
+
     if (kns == 0)
         return;
 
     fprintf(stdout, "Dirichlet Boundary Nodes for Concentration:\n");
+
     Array lrt;
     arrayDimension(&lrt, 20);
 
@@ -869,4 +884,49 @@ void gs2ReadGroupL(CSVRow** csvRow, gs2State* state, int kns) {
 
     *csvRow = (*csvRow)->prev;
     arrayFree(&lrt);
+}
+
+void gs2FinalizeGroupsKL(CSVRow** csvRow, gs2State* state, int ns, int kns) {
+    Array* lcPtr = &(state->lc);
+    Array* klcPtr = &(state->klc);
+
+    Array* lrPtr = &(state->lr);
+    Array* klrPtr = &(state->klr);
+
+    *arrayAt(lcPtr, 1) = max(*arrayAt(lrPtr, 1), 0);
+    *arrayAt(klcPtr, 1) = max(*arrayAt(klrPtr, 1), 0);
+
+
+    for (int i = 2; i <= state->nn; i++) {
+        *arrayAt(lcPtr, i) = *arrayAt(lcPtr, i-1) + max(*arrayAt(lrPtr, i), 0);
+         *arrayAt(klcPtr, i) = *arrayAt(klcPtr, i-1) + max(*arrayAt(klrPtr, i), 0);
+    }
+
+    state->mm = state->nn - *arrayAt(lcPtr, state->nn);
+    state->km = state->nn - *arrayAt(klcPtr, state->nn);
+
+    fprintf(stdout, "Number of equations for flow: %d\n", state->mm);
+    fprintf(stdout, "Number of equations for mass transport: %d\n", state->km);
+
+    if (state->mm != state->nn - ns) {
+        fprintf(stderr, "Wrong number of equations for flow\n");
+        for (int i = 0; i < state->nn; i++) {
+            fprintf(stderr, "\t%d   %lf", i, *arrayAt(lcPtr, i));
+            if ((i+1) % 5 == 0)
+                fprintf(stderr, "\n");
+        }
+       fprintf(stderr, "\n");
+       croak("Cannot proceed.");
+    } 
+
+    if (state->km != state->nn - kns) {
+        fprintf(stderr, "Wrong number of equations for mass transport\n");
+        for (int i = 0; i < state->nn; i++) {
+            fprintf(stderr, "\t%d   %lf", i, *arrayAt(klcPtr, i));
+            if ((i+1) % 5 == 0)
+                fprintf(stderr, "\n");
+        }
+       fprintf(stderr, "\n");   
+       croak("Cannot proceed."); 
+    }
 }
