@@ -211,11 +211,45 @@ void gs2ReadGroupL(
     int kns
 );
 
-void gs2FinalizeGroupsKL(
+void gs2FinalizeGroupsK_L(
     CSVRow** csvRow, 
     gs2State* state,
     int ns,
     int kns
+);
+
+void gs2ReadSubGroupM1(
+    CSVRow** csvRow,
+    gs2State* state,
+    int mq4
+);
+
+
+void gs2ReadSubGroupM2(
+    CSVRow** csvRow,
+    gs2State* state,
+    int mq4
+);
+
+void gs2ReadSubGroupM3(
+    CSVRow** csvRow,
+    gs2State* state,
+    Array* nsf, 
+    Array* coef
+);
+
+void gs2ReadSubGroupM4(
+    CSVRow** csvRow,
+    gs2State* state,
+    Array* nsf, 
+    Array* vn
+);
+
+void gs2FinalizeGroupM(
+    gs2State* state,
+    Array* nsf, 
+    Array* coef,
+    Array* vn
 );
 
 #endif /* __CAP_DATAIN_H__ */

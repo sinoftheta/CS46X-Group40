@@ -135,11 +135,9 @@ void gs2Datain(
     matrixDimension(&cc, 3, 19);
 
     CSVRow* row = csvFile.currentRow;
-    printf("row: %s\n", row->entries[0]);
     do {
         dataGroup = gs2GetGroup(row, dataGroup);
         
-
         switch (dataGroup) { 
             case GROUP_A:
                 gs2ReadGroupA(&row, state);
@@ -201,29 +199,31 @@ void gs2Datain(
             case GROUP_K:
                 gs2ReadGroupK(&row, state, ns);
                 if (row->next != CSV_NULL_ROW_PTR && gs2GetGroup(row->next, GROUP_K) != GROUP_L && gs2GetGroup(row->next, GROUP_K) != GROUP_K)
-                    gs2FinalizeGroupsKL(&row, state, ns, kns);
+                    gs2FinalizeGroupsK_L(&row, state, ns, kns);
                 break;
             case GROUP_L:
                 gs2ReadGroupL(&row, state, kns);
                 if (row->next != CSV_NULL_ROW_PTR && gs2GetGroup(row->next, GROUP_L) != GROUP_L && gs2GetGroup(row->next, GROUP_L) != GROUP_K)
-                    gs2FinalizeGroupsKL(&row, state, ns, kns);
+                    gs2FinalizeGroupsK_L(&row, state, ns, kns);
                 break;
+            case GROUP_M_1:
+                gs2ReadSubGroupM1(&row, state, mq4);
+                break;
+            case GROUP_M_2:
+                gs2ReadSubGroupM2(&row, state, mq4);
+                break;
+            case GROUP_M_3:
+                gs2ReadSubGroupM3(&row, state, nsf, coef);
+                break;    
+            case GROUP_M_4:
+                gs2ReadSubGroupM3(&row, state, nsf, vn);
+                gs2FinalizeGroupM(state, nsf, coef, vn);
+                break;           
             default:
                 break;
         };
         row = row->next;
     } while (row != CSV_NULL_ROW_PTR);
-
-
-
-    // fprintf(stdout, "Dirichlet boundary nodes for flow\n");
-    // for (int i = 0; i < state->nn; i++) {
-    //     state->lr.elements[i] = 0;
-    //     state->klr.elements[i] = 0;
-    // }
-
-    // if (ns != 0)
-    //     gs2BoundaryCondition(&(state->lr), &ns, 1, state->nn, state->memoryRequirements.maxnn, &(state->istop));
 
     arrayFree(&wxpsi);
     arrayFree(&wxm);
@@ -886,7 +886,7 @@ void gs2ReadGroupL(CSVRow** csvRow, gs2State* state, int kns) {
     arrayFree(&lrt);
 }
 
-void gs2FinalizeGroupsKL(CSVRow** csvRow, gs2State* state, int ns, int kns) {
+void gs2FinalizeGroupsK_L(CSVRow** csvRow, gs2State* state, int ns, int kns) {
     Array* lcPtr = &(state->lc);
     Array* klcPtr = &(state->klc);
 
@@ -929,4 +929,145 @@ void gs2FinalizeGroupsKL(CSVRow** csvRow, gs2State* state, int ns, int kns) {
        fprintf(stderr, "\n");   
        croak("Cannot proceed."); 
     }
+}
+
+void gs2ReadSubGroupM1(CSVRow** csvRow, gs2State* state, int mq4) {
+    fprintf(stdout, "Neumann boundary nodes for flow\n");
+
+    if (state->nsdn == 0)
+        return;
+
+    int mp4 = state->nsdn - mq4;
+
+    if (mp4 == 0)
+        return;
+
+    Array lrt;
+    arrayDimension(&lrt, 20);
+
+    for (int i = 1; i < (*csvRow)->entryCount; i++) {
+        int node = 0;
+        sscanf((*csvRow)->entries[i], "%d", &node);
+        *arrayAt(&lrt, i) = (double)node;
+    }
+
+    gs2BoundaryCondition(
+        &(state->lr),
+        &lrt,
+        mp4,
+        4,
+        state->nn,
+        &(state->istop)
+    );
+
+    arrayFree(&lrt);
+}
+
+void gs2ReadSubGroupM2(CSVRow** csvRow, gs2State* state, int mq4) {
+    fprintf(stdout, "Neumann boundary nodes for flow\n");
+
+    if (state->nsdn == 0)
+        return;
+
+    int mp4 = state->nsdn - mq4;
+
+    if (mp4 == 0)
+        return;
+
+    Array lrt;
+    arrayDimension(&lrt, 20);
+
+    for (int i = 1; i < (*csvRow)->entryCount; i++) {
+        int node = 0;
+        sscanf((*csvRow)->entries[i], "%d", &node);
+        *arrayAt(&lrt, i) = (double)node;
+    }
+
+    gs2BoundaryCondition(
+        &(state->lr),
+        &lrt,
+        mp4,
+        -4,
+        state->nn,
+        &(state->istop)
+    );
+
+    arrayFree(&lrt);
+}
+
+void gs2ReadSubGroupM3(CSVRow** csvRow, gs2State* state, Array* nsf, Array* coef) {
+    // card: group, nsf(i), coef(i), nsf(j), coef(j), nsf(k), coef(k), nsf(l), coef(l), nsf(m), coef(m)
+    for (int i = 1; i < state->nsdn; i += 5) {
+        
+        if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_M_3)
+            croak("Attempted to read sub group m3 from a non-m3 card!");
+
+        if ((*csvRow)->entryCount < 11)
+            croak("To few entries in sub group m3");
+
+        sscanf((*csvRow)->entries[1], "%lf", arrayAt(nsf, i));
+        sscanf((*csvRow)->entries[2], "%lf", arrayAt(coef, i));
+
+        sscanf((*csvRow)->entries[3], "%lf", arrayAt(nsf, i + 1));
+        sscanf((*csvRow)->entries[4], "%lf", arrayAt(coef, i + 1));
+
+        sscanf((*csvRow)->entries[5], "%lf", arrayAt(nsf, i + 2));
+        sscanf((*csvRow)->entries[6], "%lf", arrayAt(coef, i + 2));
+
+        sscanf((*csvRow)->entries[7], "%lf", arrayAt(nsf, i + 3));
+        sscanf((*csvRow)->entries[8], "%lf", arrayAt(coef, i + 3));
+
+        sscanf((*csvRow)->entries[9], "%lf", arrayAt(nsf, i + 4));
+        sscanf((*csvRow)->entries[10], "%lf", arrayAt(coef, i + 4));
+
+        *csvRow = (*csvRow)->next;
+    }
+    *csvRow = (*csvRow)->prev;
+}
+
+void gs2ReadSubGroupM4(CSVRow** csvRow, gs2State* state, Array* nsf, Array* vn) {
+    // card: group, nsf(i), coef(i), nsf(j), coef(j), nsf(k), coef(k), nsf(l), coef(l), nsf(m), coef(m)
+    for (int i = 1; i < state->nsdn; i += 5) {
+        
+        if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_M_4)
+            croak("Attempted to read sub group m4 from a non-m4 card!");
+
+        if ((*csvRow)->entryCount < 11)
+            croak("To few entries in sub group m3");
+
+        sscanf((*csvRow)->entries[1], "%lf", arrayAt(nsf, i));
+        sscanf((*csvRow)->entries[2], "%lf", arrayAt(vn, i));
+
+        sscanf((*csvRow)->entries[3], "%lf", arrayAt(nsf, i + 1));
+        sscanf((*csvRow)->entries[4], "%lf", arrayAt(vn, i + 1));
+
+        sscanf((*csvRow)->entries[5], "%lf", arrayAt(nsf, i + 2));
+        sscanf((*csvRow)->entries[6], "%lf", arrayAt(vn, i + 2));
+
+        sscanf((*csvRow)->entries[7], "%lf", arrayAt(nsf, i + 3));
+        sscanf((*csvRow)->entries[8], "%lf", arrayAt(vn, i + 3));
+
+        sscanf((*csvRow)->entries[9], "%lf", arrayAt(nsf, i + 4));
+        sscanf((*csvRow)->entries[10], "%lf", arrayAt(vn, i + 4));
+
+        *csvRow = (*csvRow)->next;
+    }
+    *csvRow = (*csvRow)->prev;
+}
+
+void gs2FinalizeGroupM(gs2State* state, Array* nsf, Array* coef, Array* vn) {
+    fprintf(stdout, "Specified fraction of normal flux\n");
+    for (int i = 1; i < state->nsdn; i++)
+        fprintf(stdout, "Node %d, Value %lf\n", (int)(*arrayAt(nsf, i)), *arrayAt(coef, i));
+    fprintf(stdout, "Dependent boundary length\n");
+    for (int i = 1; i < state->nsdn; i++)
+        fprintf(stdout, "Node %d, Value %lf\n", (int)(*arrayAt(nsf, i)), *arrayAt(vn, i));
+
+    for (int k = 1; k < state->nsdn; k++) {
+        int i = (int)(*arrayAt(nsf, k));
+        if (*arrayAt(&(state->lr), i) != -4.0)
+            continue;
+        *arrayAt(&(state)->fq, i) = state->ei * (*arrayAt(vn, k)) * (*arrayAt(coef, k));
+    }
+
 }
