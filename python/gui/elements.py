@@ -17,11 +17,11 @@ class Elements(QGroupBox):
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
-        #self.layout.setHorizontalSpacing(30)
-        #self.createTable(24)
 
     def buildTable(self, numElements, numMaterials):
-        if (hasattr(self, 'elementTable') and (numElements != self.elementTable.rowCount())):
+        if (numElements == 0):
+            return
+        elif (hasattr(self, 'elementTable') and (numElements != self.elementTable.rowCount())):
             self.elementTable.setRowCount(numElements)
         elif (hasattr(self, 'elementTable') and (numElements == self.elementTable.rowCount())):
             return

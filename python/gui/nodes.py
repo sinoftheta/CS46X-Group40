@@ -5,6 +5,14 @@ from PyQt5.QtGui import *
 nodeTableLabels = ["Node", "Boundary Type", "X-Coordinate",
             "Y-Coordinate", "Initial Pressure", "Initial Concentration"]
 
+nodeTypeLabels = [
+        "Constant Head (Dirichlet)",
+        "Source/Sink",
+        "Infiltration/Evaporation (Variable Boundary)",
+        "Seepage Face",
+        "Mixed Boundary Condition"
+]
+
 class Nodes(QGroupBox):
     def __init__(self):
         super(Nodes, self).__init__('Nodes')
@@ -14,7 +22,9 @@ class Nodes(QGroupBox):
         # self.layout.addWidget(self.nodeTable)
 
     def buildTable(self, numNodes):
-        if (hasattr(self, 'nodeTable') and (numNodes != self.nodeTable.rowCount())):
+        if (numNodes == 0):
+            return
+        elif (hasattr(self, 'nodeTable') and (numNodes != self.nodeTable.rowCount())):
             self.nodeTable.setRowCount(numNodes)
         elif (hasattr(self, 'nodeTable') and (numNodes == self.nodeTable.rowCount())):
             return
@@ -67,8 +77,5 @@ class Nodes(QGroupBox):
 class BoundaryComboBox(QComboBox):
     def __init__(self):
         super(BoundaryComboBox, self).__init__()
-        self.addItem("Constant Head (Dirichlet)")
-        self.addItem("Source/Sink")
-        self.addItem("Infiltration/Evaporation (Variable Boundary)")
-        self.addItem("Seepage Face")
-        self.addItem("Mixed Boundary Condition")
+        for nodeType in nodeTypeLabels:
+            self.addItem(nodeType)

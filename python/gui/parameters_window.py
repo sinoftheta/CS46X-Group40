@@ -114,3 +114,4 @@ class ParametersPage(QGroupBox):
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(6)
+        self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())
