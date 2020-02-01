@@ -28,7 +28,8 @@ double* arrayAt(Array* array, int index) {
 
     if (index - 1 >= array->size) {
         fprintf(stderr, "arrayAt index out of bounds: %d\n", index);
-        exit(1);
+        int a = ((Array*)(NULL))->elements[0];
+        exit(a);
     }
 
     return &array->elements[index - 1];

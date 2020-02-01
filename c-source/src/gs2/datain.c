@@ -218,7 +218,12 @@ void gs2Datain(
             case GROUP_M_4:
                 gs2ReadSubGroupM3(&row, state, nsf, vn);
                 gs2FinalizeGroupM(state, nsf, coef, vn);
-                break;           
+                break;   
+            case GROUP_N_1:
+                gs2ReadSubGroupN1(&row, state, knsdn);
+                break;  
+            case GROUP_N_2:
+                gs2ReadSubGroupN2(&row, state, nsk, cn, knsdn);
             default:
                 break;
         };
@@ -1026,8 +1031,8 @@ void gs2ReadSubGroupM3(CSVRow** csvRow, gs2State* state, Array* nsf, Array* coef
 }
 
 void gs2ReadSubGroupM4(CSVRow** csvRow, gs2State* state, Array* nsf, Array* vn) {
-    // card: group, nsf(i), coef(i), nsf(j), coef(j), nsf(k), coef(k), nsf(l), coef(l), nsf(m), coef(m)
-    for (int i = 1; i < state->nsdn; i += 5) {
+    // card: group, nsf(i), vn(i), nsf(j), vn(j), nsf(k), vn(k), nsf(l), vn(l), nsf(m), vn(m)
+    for (int i = 1; i <= state->nsdn; i += 5) {
         
         if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_M_4)
             croak("Attempted to read sub group m4 from a non-m4 card!");
@@ -1069,5 +1074,80 @@ void gs2FinalizeGroupM(gs2State* state, Array* nsf, Array* coef, Array* vn) {
             continue;
         *arrayAt(&(state)->fq, i) = state->ei * (*arrayAt(vn, k)) * (*arrayAt(coef, k));
     }
+}
 
+void gs2ReadSubGroupN1(CSVRow** csvRow, gs2State* state, int knsdn) {
+    fprintf(stdout, "Neumann boundary nodes for concentration\n");
+
+    if (knsdn == 0)
+        return;
+
+    Array lrt;
+    arrayDimension(&lrt, 20);
+
+    do {
+        for (int i = 1; i < (*csvRow)->entryCount; i++) {
+            int node = 0;
+            sscanf((*csvRow)->entries[i], "%d", &node);
+            *arrayAt(&lrt, i) = (double)node;
+        }
+
+        gs2BoundaryCondition(
+            &(state->klr), 
+            &lrt, 
+            knsdn, 
+            -4, 
+            state->nn, 
+            &(state->istop)
+        );
+        
+        *csvRow = (*csvRow)->next;
+    } while (gs2GetGroup(*csvRow, GROUP_N_1) == GROUP_N_1);
+
+    *csvRow = (*csvRow)->prev;
+
+
+    arrayFree(&lrt);
+}
+
+void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, int knsdn) {
+    // card: group, nsk(i), cn(i), nsk(j), cn(j), nsk(k), cn(k), nsk(l), cn(l), nsk(m), cn(m)
+    for (int i = 1; i <= knsdn; i += 5) {
+        
+        if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_N_2)
+            croak("Attempted to read sub group n2 from a non-n2 card!");
+
+        if ((*csvRow)->entryCount < 11)
+            croak("To few entries in sub group m2");
+
+        int maxm4 = state->memoryRequirements.maxm4;
+
+        if (i <= maxm4) {
+            sscanf((*csvRow)->entries[1], "%lf", arrayAt(nsk, i));
+            sscanf((*csvRow)->entries[2], "%lf", arrayAt(cn, i));
+        }
+        
+        if (i + 1 <= maxm4) {
+            sscanf((*csvRow)->entries[3], "%lf", arrayAt(nsk, i + 1));
+            sscanf((*csvRow)->entries[4], "%lf", arrayAt(cn, i + 1));
+        }
+
+        if (i + 2 <= maxm4) {
+            sscanf((*csvRow)->entries[5], "%lf", arrayAt(nsk, i + 2));
+            sscanf((*csvRow)->entries[6], "%lf", arrayAt(cn, i + 2));
+        }
+
+        if (i + 3 <= maxm4) {
+            sscanf((*csvRow)->entries[7], "%lf", arrayAt(nsk, i + 3));
+            sscanf((*csvRow)->entries[8], "%lf", arrayAt(cn, i + 3));
+        }
+
+        if (i + 4 <= maxm4) {
+            sscanf((*csvRow)->entries[9], "%lf", arrayAt(nsk, i + 4));
+            sscanf((*csvRow)->entries[10], "%lf", arrayAt(cn, i + 4));
+        }
+
+        *csvRow = (*csvRow)->next;
+    }
+    *csvRow = (*csvRow)->prev;
 }

@@ -59,7 +59,7 @@ void matrixAssertNotNull(Matrix* matrix, const char* message) {
         exit(1);
     }
     if (matrix->elements == NULL){
-        fprintf(stderr, "%s\nMatrix Uninitialezed!\n", message);
+        fprintf(stderr, "%s\nMatrix Uninitialized!\n", message);
         exit(1);
     }
 }

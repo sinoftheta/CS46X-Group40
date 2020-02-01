@@ -252,4 +252,18 @@ void gs2FinalizeGroupM(
     Array* vn
 );
 
+void gs2ReadSubGroupN1(
+    CSVRow** csvRow,
+    gs2State* state,
+    int knsdn
+);
+
+void gs2ReadSubGroupN2(
+    CSVRow** csvRow,
+    gs2State* state,
+    Array* nsk,
+    Array* cn,
+    int knsdn
+);
+
 #endif /* __CAP_DATAIN_H__ */

@@ -34,25 +34,37 @@ int main(int argc, char** argv) {
     state.memoryRequirements = memReqs;
     state.istop = 0;
 
-    double a = 0.0;
+    double maxdif = 0.0;
+
+    Array cold, cn, vn, coef, u, est, lp, klp, nsf, nsk, msp;
+    Matrix nsp;
+
+    arrayDimension(&nsk, memReqs.maxm4);
+    arrayDimension(&cn, memReqs.maxm4);
+    arrayDimension(&nsf, memReqs.maxm4);
+    arrayDimension(&vn, memReqs.maxm4);
+
+    matrixDimension(&nsp, memReqs.maxm5, memReqs.maxeep);
 
     gs2Datain(
         &state,
         "res/example1.csv",
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL, 
-        &a
+        &cold,
+        &cn,
+        &vn,
+        &coef,
+        &u,
+        &est,
+        &lp,
+        &klp,
+        &nsf,
+        &nsk,
+        &nsp,
+        &msp, 
+        &maxdif
     );
+
+    // don't care about freeing right now
 
     return 0;
 }
