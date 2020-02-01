@@ -340,7 +340,7 @@ C     Neumann boundary nodes for concentration
 C
 C     Seepage
           if (NSEEP.EQ.0) go to 380
-          do 370 K - 1, NSEEP
+          do 370 K = 1, NSEEP
       read (5, 910) MSP(K), MP2
       write (6, 1590) K
       MSPK = MSP(K)

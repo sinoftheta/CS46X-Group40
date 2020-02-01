@@ -1151,3 +1151,74 @@ void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, 
     }
     *csvRow = (*csvRow)->prev;
 }
+
+void gs2ReadSubGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
+    if (state->nseep == 0)
+        return;
+
+    for (int k = 1; k < state->nseep; k++) {
+        // group O1: group, msp(k), mp2
+        int mp2;
+        sscanf((*csvRow)->entries[1], "%lf", arrayAt(msp, k));
+        sscanf((*csvRow)->entries[2], "%d", &mp2);
+        
+        *csvRow = (*csvRow)->next;
+        if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_O_2) 
+            croak("Group O-1 is not followed by Group O-2!");
+
+        fprintf(stdout, "Nodes on seepage face %d\n", k);
+
+        int mspk = (int)(*arrayAt(msp, k));
+        int mq2 = mspk - mp2;
+
+        if (mq2 != 0) {
+
+            do {
+                fprintf(stdout, "Dirichlet Nodes\n");
+                for (int i = 1; i < (*csvRow)->entryCount; i++) {
+                    int value = 0;
+                    sscanf((*csvRow)->entries[i], "%d", &value);
+                    *matrixAt(nsp, i, k) = (double)value;
+
+                    fprintf(stdout, "\t%d  ", value);
+
+                    if (i % 7 == 0)
+                        fprintf(stdout, "\n");
+                }
+                fprintf(stdout, "\n");
+
+                *csvRow = (*csvRow)->next;
+            } while (gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_O_2);
+
+            if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_O_3) 
+                croak("Group O-2 is not followed by Group O-3!");
+
+            for (int j = 1; j <= mp2; j++) 
+                *arrayAt(&(state->lr), *matrixAt(nsp, j, k)) = 2.0;
+
+            if (mq2 != 0) {
+                fprintf(stdout, "Neumann Nodes\n");
+                int jj = mp2 + 1;
+                do {
+                    for (int i = 1; i < (*csvRow)->entryCount; i++) {
+                        int value = 0;
+                        sscanf((*csvRow)->entries[i], "%d", &value);
+                        *matrixAt(nsp, jj + i - 1, k) = (double)value;
+
+                        fprintf(stdout, "\t%d  ", value);
+
+                        if (i % 7 == 0)
+                            fprintf(stdout, "\n");
+                    }
+                    fprintf(stdout, "\n");
+                    *csvRow = (*csvRow)->next;
+                } while(gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_O_3);
+
+                for (int j = jj; j <= mspk; j++) 
+                    *arrayAt(&(state->lr), *matrixAt(nsp, j, k)) = -2.0;
+            }
+        }
+    }
+
+    *csvRow = (*csvRow)->prev;
+}

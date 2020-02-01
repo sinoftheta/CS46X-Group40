@@ -266,4 +266,11 @@ void gs2ReadSubGroupN2(
     int knsdn
 );
 
+void gs2ReadGroupO(
+    CSVRow** csvRow,
+    gs2State* state,
+    Array* msp,
+    Matrix* nsp
+);
+
 #endif /* __CAP_DATAIN_H__ */
