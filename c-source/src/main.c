@@ -10,8 +10,14 @@
 #include "gs2/datain.h"
 #include "gs2/gs2.h"
 
+#include <gsl/gsl_sf_bessel.h>
+
 int main(int argc, char** argv) {
 
+
+    double x = 5.0;
+    double y = gsl_sf_bessel_J0 (x);
+    printf ("J0(%g) = %.18e\n", x, y);
 
     gs2MemoryRequirements memReqs;
     memReqs.mxc = 12;
