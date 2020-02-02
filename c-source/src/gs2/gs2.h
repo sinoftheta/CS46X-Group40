@@ -107,11 +107,12 @@ typedef struct gs2State {
     //                in the unsaturated material property tables.
     Array wk;
     Matrix xk;
+    Matrix xm;
     Matrix xpsi;
     Matrix ckt[3];
     Matrix ctt[3];
     Array psio;
-    Array ipsl;
+    Array ispl;
 
     // Common Three
     int nn, mm, km, it, nsdn, nb, knb, knb2, istop;

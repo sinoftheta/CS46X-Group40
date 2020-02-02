@@ -108,6 +108,12 @@ void gs2Datain(
     // nsf should already be dimensioned
     // nsk should already be dimensioned
     // msp should already be dimensioned
+    arrayDimension(&(state->ispl), 20);
+    arrayDimension(&(state->wk), 179);
+    matrixDimension(&(state->xk), 15, 20);
+    matrixDimension(&(state->xpsi), 15, 20);
+    matrixDimension(&(state->xm), 15, 20);
+    arrayDimension(&(state->psio), 20);
 
     Array wxpsi, wxm, wxk;
     Matrix cc;
@@ -224,10 +230,24 @@ void gs2Datain(
                 break;  
             case GROUP_N_2:
                 gs2ReadSubGroupN2(&row, state, nsk, cn, knsdn);
+                break;
+            case GROUP_O_1:
+                // sub dividing group O doesn't make sense
+                gs2ReadGroupO(&row, state, msp, nsp);
+                break;
+            case GROUP_P:
+                if (nvs == 0) break;
+                gs2ReadGroupP(&row, state);
+                break;
+            case GROUP_Q_1:
+                gs2ReadGroupQ(&row, state, &wxpsi, &wxm, &wxk, &cc);
+                break;
             default:
                 break;
         };
-        row = row->next;
+
+        if (row != CSV_NULL_ROW_PTR)
+            row = row->next;
     } while (row != CSV_NULL_ROW_PTR);
 
     arrayFree(&wxpsi);
@@ -1152,7 +1172,7 @@ void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, 
     *csvRow = (*csvRow)->prev;
 }
 
-void gs2ReadSubGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
+void gs2ReadGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
     if (state->nseep == 0)
         return;
 
@@ -1221,4 +1241,146 @@ void gs2ReadSubGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp)
     }
 
     *csvRow = (*csvRow)->prev;
+}
+
+void gs2ReadGroupP(CSVRow** csvRow, gs2State* state) {
+    // card: group, l1, kf(l1), ..., l8, kf(l8)
+
+    for (int i = 1; i < (*csvRow)->entryCount; i += 2) {
+        if ((*csvRow)->entries[i][0] == '\0')
+            break;
+        int l = 0;
+        sscanf((*csvRow)->entries[i], "%d", &l);
+        sscanf((*csvRow)->entries[i + 1], "%lf", arrayAt(&(state->kf), l));
+    }
+}
+
+void gs2ReadGroupQ(
+    CSVRow** csvRow,
+    gs2State* state,
+    Array* wxpsi,
+    Array* wxm,
+    Array* wxk,
+    Matrix* cc
+) {
+    for (int i = 1; i <= state->nk; i++) {
+        sscanf((*csvRow)->entries[i], "%lf", arrayAt(&(state->ispl), i));
+    }
+    
+    *csvRow = (*csvRow)->next;
+    int k = 0;
+    do {
+        k++;
+
+        fprintf(stdout, "Variation of material properties with pressure (%d)\n", state->nk);
+
+        int ispk = (int)(*arrayAt(&(state->ispl), k));
+        //int ispm = ispk - 1;
+
+        gs2ReadSubGroupQ2(csvRow, state, k, ispk);
+        gs2ReadSubGroupQ3(csvRow, state, k, ispk);
+        gs2ReadSubGroupQ4(csvRow, state, k, ispk);
+
+        fprintf(stdout, "Pressure Head:\n\t");
+        for (int i = 1; i <= ispk; i++) {
+            fprintf(stdout, "%lf  ", *matrixAt(&(state->xpsi), i, k));
+            if (i % 8 == 0)
+                fprintf(stdout, "\n\t");
+        }
+        fprintf(stdout, "\n\nMositure Content:\n\t");
+        for (int i = 1; i <= ispk; i++) {
+            fprintf(stdout, "%lf  ", *matrixAt(&(state->xm), i, k));
+            if (i % 8 == 0)
+                fprintf(stdout, "\n\t");
+        }
+        fprintf(stdout, "\n\nHydrualic Conductivity:\n\t");
+        for (int i = 1; i <= ispk; i++) {
+            fprintf(stdout, "%lf  ", *matrixAt(&(state->xk), i, k));
+            if (i % 8 == 0)
+                fprintf(stdout, "\n\t");
+        }
+        fprintf(stdout, "\n");
+
+        double xpsiAtK = *matrixAt(&(state->xpsi), ispk, k);
+        *arrayAt(&(state->psio), k) = -pow(10, xpsiAtK);
+
+        for (int i = 1; i <= ispk; i++) {
+            *arrayAt(wxk, i) = *matrixAt(&(state->xk), i, k);
+            *arrayAt(wxm, i) = *matrixAt(&(state->xm), i, k);
+            *arrayAt(wxpsi, i) = *matrixAt(&(state->xpsi), i, k);
+        }
+
+        //int ier = 0;
+
+        // wrap ICS1CU
+
+    } while (k < state->nk);
+}
+
+void gs2ReadSubGroupQ2(
+    CSVRow** csvRow,
+    gs2State* state,
+    int material,
+    int count
+) {
+    int j = 1;
+    do {
+        // card: group, xpsi(1, k), ..., xpsi(8, k)
+        for (int i = 1; i <= 8; i++) {
+            if ((*csvRow)->entries[i][0] == '\0')
+                break;
+
+            double* matRef =  matrixAt(&(state->xpsi), j, material);
+            sscanf((*csvRow)->entries[i], "%lf", matRef);
+
+            j++;
+        }
+
+        *csvRow = (*csvRow)->next;
+    } while (gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_Q_2);
+}
+
+void gs2ReadSubGroupQ3(
+    CSVRow** csvRow,
+    gs2State* state,
+    int material,
+    int count
+) {
+    int j = 1;
+    do {
+        // card: group, xm(1, k), ..., xm(8, k)
+        for (int i = 1; i <= 8; i++) {
+            if ((*csvRow)->entries[i][0] == '\0')
+                break;
+
+            sscanf((*csvRow)->entries[i], "%lf", matrixAt(&(state->xm), j, material));
+
+            j++;
+        }
+
+        *csvRow = (*csvRow)->next;
+    } while (gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_Q_3);
+}
+
+void gs2ReadSubGroupQ4(
+    CSVRow** csvRow,
+    gs2State* state,
+    int material,
+    int count
+) {
+    int j = 1;
+    do {
+        // card: group, xk(1, k), ..., xk(8, k)
+        for (int i = 1; i <= 8; i++) {
+            if ((*csvRow)->entries[i][0] == '\0')
+                break;
+
+            double* matRef =  matrixAt(&(state->xk), j, material);
+            sscanf((*csvRow)->entries[i], "%lf", matRef);
+
+            j++;
+        }
+
+        *csvRow = (*csvRow)->next;
+    } while (gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_Q_4);
 }

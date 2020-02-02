@@ -273,4 +273,39 @@ void gs2ReadGroupO(
     Matrix* nsp
 );
 
+void gs2ReadGroupP(
+    CSVRow** csvRow,
+    gs2State* state
+);
+
+void gs2ReadGroupQ(
+    CSVRow** csvRow,
+    gs2State* state,
+    Array* wxpsi,
+    Array* wxm,
+    Array* wxk,
+    Matrix* cc
+);
+
+void gs2ReadSubGroupQ2(
+    CSVRow** csvRow,
+    gs2State* state,
+    int material,
+    int count
+);
+
+void gs2ReadSubGroupQ3(
+    CSVRow** csvRow,
+    gs2State* state,
+    int material,
+    int count
+);
+
+void gs2ReadSubGroupQ4(
+    CSVRow** csvRow,
+    gs2State* state,
+    int material,
+    int count
+);
+
 #endif /* __CAP_DATAIN_H__ */

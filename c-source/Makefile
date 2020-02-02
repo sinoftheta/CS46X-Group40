@@ -1,6 +1,7 @@
 CC=gcc
-CFLAGS := -lm -pedantic -Wall -Werror -g -std=c99
-CLIBS :=
+# -lgsl -lgslcblas
+CFLAGS := -lm  -Iinclude -pedantic -Wall -Werror -g -std=c99
+CLIBS := -static -Llib/gsl -static -Llib/gslcblas
 
 SRCDIR := src
 BUILDDIR := build/objs
