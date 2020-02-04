@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 
-#define DEFAULT(cond, data, value) do { if (!cond) { data = value; } } while(0) 
+#define DEFAULT(cond, data, value) do { if (cond <= 0) { data = value; } } while(0) 
 
 const char* gs2DataGroupNames[NUM_DATA_GROUP] = {
     "A",
@@ -252,9 +252,9 @@ void gs2Datain(
             case GROUP_Q_1:
                 gs2ReadGroupQ(&row, state, &wxpsi, &wxm, &wxk, &cc);
                 break;
-            case GROUP_R:
-                gs2ReadGroupR(&row, state);
-                break;
+            // case GROUP_R:
+            //     gs2ReadGroupR(&row, state);
+            //     break;
             default:
                 break;
         };
@@ -380,8 +380,8 @@ void gs2ReadGroupB(
 
     fprintf(stdout, "\tboundary nodes with specified flux: %d\n", state->nsdn);
     fprintf(stdout, "\tInitial value: %d\n", *mq4);
-    fprintf(stdout, "\tMinimum allowed pressure: %lf\n", state->pl);
-    fprintf(stdout, "\tMaximum flux: %lf\n", state->ei);    
+    fprintf(stdout, "\tMinimum allowed pressure: %e\n", state->pl);
+    fprintf(stdout, "\tMaximum flux: %e\n", state->ei);    
     fprintf(stdout, "\tboundary nodes with specified concentration flux: %d\n", *knsdn);
     fprintf(stdout, "\tSeepage nodes: %d\n", state->nseep);
 
@@ -420,12 +420,12 @@ void gs2ReadGroupB(
     fprintf(stdout, "\tMultipler for increasing time step: %lf\n", state->chng);
     fprintf(stdout, "\tMaximum permitted number of time steps: %d\n", state->itmax);
     fprintf(stdout, "\tNumber of time steps between changes in delt: %d\n", state->itchng);
-    fprintf(stdout, "\tPressure change criterion: %lf\n", state->pchng);
-    fprintf(stdout, "\tFluid compressibility (betap): %lf\n", state->betap);
-    fprintf(stdout, "\tMolecular diffusino constant: %lf\n", state->difusn);
+    fprintf(stdout, "\tPressure change criterion: %e\n", state->pchng);
+    fprintf(stdout, "\tFluid compressibility (betap): %e\n", state->betap);
+    fprintf(stdout, "\tMolecular diffusion constant: %e\n", state->difusn);
     fprintf(stdout, "\tFactor for time derivative of porosity: %lf\n", state->dprdt);
     fprintf(stdout, "\tNumber of iteration in flow: %d\n", state->iter1);
-    fprintf(stdout, "\tClosure criterion: %lf\n", state->clos1);
+    fprintf(stdout, "\tClosure criterion: %e\n", state->clos1);
     fprintf(stdout, "\tNumber of concentration steps per pres. step: %d\n", state->igo);
 
     switch (state->type) {
@@ -582,7 +582,7 @@ void gs2ReadSubGroupF1(CSVRow** csvRow, gs2State* state) {
     sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->fq), index[3]));
 
     for (int i = 0; i < 4; i++)
-        fprintf(stdout, "Node %d source and sink discharge: %lf\n", index[i], *arrayAt(&(state->fq), index[i]));
+        fprintf(stdout, "Node %d source and sink discharge: %e\n", index[i], *arrayAt(&(state->fq), index[i]));
 }
 
 void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
@@ -614,28 +614,41 @@ void gs2ReadSubGroupG1(CSVRow** csvRow, gs2State* state) {
 }
 
 void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
-    if ((*csvRow)->entryCount < 9)
-        croak("Sub Group G2, too few entries!");
     
-    int index[4];   
-    
-    sscanf((*csvRow)->entries[1], "%d", &index[0]);
-    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->conci), index[0]));
 
-    sscanf((*csvRow)->entries[3], "%d", &index[1]);
-    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->conci), index[1]));
+    fprintf(stdout, "Initial Concentration\n");
+    fprintf(stdout, "Node\tValue\t\tNode\tValue\t\tNode\tValue\t\tNode\tValue\n");
 
-    sscanf((*csvRow)->entries[5], "%d", &index[2]);
-    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->conci), index[2]));
+    do {
+        if ((*csvRow)->entryCount < 9)
+            croak("Sub Group G2, too few entries!");
+        
+        int index[4];   
+        
+        sscanf((*csvRow)->entries[1], "%d", &index[0]);
+        sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->conci), index[0]));
 
-    sscanf((*csvRow)->entries[7], "%d", &index[3]);
-    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->conci), index[3]));
+        sscanf((*csvRow)->entries[3], "%d", &index[1]);
+        sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->conci), index[1]));
 
-    if (state->stime > 0.0) {
-        for (int i = 0; i < 4; i++) {
-            state->conci.elements[index[i]] *= aconci;
-        }
-    } 
+        sscanf((*csvRow)->entries[5], "%d", &index[2]);
+        sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->conci), index[2]));
+
+        sscanf((*csvRow)->entries[7], "%d", &index[3]);
+        sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->conci), index[3]));
+
+        for (int i = 0; i < 4; i++)
+            fprintf(stdout, "%d\t%e\t", index[i], *arrayAt(&(state->conci), index[i]));
+        fprintf(stdout, "\n");
+
+        if (state->stime > 0.0) {
+            for (int i = 0; i < 4; i++) {
+                state->conci.elements[index[i]] *= aconci;
+            }
+        } 
+        *csvRow = (*csvRow)->next;
+    } while(gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_G_2);
+    *csvRow = (*csvRow)->prev;
 }
 
 void gs2ReadSubGroupH1(CSVRow** csvRow, gs2State* state) {
@@ -661,27 +674,39 @@ void gs2ReadSubGroupH2(CSVRow** csvRow, gs2State* state, double* hone) {
 
 // the hone != 9999 is handled elsewhere
 void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, double aphii) {
+
+    fprintf(stdout, "Initial Concentration\n");
+    fprintf(stdout, "Node\tValue\t\tNode\tValue\t\tNode\tValue\t\tNode\tValue\n");
+
     if ((*csvRow)->entryCount < 9)
         croak("Sub Group H3 too few entries");
 
-    int index[4];
-    sscanf((*csvRow)->entries[1], "%d", &index[0]);
-    sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->phii), index[0]));
+    do {
+        int index[4];
+        sscanf((*csvRow)->entries[1], "%d", &index[0]);
+        sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->phii), index[0]));
 
-    sscanf((*csvRow)->entries[3], "%d", &index[1]);
-    sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->phii), index[1]));
+        sscanf((*csvRow)->entries[3], "%d", &index[1]);
+        sscanf((*csvRow)->entries[4], "%lf", arrayAt(&(state->phii), index[1]));
 
-    sscanf((*csvRow)->entries[5], "%d", &index[2]);
-    sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->phii), index[2]));
+        sscanf((*csvRow)->entries[5], "%d", &index[2]);
+        sscanf((*csvRow)->entries[6], "%lf", arrayAt(&(state->phii), index[2]));
 
-    sscanf((*csvRow)->entries[7], "%d", &index[3]);
-    sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->phii), index[3]));
+        sscanf((*csvRow)->entries[7], "%d", &index[3]);
+        sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->phii), index[3]));
 
-    if (state->stime > 0.0) {
-        for (int i = 0; i < 4; i++) {
-            state->phii.elements[index[i]] *= aphii;
-        }
-    } 
+        for (int i = 0; i < 4; i++)
+            fprintf(stdout, "%d\t%e\t", index[i], *arrayAt(&(state->phii), index[i]));
+        fprintf(stdout, "\n");
+
+        if (state->stime > 0.0) {
+            for (int i = 0; i < 4; i++) {
+                state->phii.elements[index[i]] *= aphii;
+            }
+        } 
+        *csvRow = (*csvRow)->next;
+    } while(gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_H_3);
+    *csvRow = (*csvRow)->prev;
 }
 
 void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
