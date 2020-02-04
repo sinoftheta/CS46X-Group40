@@ -309,4 +309,9 @@ void gs2ReadSubGroupQ4(
     int count
 );
 
+void gs2ReadGroupR(
+    CSVRow** csvRow,
+    gs2State* state
+);
+
 #endif /* __CAP_DATAIN_H__ */

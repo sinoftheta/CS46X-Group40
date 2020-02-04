@@ -10,14 +10,8 @@
 #include "gs2/datain.h"
 #include "gs2/gs2.h"
 
-#include <gsl/gsl_sf_bessel.h>
 
 int main(int argc, char** argv) {
-
-
-    double x = 5.0;
-    double y = gsl_sf_bessel_J0 (x);
-    printf ("J0(%g) = %.18e\n", x, y);
 
     gs2MemoryRequirements memReqs;
     memReqs.mxc = 12;
@@ -26,7 +20,7 @@ int main(int argc, char** argv) {
     memReqs.maxne = 25;
     memReqs.ns1 = 2;
     memReqs.kns1 = 0;
-    memReqs.maxm4 = 1;
+    memReqs.maxm4 = 2;
     memReqs.maxm5 = 1;
     memReqs.maxeep = 1;
     memReqs.maxbw = 4;
@@ -58,7 +52,7 @@ int main(int argc, char** argv) {
     arrayDimension(&nsk, memReqs.maxm4);
     arrayDimension(&msp, memReqs.maxeep);
     matrixDimension(&nsp, memReqs.maxm5, memReqs.maxeep);
-    
+
     gs2Datain(
         &state,
         "res/example1.csv",

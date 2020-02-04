@@ -252,6 +252,9 @@ void gs2Datain(
             case GROUP_Q_1:
                 gs2ReadGroupQ(&row, state, &wxpsi, &wxm, &wxk, &cc);
                 break;
+            case GROUP_R:
+                gs2ReadGroupR(&row, state);
+                break;
             default:
                 break;
         };
@@ -1169,6 +1172,8 @@ void gs2ReadSubGroupN1(CSVRow** csvRow, gs2State* state, int knsdn) {
 }
 
 void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, int knsdn) {
+    
+    fprintf(stdout, "Specified concentration flux\n");
     // card: group, nsk(i), cn(i), nsk(j), cn(j), nsk(k), cn(k), nsk(l), cn(l), nsk(m), cn(m)
     for (int i = 1; i <= knsdn; i += 5) {
         
@@ -1183,26 +1188,36 @@ void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, 
         if (i <= maxm4) {
             sscanf((*csvRow)->entries[1], "%lf", arrayAt(nsk, i));
             sscanf((*csvRow)->entries[2], "%lf", arrayAt(cn, i));
+
+            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i)), *arrayAt(cn, i));
         }
         
         if (i + 1 <= maxm4) {
             sscanf((*csvRow)->entries[3], "%lf", arrayAt(nsk, i + 1));
             sscanf((*csvRow)->entries[4], "%lf", arrayAt(cn, i + 1));
+
+            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 1)), *arrayAt(cn, i + 1));
         }
 
         if (i + 2 <= maxm4) {
             sscanf((*csvRow)->entries[5], "%lf", arrayAt(nsk, i + 2));
             sscanf((*csvRow)->entries[6], "%lf", arrayAt(cn, i + 2));
+
+            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 2)), *arrayAt(cn, i + 2));
         }
 
         if (i + 3 <= maxm4) {
             sscanf((*csvRow)->entries[7], "%lf", arrayAt(nsk, i + 3));
             sscanf((*csvRow)->entries[8], "%lf", arrayAt(cn, i + 3));
+
+            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 3)), *arrayAt(cn, i + 3));
         }
 
         if (i + 4 <= maxm4) {
             sscanf((*csvRow)->entries[9], "%lf", arrayAt(nsk, i + 4));
             sscanf((*csvRow)->entries[10], "%lf", arrayAt(cn, i + 4));
+
+            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 4)), *arrayAt(cn, i + 4));
         }
 
         *csvRow = (*csvRow)->next;
@@ -1439,4 +1454,8 @@ void gs2ReadSubGroupQ4(
 
         *csvRow = (*csvRow)->next;
     } while (gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_Q_4);
+}
+
+void gs2ReadGroupR(CSVRow** csvRow, gs2State* state) {
+    sscanf((*csvRow)->entries[1], "%lf", &(state->delt));
 }

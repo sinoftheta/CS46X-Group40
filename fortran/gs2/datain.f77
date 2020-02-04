@@ -335,6 +335,8 @@ C     Neumann boundary nodes for concentration
           if (KNSDN.EQ.0) go to 345
       call BC (KLR, KNSDN, -4, NN, MAXNN, ISTOP)
       read (5, 1030) (NSK(K), CN(K), K = 1, KNSDN)
+      write (6, 1058)
+      write (6, 1090) (NSK(K), CN(K), K=1, KNSDN)
   345 continue
 
 C
