@@ -107,6 +107,7 @@ typedef struct gs2State {
     Array wk;
     Matrix xk;
     Matrix xpsi;
+    Matrix xm;
     Matrix ckt[3];
     Matrix ctt[3];
     Array psio;
@@ -125,7 +126,7 @@ typedef struct gs2State {
    // INC = 4), both MXC and MXT can be set to 4 and all variables
    // in common block four changed to dimensions of 4.
    Matrix pe, se, f, dx, dy;
-   Array q, detj, cphi, vkx, vky, dpordt,
+   Array q, qp, detj, cphi, vkx, vky, dpordt,
          d0, dk, dh, srcrt, ff, dgx, dgy,
          srcr;
 
