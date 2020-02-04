@@ -7,6 +7,7 @@ from multipliers import Multipliers
 from nodes import Nodes
 from nodeTypes import NodeTypes
 from elements import Elements
+from elementIncidences import ElementIncidences
 from materials import Materials
 
 parameters = ['Import', 'Basic Parameters', 'Multipliers',
@@ -38,6 +39,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageNodes = Nodes()
         self.parametersPageNodesT = NodeTypes()
         self.parametersPageElem = Elements()
+        self.parametersPageElemIncid = ElementIncidences()
         self.parametersPageMat = Materials()
 
         # Adds each class to stack layout
@@ -47,6 +49,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageNodes)
         self.parametersPageStack.addWidget(self.parametersPageNodesT)
         self.parametersPageStack.addWidget(self.parametersPageElem)
+        self.parametersPageStack.addWidget(self.parametersPageElemIncid)
         self.parametersPageStack.addWidget(self.parametersPageMat)
 
         #   Add navigation buttons (widgets) to
@@ -81,6 +84,11 @@ class ParametersPage(QGroupBox):
         elemNavBtn.pressed.connect(self.elementsClick)
         self.parametersPageNav.addWidget(elemNavBtn)
 
+        elemIncNavBtn = QPushButton("Element Incidences")
+        elemIncNavBtn.setGeometry(0, 0, 150, 100)
+        elemIncNavBtn.pressed.connect(self.elementIncClick)
+        self.parametersPageNav.addWidget(elemIncNavBtn)
+
         matsNavBtn = QPushButton("Materials")
         matsNavBtn.setGeometry(0, 0, 150, 100)
         matsNavBtn.pressed.connect(self.materialsClick)
@@ -112,6 +120,12 @@ class ParametersPage(QGroupBox):
         self.parametersPageElem.buildTable(numElements, numMaterials)
         self.parametersPageStack.setCurrentIndex(5)
 
-    def materialsClick(self):
+    def elementIncClick(self):
+        numElements = self.parametersPageBasic.getNumElements()
+        maxNodes = self.parametersPageBasic.getMaxNodesPerElem()
         self.parametersPageStack.setCurrentIndex(6)
+        self.parametersPageElemIncid.buildTable(numElements, maxNodes)
+
+    def materialsClick(self):
+        self.parametersPageStack.setCurrentIndex(7)
         self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())

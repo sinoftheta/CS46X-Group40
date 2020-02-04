@@ -2,7 +2,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-materialsTableLabels = []
+materialsTableLabels = [ "Pressure Head",
+                "Hydraulic Conductivity",
+                "Moisture Content" ]
 
 class Materials(QGroupBox):
     def __init__(self):
@@ -48,7 +50,6 @@ class Materials(QGroupBox):
                 self.materialGroup.addItem(str(i+1))
                 self.materialsStack.addWidget(MaterialOptions(i+1))
         elif (currentNumMats > numMaterials):
-            print("In currentNumMats > numMats")
             for i in range (currentNumMats, numMaterials-1, -1):
                 print(i)
                 self.materialGroup.removeItem(i)
@@ -70,13 +71,13 @@ class MaterialOptions(QGroupBox):
     def __init__(self, material):
         super(MaterialOptions, self).__init__("Material " + str(material))
         self.layout = QVBoxLayout()
-        self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        self.layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         self.layout.setSpacing(20)
         self.setLayout(self.layout)
         pointsLabel = QLabel("Number of Interpolation Points")
         pointsLabel.setAlignment(Qt.AlignLeft)
         self.ISPL = QLineEdit()
-        self.ISPL.setFixedWidth(120)
+        self.ISPL.setFixedWidth(60)
         self.ISPL.editingFinished.connect(self.updateInputs)
         self.ISPL.setAlignment(Qt.AlignRight)
         self.layout.addWidget(pointsLabel)
@@ -89,29 +90,43 @@ class MaterialOptions(QGroupBox):
             self.setInputs(numPoints)
         else:
             InterpolationPointsLabel = QLabel("Interpolation Points")
-            InterpolationPointsLabel.setFont(QFont('Helvetica', 14))
+            InterpolationPointsLabel.setFont(QFont('Arial', 16))
             InterpolationPointsLabel.setAlignment(Qt.AlignLeft)
             self.layout.addWidget(InterpolationPointsLabel)
-            # spacer = QSpacerItem(5, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
-            # self.layout.addItem(spacer)
+            self.inputLayout = QHBoxLayout()
+            self.inputLayout.setAlignment(Qt.AlignCenter)
+            self.layout.addLayout(self.inputLayout)
+
+            self.XPSI = QVBoxLayout()
+            self.XPSI.setContentsMargins(0, 0, 20, 2)
+            self.XPSI.setSpacing(0)
+            self.XPSI.setAlignment(Qt.AlignCenter)
+            self.XM = QVBoxLayout()
+            self.XM.setContentsMargins(0, 0, 20, 2)
+            self.XM.setSpacing(0)
+            self.XM.setAlignment(Qt.AlignCenter)
+            self.XK = QVBoxLayout()
+            self.XK.setContentsMargins(0, 0, 20, 2)
+            self.XK.setSpacing(0)
+            self.XK.setAlignment(Qt.AlignCenter)
+            self.inputLayout.addLayout(self.XPSI)
+            self.inputLayout.addLayout(self.XM)
+            self.inputLayout.addLayout(self.XK)
             pressureHeadLabel = QLabel("Pressure Head")
-            pressureHeadLabel.setFont(QFont('Helvetica', 12))
+            pressureHeadLabel.setFont(QFont('Arial', 13))
             pressureHeadLabel.setAlignment(Qt.AlignLeft)
-            self.layout.addWidget(pressureHeadLabel)
-            self.XPSI = QHBoxLayout()
-            self.layout.addLayout(self.XPSI)
-            moistureContentLabel = QLabel("Moisture Content")
-            moistureContentLabel.setFont(QFont('Helvetica', 12))
-            moistureContentLabel.setAlignment(Qt.AlignLeft)
-            self.layout.addWidget(moistureContentLabel)
-            self.XM = QHBoxLayout()
-            self.layout.addLayout(self.XM)
             hConductivityLabel = QLabel("Hydraulic Conductivity")
-            hConductivityLabel.setFont(QFont('Helvetica', 12))
+            hConductivityLabel.setFont(QFont('Arial', 13))
             hConductivityLabel.setAlignment(Qt.AlignLeft)
-            self.layout.addWidget(hConductivityLabel)
-            self.XK = QHBoxLayout()
-            self.layout.addLayout(self.XK)
+            moistureContentLabel = QLabel("Moisture Content")
+            moistureContentLabel.setFont(QFont('Arial', 13))
+            moistureContentLabel.setAlignment(Qt.AlignLeft)
+
+            self.XM.addWidget(moistureContentLabel)
+            self.XPSI.addWidget(pressureHeadLabel)
+            self.XK.addWidget(hConductivityLabel)
+
+
             self.setInputs(numPoints)
 
     def setInputs(self, numPoints):
@@ -119,31 +134,33 @@ class MaterialOptions(QGroupBox):
                 entryInput = QDoubleSpinBox()
                 entryInput.setDecimals(3)
                 entryInput.setSingleStep(0.001)
+                entryInput.setRange(-999.999, 9999.999)
                 entryInput.setAlignment(Qt.AlignRight)
+                entryInput.setFixedWidth(85)
                 self.XPSI.addWidget(entryInput)
 
             for i in range(0, numPoints):
                 entryInput = QDoubleSpinBox()
                 entryInput.setDecimals(3)
                 entryInput.setSingleStep(0.001)
+                entryInput.setRange(-999.999, 9999.999)
                 entryInput.setAlignment(Qt.AlignRight)
+                entryInput.setFixedWidth(85)
                 self.XM.addWidget(entryInput)
 
             for i in range(0, numPoints):
                 entryInput = QDoubleSpinBox()
                 entryInput.setDecimals(3)
                 entryInput.setSingleStep(0.001)
+                entryInput.setRange(-999.999, 9999.999)
                 entryInput.setAlignment(Qt.AlignRight)
+                entryInput.setFixedWidth(85)
                 self.XK.addWidget(entryInput)
 
     def clearLayouts(self):
-        for i in reversed(range(self.XPSI.count())):
-            widget = self.XPSI.itemAt(i).widget()
-            self.XPSI.removeWidget(widget)
-            widget.deleteLater()
-            widget = self.XM.itemAt(i).widget()
-            self.XM.removeWidget(widget)
-            widget.deleteLater()
-            widget = self.XK.itemAt(i).widget()
-            self.XK.removeWidget(widget)
-            widget.deleteLater()
+        for inputWidget in range(0, self.inputLayout.count()):
+            for i in reversed(range(1, self.inputLayout.itemAt(inputWidget).count())):
+                if (i != 0):
+                    widget = self.inputLayout.itemAt(inputWidget).takeAt(i).widget()
+                    self.inputLayout.itemAt(inputWidget).removeWidget(widget)
+                    widget.deleteLater()

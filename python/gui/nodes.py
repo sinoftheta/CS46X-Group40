@@ -77,5 +77,6 @@ class Nodes(QGroupBox):
 class BoundaryComboBox(QComboBox):
     def __init__(self):
         super(BoundaryComboBox, self).__init__()
+        self.addItem('-Select Boundary Type-')
         for nodeType in nodeTypeLabels:
             self.addItem(nodeType)
