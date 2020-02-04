@@ -4,6 +4,7 @@
 #include "../capstone/MathUtil.h"
 #include "../capstone/Debug.h"
 
+#include "ics1cu.h"
 #include "bc.h"
 
 #include <string.h>
@@ -50,6 +51,7 @@ const char* gs2DataGroupNames[NUM_DATA_GROUP] = {
 void gs2Datain(
     gs2State* state, 
     const char* csvPath,
+    Array* old,
     Array* cold, 
     Array* cn,
     Array* vn,
@@ -249,6 +251,34 @@ void gs2Datain(
         if (row != CSV_NULL_ROW_PTR)
             row = row->next;
     } while (row != CSV_NULL_ROW_PTR);
+
+
+    state->it = 0;
+    state->delp = pow(1, 10);
+    state->delt = state->delt * 3600;
+    state->ssec = state->stime * 3600;
+
+    int ic = 0;
+    int ip = 0;
+
+    for (int i = 1; i <= state->nn; i++) {
+        *arrayAt(&(state->phi), i) = *arrayAt(&(state->phii), i);
+        *arrayAt(&(state->conc), i) = *arrayAt(&(state->conci), i);
+
+        if (*arrayAt(&(state->lr), i) != 1.0) {
+            ip++;
+            *arrayAt(lp, ip) = i;
+            *arrayAt(u, ip) = *arrayAt(&(state->phii), i);
+            *arrayAt(old, ip) = *arrayAt(&(state->phii), i);
+            *arrayAt(est, ip) = *arrayAt(&(state->phii), i);
+        }
+
+        if (*arrayAt(&(state->klr), i) != 1.0) {
+            ic++;
+            *arrayAt(klp, ic) = i;
+            *arrayAt(cold, ic) = *arrayAt(&(state->conci), i);
+        }
+    }
 
     arrayFree(&wxpsi);
     arrayFree(&wxm);
@@ -1272,10 +1302,10 @@ void gs2ReadGroupQ(
     do {
         k++;
 
-        fprintf(stdout, "Variation of material properties with pressure (%d)\n", state->nk);
+        fprintf(stdout, "Variation of material properties with pressure (%d)\n", k);
 
         int ispk = (int)(*arrayAt(&(state->ispl), k));
-        //int ispm = ispk - 1;
+        int ispm = ispk - 1;
 
         gs2ReadSubGroupQ2(csvRow, state, k, ispk);
         gs2ReadSubGroupQ3(csvRow, state, k, ispk);
@@ -1288,12 +1318,14 @@ void gs2ReadGroupQ(
                 fprintf(stdout, "\n\t");
         }
         fprintf(stdout, "\n\nMositure Content:\n\t");
+
         for (int i = 1; i <= ispk; i++) {
             fprintf(stdout, "%lf  ", *matrixAt(&(state->xm), i, k));
             if (i % 8 == 0)
                 fprintf(stdout, "\n\t");
         }
         fprintf(stdout, "\n\nHydrualic Conductivity:\n\t");
+        
         for (int i = 1; i <= ispk; i++) {
             fprintf(stdout, "%lf  ", *matrixAt(&(state->xk), i, k));
             if (i % 8 == 0)
@@ -1310,9 +1342,25 @@ void gs2ReadGroupQ(
             *arrayAt(wxpsi, i) = *matrixAt(&(state->xpsi), i, k);
         }
 
-        //int ier = 0;
+        int ier = 0;
 
-        // wrap ICS1CU
+        gs2ICS1CU(wxm, wxpsi, ispk, cc, k, &ier);
+
+        for (int i = 1; i <=  ispm; i++) {
+            for (int j = 1; j <= 3; j++) {
+                *matrixAt(&(state->ctt[j-1]), i, k) = *matrixAt(cc, j, i);
+            }
+        }
+
+         gs2ICS1CU(wxk, wxpsi, ispk, cc, k, &ier);
+
+        for (int i = 1; i <=  ispm; i++) {
+            for (int j = 1; j <= 3; j++) {
+                *matrixAt(&(state->ckt[j-1]), i, k) = *matrixAt(cc, j, i);
+            }
+        }
+
+        // error check
 
     } while (k < state->nk);
 }

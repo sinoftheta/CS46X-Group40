@@ -388,6 +388,8 @@ C     OLD, COLD
       KLP(IC) = I
       COLD(IC) = CONCI(I)
   470 continue
+
+C Group P
           do 474 L = 1, NE
   474 KF(L) = 0
           if (NVS.EQ.0) go to 476
@@ -443,7 +445,7 @@ C
      & 15H MASS TRANSPORT//31X,
      & 31HWITH ISOPARAMETRIC 2-D ELEMENTS//)
   860 format (11X, 70(1H*)//11X, 20A4//11X, 70(1H*)///)
-  910 format (1615)
+  910 format (16I5)
   911 format (//11X, 4HKOD1, I5/11X, 4HKOD2, I5/11X, 4HKOD3,
      & I5/11X, 4HKOD4, I5/11X, 4HKOD7, I5/11X, 4HKOD8, I5/11X,
      & 4HKOD9, I5/11X, 5HKOD10, I4/11X, 5HKOD11, I4/11X,

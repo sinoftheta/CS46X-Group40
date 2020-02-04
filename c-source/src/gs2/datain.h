@@ -45,6 +45,7 @@ extern const char* gs2DataGroupNames[NUM_DATA_GROUP];
 void gs2Datain(
     gs2State* state, 
     const char* csvPath,
+    Array* old,
     Array* cold, 
     Array* cn,
     Array* vn,

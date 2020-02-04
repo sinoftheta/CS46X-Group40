@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 
     double maxdif = 0.0;
 
-    Array cold, cn, vn, coef, u, est, lp, klp, nsf, nsk, msp;
+    Array old, cold, cn, vn, coef, u, est, lp, klp, nsf, nsk, msp;
     Matrix nsp;
 
     arrayDimension(&nsk, memReqs.maxm4);
@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
     gs2Datain(
         &state,
         "res/example1.csv",
+        &old,
         &cold,
         &cn,
         &vn,
