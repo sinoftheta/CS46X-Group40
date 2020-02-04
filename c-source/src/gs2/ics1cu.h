@@ -6,11 +6,11 @@
 
 
 void gs2ICS1CU(
-    Array* xs, 
-    Array* ys, 
-    int ispk, 
-    Matrix* cc,
-    int material,
+    Array* gs2xs, 
+    Array* gs2ys, 
+    int dataPointCount, 
+    int coefficentCount,
+    Matrix* coefficentMatrix,
     int* ier
 );
 

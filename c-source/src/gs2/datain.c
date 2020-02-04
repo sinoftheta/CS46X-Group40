@@ -140,7 +140,15 @@ void gs2Datain(
     arrayDimension(&wxpsi, 20);
     arrayDimension(&wxm, 20);
     arrayDimension(&wxk, 20);
-    matrixDimension(&cc, 3, 19);
+
+    // coefficient matricies are typically square, this implementation of
+    // ICS1CU relies on square matricies.
+    matrixDimension(&cc, 19, 19);
+
+    for (int i = 0; i < 3; i++) {
+        matrixDimension(&(state->ctt[i]), 14, 19);
+        matrixDimension(&(state->ckt[i]), 14, 19);
+    }
 
     CSVRow* row = csvFile.currentRow;
     do {
@@ -1325,7 +1333,7 @@ void gs2ReadGroupQ(
                 fprintf(stdout, "\n\t");
         }
         fprintf(stdout, "\n\nHydrualic Conductivity:\n\t");
-        
+
         for (int i = 1; i <= ispk; i++) {
             fprintf(stdout, "%lf  ", *matrixAt(&(state->xk), i, k));
             if (i % 8 == 0)
@@ -1344,7 +1352,7 @@ void gs2ReadGroupQ(
 
         int ier = 0;
 
-        gs2ICS1CU(wxm, wxpsi, ispk, cc, k, &ier);
+        gs2ICS1CU(wxm, wxpsi, ispk, ispm, cc, &ier);
 
         for (int i = 1; i <=  ispm; i++) {
             for (int j = 1; j <= 3; j++) {
@@ -1352,7 +1360,7 @@ void gs2ReadGroupQ(
             }
         }
 
-         gs2ICS1CU(wxk, wxpsi, ispk, cc, k, &ier);
+        gs2ICS1CU(wxk, wxpsi, ispk, ispm, cc, &ier);
 
         for (int i = 1; i <=  ispm; i++) {
             for (int j = 1; j <= 3; j++) {

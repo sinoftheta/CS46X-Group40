@@ -45,13 +45,20 @@ int main(int argc, char** argv) {
     Array old, cold, cn, vn, coef, u, est, lp, klp, nsf, nsk, msp;
     Matrix nsp;
 
-    arrayDimension(&nsk, memReqs.maxm4);
+    arrayDimension(&old, memReqs.maxm1);
+    arrayDimension(&cold, memReqs.maxm2);
     arrayDimension(&cn, memReqs.maxm4);
-    arrayDimension(&nsf, memReqs.maxm4);
     arrayDimension(&vn, memReqs.maxm4);
-
+    arrayDimension(&coef, memReqs.maxm4);
+    arrayDimension(&u, memReqs.maxm1);
+    arrayDimension(&est, memReqs.maxm1);
+    arrayDimension(&lp, memReqs.maxm1);
+    arrayDimension(&klp, memReqs.maxm2);
+    arrayDimension(&nsf, memReqs.maxm4);
+    arrayDimension(&nsk, memReqs.maxm4);
+    arrayDimension(&msp, memReqs.maxeep);
     matrixDimension(&nsp, memReqs.maxm5, memReqs.maxeep);
-
+    
     gs2Datain(
         &state,
         "res/example1.csv",

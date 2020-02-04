@@ -1,50 +1,75 @@
 #include "ics1cu.h"
 
-#include <gsl/gsl_interp.h>
+#include <gsl/gsl_bspline.h>
+#include <gsl/gsl_multifit.h>
 
 #include <stdio.h>
 
 void gs2ICS1CU(
-    Array* xs, 
-    Array* ys, 
+    Array* gs2xs, 
+    Array* gs2ys, 
     int dataPointCount, 
     int coefficentCount,
     Matrix* coefficentMatrix,
     int* ier
 ) {
 
-    // gsl_interp* interp = gsl_interp_alloc(gsl_interp_cspline, ispk);
+    // 4 represents a cubic spline
+    const size_t k = 4;
+    const size_t nbreak = coefficentCount + 2 - k;
 
-    // printf("xs = %d, ys = %d, ispk = %d\n", xs->size, ys->size, ispk);
+    gsl_bspline_workspace* bw;
+    gsl_vector* B;
+    gsl_vector* xs;
+    gsl_vector* ys;
+    gsl_matrix* X;
 
-    // for (int i = 1; i <= ispk; i++) {
-    //     printf("%lf  ", xs->elements[i-1]);
-    // }
-    // puts(" ");
+    bw = gsl_bspline_alloc(k, nbreak);
 
-    // for (int i = 1; i <= ispk; i++) {
-    //     printf("%lf  ", ys->elements[i-1]);
-    // }
-    // puts(" ");
+    B = gsl_vector_alloc(coefficentCount);
+    xs = gsl_vector_alloc(dataPointCount);
+    ys = gsl_vector_alloc(dataPointCount);
 
-    // *ier = gsl_interp_init(interp, xs->elements, ys->elements, ispk);
+    X = gsl_matrix_alloc(dataPointCount, coefficentCount);
 
-    // gsl_interp_accel *acc = gsl_interp_accel_alloc();
+    double maxXI = 0.0;
+    double minXI = 0.0;
+    for (int i = 0; i < dataPointCount; i++) {
+        double xi = *arrayAt(gs2xs, i + 1);
+        double yi = *arrayAt(gs2ys, i + 1);
 
-    // // constant
-    // double d = gsl_interp_eval(interp, xs->elements, ys->elements, 0.0, acc);
-    // // linear
-    // double c = gsl_interp_eval_deriv(interp, xs->elements, ys->elements, 0.0, acc);
-    // // quadratic
-    // double b = 0.5 * gsl_interp_eval_deriv2(interp, xs->elements, ys->elements, 0.0, acc);
-    // // cubic
-    // double a = gsl_interp_eval(interp, xs->elements, ys->elements, 1.0, acc) - b - c - d;
+        gsl_vector_set(xs, i, xi);
+        gsl_vector_set(ys, i, yi);
 
-   
-    // *matrixAt(cc, 3, material) = a;
-    // *matrixAt(cc, 2, material) = b;
-    // *matrixAt(cc, 1, material) = c;
+        maxXI = xi > maxXI ? xi : maxXI; 
+        minXI = xi < minXI ? xi : minXI;
+    }
 
-    // gsl_interp_accel_free(acc);
-    // gsl_interp_free(interp);
+    gsl_bspline_knots_uniform(minXI-0.02, maxXI+0.02, bw);
+
+    for (int i = 0; i < dataPointCount; i++) {
+        double xi = gsl_vector_get(xs, i);
+        
+        gsl_bspline_eval(xi, B, bw);
+
+        for (int j = 0; j < coefficentCount; j++){
+          double Bj = gsl_vector_get(B, j);
+          gsl_matrix_set(X, i, j, Bj);
+        }
+    }
+
+
+
+    for (int i = 0; i < dataPointCount; i++) {
+        for (int j = 0; j < coefficentCount; j++) {
+            *matrixAt(coefficentMatrix, j+1, i+1) = gsl_matrix_get(X, i, j);
+        }
+    }
+
+
+    gsl_bspline_free(bw);
+    gsl_vector_free(xs);
+    gsl_vector_free(ys);
+    gsl_vector_free(B);
+    gsl_matrix_free(X);
 }
