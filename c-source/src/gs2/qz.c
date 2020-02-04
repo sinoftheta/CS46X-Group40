@@ -37,19 +37,19 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
     arrayDimension(&ag, 6);
     arrayDimension(&bg, 4);
 
-    *arrayAt(&ag, 0) = -0.577350;
-    *arrayAt(&ag, 1) = 0.577350;
-    *arrayAt(&ag, 2) = -0.861136;
-    *arrayAt(&ag, 3) = -0.339981;
-    *arrayAt(&ag, 4) = 0.339981;
-    *arrayAt(&ag, 5) = 0.861136;
+    *arrayAt(&ag, 1) = -0.577350;
+    *arrayAt(&ag, 2) = 0.577350;
+    *arrayAt(&ag, 3) = -0.861136;
+    *arrayAt(&ag, 4) = -0.339981;
+    *arrayAt(&ag, 5) = 0.339981;
+    *arrayAt(&ag, 6) = 0.861136;
 
-    *arrayAt(&bg, 0) = -1.0;
-    *arrayAt(&bg, 1) = 1.0;
+    *arrayAt(&bg, 1) = -1.0;
     *arrayAt(&bg, 2) = 1.0;
-    *arrayAt(&bg, 3) = -1.0;
+    *arrayAt(&bg, 3) = 1.0;
+    *arrayAt(&bg, 4) = -1.0;
 
-    int is1, is, i, j, k, j1, jj, jdi;
+    int is1, is, i, j, k, j1, jj, jdi, stop;
     double xi, yi, phi, ppk, hmz, x1, x2, x3, pp, xcond, ycond, det;
 
     *ispk = *arrayAt(&(state->ispl), ik);
@@ -57,7 +57,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
     *ispm = *ispk - 1;
     is1 = 0;
 
-    for (is = 0; is < 4; is++) {
+    for (is = 1; is <= 4; is++) {
 
         if (*arrayAt(kf, l) != is) {
             continue;
@@ -71,8 +71,8 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
                 state->np = 4;
             }
 
-            k = -1;
-            for (i = 0; i < m; i++) {
+            k = 0;
+            for (i = 1; i <= m; i++) {
 
                 do {
                     k++;
@@ -84,14 +84,14 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
 
         gs2Green(x, y, detj, &ag, in, kf, jd, ieq, ms, state->np, l, istop);
 
-        for (k = 0; k < state->np; k++) {
+        for (k = 1; k <= state->np; k++) {
             
             j1 = k;
             if (state->np == 4) {
                 j1 = k + 2;
             }
 
-            if (is != 0 && is != 2) {
+            if (is != 1 && is != 3) {
                 xi = *arrayAt(&bg, is);
                 yi = *arrayAt(&ag, j1);
             } else {
@@ -101,7 +101,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
 
             gs2Shape(x, y, in, l, m, xi, yi, ff, &det, dgx, dgy);
 
-            for (jj = 0; jj < m; jj++) {
+            for (jj = 1; jj <= m; jj++) {
                 *matrixAt(f, jj, k) = *arrayAt(ff, jj);
                 *matrixAt(dx, jj, k) = *arrayAt(dgx, jj);
                 *matrixAt(dy, jj, k) = *arrayAt(dgy, jj);
@@ -112,9 +112,9 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
             *arrayAt(vky, k) = 0.0;
             *arrayAt(cphi, k) = 0.0;
 
-            for (i = 0; i < m; i++) {
+            for (i = 1; i <= m; i++) {
                 
-                jdi = *arrayAt(jd, i) - 1;
+                jdi = *arrayAt(jd, i);
                 
                 if (*arrayAt(lr, jdi) != 1) {
                     j = jdi - *arrayAt(lc, jdi);
@@ -134,14 +134,17 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
 
                 hmz = abs(*arrayAt(cphi, k));
                 hmz = log10(hmz);
-                if (hmz > *matrixAt(&(state->xpsi), 0, ik)) {
-                    hmz = *matrixAt(&(state->xpsi), 0, ik);
+                if (hmz > *matrixAt(&(state->xpsi), 1, ik)) {
+                    hmz = *matrixAt(&(state->xpsi), 1, ik);
                 }
 
-                j = 0;
-                while (hmz < *matrixAt(&(state->xpsi), j+1, ik) && j < ispm-1) {
-                    j++;
+                stop = 0;
+                for (j = 1; j <= ispm && !stop; j++) {
+                    if (hmz >= *matrixAt(&(state->xpsi), j+1, ik)) {
+                        stop = 1;
+                    }
                 }
+                j--;
 
                 x1 = hmz - *matrixAt(&(state->xpsi), j, ik);
                 x2 = x1 * x1;
@@ -156,9 +159,9 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
             xcond = -ppk * *arrayAt(fmobx, l);
             ycond = -ppk * *arrayAt(fmoby, l);
 
-            for (i = 0; i < m; i++) {
+            for (i = 1; i <= m; i++) {
                 
-                jdi = *arrayAt(jd, i) - 1;
+                jdi = *arrayAt(jd, i);
 
                 if (*arrayAt(lr, jdi) != 1) {
                     j = jdi - *arrayAt(lc, jdi);
