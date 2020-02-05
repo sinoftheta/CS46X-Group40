@@ -133,4 +133,20 @@ typedef struct gs2State {
 
 } gs2State;
 
+
+// This function exists as a convience for creating a memReqs
+// struct in python
+gs2MemoryRequirements gs2CreateMemoryRequirements(
+    int mxc,
+    int mxt,
+    int maxnn,
+    int maxne,
+    int ns1,
+    int kns1,
+    int maxm4,
+    int maxm5,
+    int maxeep,
+    int maxbw
+);
+
 #endif /* __CAP_GS2_H__ */
