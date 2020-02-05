@@ -252,9 +252,9 @@ void gs2Datain(
             case GROUP_Q_1:
                 gs2ReadGroupQ(&row, state, &wxpsi, &wxm, &wxk, &cc);
                 break;
-            // case GROUP_R:
-            //     gs2ReadGroupR(&row, state);
-            //     break;
+            case GROUP_R:
+                gs2ReadGroupR(&row, state);
+                break;
             default:
                 break;
         };
