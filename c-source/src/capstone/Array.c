@@ -8,6 +8,7 @@ void arrayDimension(Array* array, int size) {
     array->elements = calloc(size, sizeof(double));
     if(array->elements == NULL){
         fprintf(stderr, "Memory allocation failed in arrayDimension!\n");
+        exit(-1);
     }
     array->size = size;
 }
@@ -24,9 +25,11 @@ void arrayFree(Array* array) {
 double* arrayAt(Array* array, int index) {
     arrayAssertNotNull(array, "array null in arrayAt!");
 
+
     if (index - 1 >= array->size) {
         fprintf(stderr, "arrayAt index out of bounds: %d\n", index);
-        exit(1);
+        int a = ((Array*)(NULL))->elements[0];
+        exit(a);
     }
 
     return &array->elements[index - 1];
@@ -35,6 +38,6 @@ double* arrayAt(Array* array, int index) {
 void arrayAssertNotNull(Array* array, const char* message) {
     if (array == NULL) {
         fprintf(stderr, "%s\n", message);
-        exit(1);
+        exit(-1);
     }
 }

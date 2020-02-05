@@ -6,13 +6,13 @@
 void matrixDimension(Matrix* oMatrix, int rows, int columns) {
     matrixAssertNotNull(oMatrix, "matrix null in matrixDimension!");
 
-    oMatrix->elements = calloc(rows, sizeof(double *));
+    oMatrix->elements = calloc(rows, sizeof(double*));
     if(oMatrix->elements == NULL){
         fprintf(stderr, "Matrix memory allocation failed in matrixDimension!");
         exit(1);
     }
 
-    for(int i = 0; i < oMatrix->columns; ++i){
+    for(int i = 0; i < rows; ++i){
         oMatrix->elements[i] = calloc(columns, sizeof(double));
         if(oMatrix->elements[i] == NULL){
             fprintf(stderr, "Matrix allocation failed in matrixDimension!");
@@ -28,7 +28,7 @@ void matrixFree(Matrix* oMatrix) {
     matrixAssertNotNull(oMatrix, "matrix null in matrixFree!");
 
 
-    for(int i = 0; i < oMatrix->columns; ++i){
+    for(int i = 0; i < oMatrix->rows; ++i){
         free(oMatrix->elements[i]);
     }
 
@@ -44,6 +44,7 @@ double* matrixAt(Matrix* matrix, int row, int col) {
 
     
 
+
     if (col - 1 >= matrix->columns || row - 1 >= matrix->rows) {
         fprintf(stderr, "matrixAt index out of bounds at row: %d, column: %d\n", row, col);
         exit(1);
@@ -55,10 +56,6 @@ double* matrixAt(Matrix* matrix, int row, int col) {
 void matrixAssertNotNull(Matrix* matrix, const char* message) {
     if (matrix == NULL) {
         fprintf(stderr, "%s\n", message);
-        exit(1);
-    }
-    if (matrix->elements == NULL){
-        fprintf(stderr, "%s\nMatrix Uninitialezed!\n", message);
         exit(1);
     }
 }
