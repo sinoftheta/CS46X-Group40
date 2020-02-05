@@ -339,7 +339,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
             // Print element matrices for flow
             if (state->kod1 == 1) {
                 printf("1\n\n\n\n           ELEMENT MATRICES FOR FLOW\n           -------------------------\n");
-                gs2Matgen3(&(state->pe), &(state->se), m);
+                gs2Matgen3(&(state->pe), &(state->se), m, l);
             }
 
             // Assembly
@@ -551,7 +551,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
             // Print element matrices for concentration
             if (state->kod3 == 1) {
                 printf("1\n\n\n\n           ELEMENT MATRICES FOR CONCENTRATION\n           ----------------------------------\n");
-                gs2Matgen3(&(state->pe), &(state->se), m);
+                gs2Matgen3(&(state->pe), &(state->se), m, l);
             }
 
             // Assembly of global coefficient matrix

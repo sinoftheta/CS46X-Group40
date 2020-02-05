@@ -111,7 +111,7 @@ typedef struct gs2State {
     Matrix ckt[3];
     Matrix ctt[3];
     Array psio;
-    Array ipsl;
+    Array ispl;
 
     // Common Three
     int nn, mm, it, nsdn, istop;
