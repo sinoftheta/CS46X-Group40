@@ -52,7 +52,7 @@ void gs2Matgen2(gs2State* state, Array* srcr, Array* srcrt, int i) {
     }
 }
 
-void gs2Matgen3(Matrix* pe, Matrix* se, int m) {
+void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l) {
 
     matrixAssertNotNull(pe, "Matrix 'pe' NULL in gs2Shape!");
     matrixAssertNotNull(se, "Matrix 'se' NULL in gs2Shape!");
