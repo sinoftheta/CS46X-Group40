@@ -82,7 +82,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
             }
         }
 
-        gs2Green(x, y, detj, &ag, in, kf, jd, ieq, ms, state->np, l, istop);
+        gs2Green(x, y, detj, &ag, in, kf, jd, ieq, ms, state->me, state->np, l, istop);
 
         for (k = 1; k <= state->np; k++) {
             
@@ -139,7 +139,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
                 }
 
                 stop = 0;
-                for (j = 1; j <= ispm && !stop; j++) {
+                for (j = 1; j <= *ispm && !stop; j++) {
                     if (hmz >= *matrixAt(&(state->xpsi), j+1, ik)) {
                         stop = 1;
                     }
