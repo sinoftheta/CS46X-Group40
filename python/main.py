@@ -51,12 +51,64 @@ gs2.arrayDimension(byref(msp), memReqs.maxeep)
 
 gs2.matrixDimension(byref(nsp), memReqs.maxm5, memReqs.maxeep)
 
-# arr = types.Array()
 
-# gs2.arrayAt.restype = POINTER(c_double)
-# gs2.arrayDimension(byref(arr), 10)
+state = types.State()
+state.memoryRequirements = memReqs
+state.istop = c_int(0)
 
-# for i in range(arr.size):
-#     # elemPtr = gs2.arrayAt(byref(arr), i+1)
-#     # elemValue = cast(elemPtr, c_double_p)
-#     print(gs2.arrayAt(byref(arr), i+1).contents)
+
+maxdif = c_double(0.0)
+inputPath = create_string_buffer(b"../c-source/res/example1.csv")
+
+gs2.gs2Datain.argtypes = [
+    POINTER(types.State),
+    c_char_p,
+    POINTER(types.Array),
+    POINTER(types.Array), 
+    POINTER(types.Array),
+    POINTER(types.Array),
+    POINTER(types.Array),
+    POINTER(types.Array), 
+    POINTER(types.Array),
+    POINTER(types.Array),
+    POINTER(types.Array),
+    POINTER(types.Array),
+    POINTER(types.Array),
+    POINTER(types.Matrix),
+    POINTER(types.Array),
+    POINTER(c_double)
+]
+
+gs2.gs2Datain(
+    byref(state),
+    inputPath,
+    byref(old),
+    byref(cold),
+    byref(cn),
+    byref(vn),
+    byref(coef),
+    byref(u),
+    byref(est),
+    byref(lp),
+    byref(klp),
+    byref(nsf),
+    byref(nsk),
+    byref(nsp),
+    byref(msp), 
+    byref(maxdif)
+)
+
+gs2.arrayFree(byref(old))
+gs2.arrayFree(byref(cold))
+gs2.arrayFree(byref(cn))
+gs2.arrayFree(byref(vn))
+gs2.arrayFree(byref(coef))
+gs2.arrayFree(byref(u))
+gs2.arrayFree(byref(est))
+gs2.arrayFree(byref(lp))
+gs2.arrayFree(byref(klp))
+gs2.arrayFree(byref(nsf))
+gs2.arrayFree(byref(nsk))
+gs2.arrayFree(byref(msp))
+
+gs2.matrixFree(byref(nsp))
