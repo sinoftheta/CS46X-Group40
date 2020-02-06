@@ -21,10 +21,11 @@ deactivate
 cd ..
 
 # bundle
-mkdir -p "$distDir/lib/" "$distDir/config/"
+mkdir -p "$distDir/lib/" "$distDir/config/" "$distDir/res/"
 cd $distDir
+cp "../$pythonDir/config/prod-config.ini" "./config/config.ini"
 cp "../$pythonDir/dist/main" "./main"
 cp "../$csourceDir/build/libgs2.so" "./lib/libgs2.so"
-cp "../$pythonDir/config/prod-config.ini" "./config/config.ini"
+cp "../$csourceDir/res/example1.csv" "./res/example.csv"
 
 # clean up artefacts

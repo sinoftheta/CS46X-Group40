@@ -1,8 +1,24 @@
 from ctypes import *
-
 from gs2 import types
+import configparser
 
-lib_path = "../c-source/build/libgs2.so"
+from os import path
+import sys
+
+bundle_dir = path.abspath(path.dirname(__file__))
+
+if (getattr(sys, 'frozen', False)):
+    # running in pyinstaller bundle
+    bundle_dir = path.dirname(sys.executable)
+
+config_path = path.abspath(path.join(bundle_dir, 'config/config.ini'))
+
+config = configparser.ConfigParser()
+config.read(config_path)
+
+
+lib_path = path.abspath(path.join(bundle_dir, config['paths']['gs2Lib']))
+example_path = path.abspath(path.join(bundle_dir, config['paths']['exampleCsv']))
 
 gs2 = CDLL(lib_path)
 
@@ -58,7 +74,7 @@ state.istop = c_int(0)
 
 
 maxdif = c_double(0.0)
-inputPath = create_string_buffer(b"../c-source/res/example1.csv")
+inputPath = create_string_buffer(example_path.encode('utf-8'))
 
 gs2.gs2Datain.argtypes = [
     POINTER(types.State),
