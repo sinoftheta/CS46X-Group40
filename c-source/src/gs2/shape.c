@@ -37,18 +37,18 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
     yi2 = 1.0 + yi;
 
     // Corner node shape functions, basic part
-    *arrayAt(&alf, 0) = 0.25 * xi1 * yi1;
-    *arrayAt(&alf, 1) = 0.25 * xi2 * yi1;
-    *arrayAt(&alf, 2) = 0.25 * xi2 * yi2;
-    *arrayAt(&alf, 3) = 0.25 * xi1 * yi2;
-    *arrayAt(&dax, 0) = -0.25 * yi1;
-    *arrayAt(&dax, 1) = 0.25 * yi1;
-    *arrayAt(&dax, 2) = 0.25 * yi2;
-    *arrayAt(&dax, 3) = -0.25 * yi2;
-    *arrayAt(&day, 0) = -0.25 * xi1;
-    *arrayAt(&day, 1) = -0.25 * xi2;
-    *arrayAt(&day, 2) = 0.25 * xi2;
-    *arrayAt(&day, 3) = 0.25 * xi1;
+    *arrayAt(&alf, 1) = 0.25 * xi1 * yi1;
+    *arrayAt(&alf, 2) = 0.25 * xi2 * yi1;
+    *arrayAt(&alf, 3) = 0.25 * xi2 * yi2;
+    *arrayAt(&alf, 4) = 0.25 * xi1 * yi2;
+    *arrayAt(&dax, 1) = -0.25 * yi1;
+    *arrayAt(&dax, 2) = 0.25 * yi1;
+    *arrayAt(&dax, 3) = 0.25 * yi2;
+    *arrayAt(&dax, 4) = -0.25 * yi2;
+    *arrayAt(&day, 1) = -0.25 * xi1;
+    *arrayAt(&day, 2) = -0.25 * xi2;
+    *arrayAt(&day, 3) = 0.25 * xi2;
+    *arrayAt(&day, 4) = 0.25 * xi1;
 
     // Corner node shape functions, side-dependent part
     xq1 = xi - 0.5;
@@ -60,10 +60,10 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
     yc1 = 1.125 * yi * yi - 0.625;
     yc2 = 2.25 * yi;
 
-    j1 = 0;
-    j2 = 1;
-    j3 = 4;
-    for (i = 0; i < 2; i++) {
+    j1 = 1;
+    j2 = 2;
+    j3 = 5;
+    for (i = 1; i <= 2; i++) {
         if (*matrixAt(in, j3, l) == 0) {
 
             *arrayAt(&btx, j1) = 0.5;
@@ -86,15 +86,15 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
             *arrayAt(&dbx, j2) = xc2;
 
         }
-        j1 = 3;
-        j2 = 2;
-        j3 = 6;
+        j1 = 4;
+        j2 = 3;
+        j3 = 7;
     }
 
-    j1 = 1;
-    j2 = 2;
-    j3 = 6;
-    for (i = 0; i < 2; i++) {
+    j1 = 2;
+    j2 = 3;
+    j3 = 7;
+    for (i = 1; i <= 2; i++) {
         if (*matrixAt(in, j3, l) == 0) {
             
             *arrayAt(&bty, j1) = 0.5;
@@ -117,13 +117,13 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
             *arrayAt(&dby, j2) = yc2;
 
         }
-        j1 = 0;
-        j2 = 3;
-        j3 = 10;
+        j1 = 1;
+        j2 = 4;
+        j3 = 11;
     }
 
     // Shape function derivative matrix - corner nodes
-    for (j = 0; j < 4; j++) {
+    for (j = 1; j <= 4; j++) {
         *arrayAt(&dfx, j) = *arrayAt(&dax, j) * (*arrayAt(&btx, j) + *arrayAt(&bty, j)) + *arrayAt(&dbx, j) * *arrayAt(&alf, j);
         *arrayAt(&dfy, j) = *arrayAt(&day, j) * (*arrayAt(&btx, j) + *arrayAt(&bty, j)) + *arrayAt(&dby, j) * *arrayAt(&alf, j);
         *arrayAt(f, j) = *arrayAt(&alf, j) * (*arrayAt(&btx, j) + *arrayAt(&bty, j));
@@ -131,7 +131,7 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
 
     // Shape function derivative matrix - edge nodes
     if (m != 4) {
-        j = 3;
+        j = 4;
         xeq = 1.0 - xi * xi;
         yeq = 1.0 - yi * yi;
         xe1 = 1.0 - 3.0 * xi;
@@ -139,8 +139,8 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
         ye1 = 1.0 - 3.0 * yi;
         ye2 = 1.0 + 3.0 * yi;
 
-        if (*matrixAt(in, 4, l) != 0) {
-            if (*matrixAt(in, 5, l) == 0) {
+        if (*matrixAt(in, 5, l) != 0) {
+            if (*matrixAt(in, 6, l) == 0) {
                 j++;
                 *arrayAt(&dfx, j) = -xi * yi1;
                 *arrayAt(&dfy, j) = -0.5 * xeq;
@@ -157,8 +157,8 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
             }
         }
 
-        if (*matrixAt(in, 6, l) != 0) {
-            if (*matrixAt(in, 7, l) == 0) {
+        if (*matrixAt(in, 7, l) != 0) {
+            if (*matrixAt(in, 8, l) == 0) {
                 j++;
                 *arrayAt(&dfx, j) = 0.5 * yeq;
                 *arrayAt(&dfy, j) = -yi * xi2;
@@ -175,8 +175,8 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
             }
         }
 
-        if (*matrixAt(in, 8, l) != 0) {
-            if (*matrixAt(in, 9, l) == 0) {
+        if (*matrixAt(in, 9, l) != 0) {
+            if (*matrixAt(in, 10, l) == 0) {
                 j++;
                 *arrayAt(&dfx, j) = -xi * yi2;
                 *arrayAt(&dfy, j) = 0.5 * xeq;
@@ -193,8 +193,8 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
             }
         }
 
-        if (*matrixAt(in, 10, l) != 0) {
-            if (*matrixAt(in, 11, l) == 0) {
+        if (*matrixAt(in, 11, l) != 0) {
+            if (*matrixAt(in, 12, l) == 0) {
                 j++;
                 *arrayAt(&dfx, j) = -0.5 * yeq;
                 *arrayAt(&dfy, j) = -yi * xi1;
@@ -218,14 +218,14 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
     sum3 = 0.0;
     sum4 = 0.0;
 
-    k = -1;
-    for (i = 0; i < m; i++) {
+    k = 0;
+    for (i = 1; i <= m; i++) {
 
         do {
             k++;
         } while (*matrixAt(in, k, l) == 0);
 
-        ki = *matrixAt(in, k, l) - 1;
+        ki = *matrixAt(in, k, l);
         sum1 += *arrayAt(&dfx, i) * *arrayAt(x, ki);
         sum2 += *arrayAt(&dfx, i) * *arrayAt(y, ki);
         sum3 += *arrayAt(&dfy, i) * *arrayAt(x, ki);
@@ -239,7 +239,7 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
     c21 = -det1 * sum3;
     c22 = det1 * sum1;
 
-    for (j = 0; j < m; j++) {
+    for (j = 1; j <= m; j++) {
         *arrayAt(dgx, j) = c11 * *arrayAt(&dfx, j) + c12 * *arrayAt(&dfy, j);
         *arrayAt(dgy, j) = c21 * *arrayAt(&dfx, j) + c22 * *arrayAt(&dfy, j);
     }
