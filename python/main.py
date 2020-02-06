@@ -67,7 +67,6 @@ gs2.arrayDimension(byref(msp), memReqs.maxeep)
 
 gs2.matrixDimension(byref(nsp), memReqs.maxm5, memReqs.maxeep)
 
-
 state = types.State()
 state.memoryRequirements = memReqs
 state.istop = c_int(0)

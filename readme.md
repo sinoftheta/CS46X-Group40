@@ -31,3 +31,14 @@ $ deactivate
 $ git add/commit/push
 
 ```
+
+
+## Building on Linux/Mac
+
+To build on Linux and presumably Mac, just:
+
+```
+$ bash build.sh
+```
+
+Running `build.sh` creates a top-level directory, `dist`. In dist there is an executable `main`. Running main should launch the application.
