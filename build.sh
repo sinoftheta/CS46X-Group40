@@ -28,4 +28,15 @@ cp "../$pythonDir/dist/main" "./main"
 cp "../$csourceDir/build/libgs2.so" "./lib/libgs2.so"
 cp "../$csourceDir/res/example1.csv" "./res/example.csv"
 
-# clean up artefacts
+cd ..
+
+# clean up artifacts
+
+rm -r "$pythonDir/build/"
+rm -r "$pythonDir/dist/"
+rm -r "$pythonDir/main.spec"
+
+cd $csourceDir
+make clean
+
+
