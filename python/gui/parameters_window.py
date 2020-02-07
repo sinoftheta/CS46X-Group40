@@ -2,13 +2,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from parameters_basic import BasicParameters
-from multipliers import Multipliers
-from nodes import Nodes
-from nodeTypes import NodeTypes
-from elements import Elements
-from elementIncidences import ElementIncidences
-from materials import Materials
+from .parameters_basic import BasicParameters
+from .multipliers import Multipliers
+from .nodes import Nodes
+from .nodeTypes import NodeTypes
+from .elements import Elements
+from .elementIncidences import ElementIncidences
+from .materials import Materials
 
 parameters = ['Import', 'Basic Parameters', 'Multipliers',
             'Nodes', 'Node Types', 'Elements', 'Materials']
