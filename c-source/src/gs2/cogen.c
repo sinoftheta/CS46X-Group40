@@ -62,7 +62,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
     int i, j, k, l, m, np2, ik, ispk, ispm, jdi, jdj, ic, jc,  stop, i1;
     int kase, ms, ii, jj, jdii, jdjj, kc, kb1;
     double vmax, xi, yi, det, st, psik, hmz, x1, x2, x3, teta, ce, pp, ppk;
-    double cee, vlx, vly, rd, xcond, ycond, dispx, dispy, dispxy;
+    double vlx, vly, rd, xcond, ycond, dispx, dispy, dispxy;
     double vxsqrd, vysqrd, vsqrd, uu, dl, dt, dvx, dvy, ap;
 
     if (jtest == 0) {
@@ -290,7 +290,6 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
                                 teta = min(teta, 1.0);
                                 ppk = min(ppk, 1.0);
-                                cee = ce;
                                 ce = abs(ce);
                             }
                         }
