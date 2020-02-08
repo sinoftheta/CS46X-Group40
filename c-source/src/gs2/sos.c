@@ -16,7 +16,7 @@ void gs2Sos(Matrix* a, int neq, int iband, int istart) {
         for (i = istart; i <= neq; i++) {
             printf("%5d", i);
             for (j = k1; j <= k2; j++) {
-                printf("%12.4f", *matrixAt(a, i, j)));
+                printf("%12.4f", *matrixAt(a, i, j));
             }
             printf("\n");
         }
