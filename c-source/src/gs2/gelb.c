@@ -1,7 +1,7 @@
 #include "gelb.h"
 
 //label 47, error return 
-#define ERR {*ier = -1; return;}
+#define ERR do { *ier = -1; return; } while(0)
 
 void gs2Gelb(
     Array* r, Array* a, int m, int n, 
@@ -16,11 +16,13 @@ void gs2Gelb(
     //test wrong input params
     int mc, mu, ml, mr, mz, ma, nm;
 
-    if(mld < 0 || mud < 0) ERR
+    if(mld < 0 || mud < 0) 
+        ERR;
 
     mc = 1 + mld + mud;
 
-    if(mc + 1 - 2 * m > 0) ERR
+    if(mc + 1 - 2 * m > 0) 
+        ERR;
 
     //prep integer params
     /*
@@ -32,7 +34,9 @@ void gs2Gelb(
     * ma: total number of storage locations necessary for matrix a
     * nm: number of elements in matrix r
     */
-    if(mc - m > 0) mc = m;
+    if(mc - m > 0) 
+        mc = m;
+    
     mu = mc - mud - 1;
     ml = mc - mld - 1;
     mr = m - ml;
@@ -42,25 +46,27 @@ void gs2Gelb(
 
     //move elements backwars and search for absolutely greatest element
 
-    ier = 0;
+    *ier = 0;
     piv = 0.0;
-    if(mld <= 0){
+    if(mld > 0){
         //6
         jj = ma;
-        j - ma - mz;
+        j = ma - mz;
         kst = j;
         for(int iter = 1; iter <= kst; ++iter){
 
             tb = *arrayAt(a, j);
             *arrayAt(a, jj) = tb;
-            tb = abs(tb);
-            if(tb - piv > 0) piv = tb;
-            --jj;
-            --j;
+            tb = absd(tb);
+            if(tb - piv > 0) 
+                piv = tb;
+            
+            jj--;
+            j--;
         }
 
         // insert zeros in first mu rows (not necessary in case mz = 0)
-        if(mz <= 0){
+        if(mz > 0){
             jj = 1;
             j = 1 + mz;
             ic = 1 + mud;
@@ -70,11 +76,11 @@ void gs2Gelb(
                     *arrayAt(a, jj) = 0.0;
                     if(k - ic <= 0 ){
                         *arrayAt(a, jj) = *arrayAt(a, j);
-                        ++j;
+                        j++;
                     }
-                    ++jj;
-                    ++ic;
+                    jj++;
                 }
+                ic++;
             }
         }
     }
@@ -89,37 +95,48 @@ void gs2Gelb(
     ic = mc - 1;
 
     for(int k = 0; k <= m; ++k){
-        if(k - mr - 1 > 0 ) --idst;
+        if(k - mr - 1 > 0 ) 
+            idst--;
+
         id = idst;
         ilr = k + mld;
-        if(ilr - m > 0) ilr = m;
+        if(ilr - m > 0) 
+            ilr = m;
+        
         ii = kst;
 
         // pivot search in first column (row indexes from i = k up to i = ilr)
         piv = 0.0;
 
         for(int i = k; i <= ilr; ++i){
-            tb = abs(*arrayAt(a, ii));
+            tb = absd(*arrayAt(a, ii));
             if(tb - piv > 0){ 
                 piv = tb;
                 j = i;
                 jj = ii;    
             }
-            if(i - mr > 0) id--;
+
+            if(i - mr > 0) 
+                id--;
 
             ii += id;
         }
         // 22
 
         // test on singularity
-        if(piv <= 0) ERR
-        if(ier == 0 && piv - tol <= 0) ier = k - 1; 
+        if(piv <= 0) 
+            ERR;
+
+        
+        if(*ier == 0 && piv - tol <= 0.0) 
+            *ier = k - 1;
+
         piv = 1.0 / *arrayAt(a, jj);
 
         // pivot row reduction and row interchange in right hand side r
         id = j - k;
 
-        for(int i = k; i < nm; i += m){ //not sure if "i < nm" or "i <= nm"
+        for(int i = k; i <= nm; i += m){ 
             ii = i + id;
             tb = piv * *arrayAt(r, ii);
             *arrayAt(r, ii) = *arrayAt(r, i);
@@ -144,14 +161,16 @@ void gs2Gelb(
             ii = k+1;
             mu = kst + 1;
             mz = kst + ic;
-            for(int i = ii; i <= ii; i++){
+            for(int i = ii; i <= ilr; i++){
                 // in matrix a
                 id += mc;
                 jj = i - mr - 1;
-                if(jj >0) id -= jj;
+                if(jj > 0) 
+                    id -= jj;
+                
                 piv = -1 * *arrayAt(a, id);
                 j = id + 1;
-                for(jj = mu; jj <= mz; ++jj){
+                for(jj = mu; jj <= mz; jj++){
                     *arrayAt(a, j - 1) = *arrayAt(a, j) + piv * *arrayAt(a, jj);
                     j++;
                 }
@@ -159,40 +178,50 @@ void gs2Gelb(
 
                 // in matrix r
                 j = k;
-                for(jj = i; jj <= nm; jj+=m){
+                for(jj = i; jj <= nm; jj += m){
                     *arrayAt(r, jj) = *arrayAt(r, jj) + piv * *arrayAt(r, j);
                     j += m;
-                }
+                } 
             }
-            //33
 
+            // 34
             kst += mc;
-            if(ilr - mr >= 0) --ic;
+            if(ilr - mr >= 0) 
+                ic--;
+
             id = k - mr;
-            if(id > 0) kst -= id;
+            
+            if(id > 0) 
+                kst -= id;
         }
     }
     // 38
 
     // back substitution
-    if(mc - 1 <= 0) return;
+    if (mc - 1 <= 0) 
+        return;
+    
     ic = 2;
     kst = ma + ml - mc + 2;
     ii = m;
-    for(int i = 2; i <= m; ++i){
-        kst -=mc;
-        --ii;
+    for (int i = 2; i <= m; i++){
+        kst -= mc;
+        ii--;
         j = ii - mr;
-        if(j > 0) kst += j;
-        for(j = ii; j <= nm; j+= m){
+        if (j > 0) 
+            kst += j;
+        
+        for (j = ii; j <= nm; j += m){
             tb = *arrayAt(r, j);
             mz = kst + ic - 2;
             id = j;
-            for(jj = kst; jj <= mz; ++jj){
-                ++id;
+            for (jj = kst; jj <= mz; jj++){
+                id++;
                 tb -= *arrayAt(a, jj) * *arrayAt(r, id);
+                *arrayAt(r, j) = tb;
             }
-            if(ic - mc < 0) ++ic;
+            if (ic - mc < 0)
+                ic++;
         }
     }
 }

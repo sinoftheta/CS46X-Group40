@@ -9,8 +9,6 @@ int max(int a, int b){
     return a > b ? a : b;
 }
 
-
-
-double abs(double a){
+double absd(double a){
     return a > 0 ? a : a * -1;
 }
