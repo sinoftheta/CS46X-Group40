@@ -71,6 +71,7 @@ C
       if (STATP.EQ.0.) write (6, 943)
       TDR = 2.0
           if (TYPE.EQ.BWD) TDR = 1.0
+C       END GROUP B
 C
       read (5, 1440) AFMOBX, AFMOBY, APOR, AELONG, AETRAN, APHII,
      & ACONCI, XFACT, YFACT, ATETA, AAL, AKD, ALAM, ARHO
@@ -153,7 +154,7 @@ C****************************************************************
             do 1470 I = 1, NN
       CONCI(I) = CONCI(I) * ACONCI
 C     if (HONE.NE.9999.) then
-          PHII(I) = PHII(I) APHII
+          PHII(I) = PHII(I) * APHII
 C     endif
  1470 continue
    80 write (6, 1070)
@@ -193,7 +194,8 @@ C     Count active nodes and compute max nodal difference
           do 202 J = IP, M
           if (IN(J, L).EQ.0) go to 202
       ND = IABS(IN(I, L) - IN(J, L))
-      MND = MAX0(ND, MAXDIF)
+      MND = MAX0(ND, MND)
+      MAXDIF = MAX0(ND, MAXDIF)
   202 continue
   205 continue
       write (6, 1160) L, MND, (IN(I, L), I = 1, INC)
@@ -305,7 +307,7 @@ C     LC and KLC
           go to 520
   360 continue
 
-C
+C     Group M  
 C     Neumann boundary nodes for flow
       write (6, 1250)
           if (NSDN.EQ.0) go to 340
@@ -333,12 +335,14 @@ C     Neumann boundary nodes for concentration
           if (KNSDN.EQ.0) go to 345
       call BC (KLR, KNSDN, -4, NN, MAXNN, ISTOP)
       read (5, 1030) (NSK(K), CN(K), K = 1, KNSDN)
+      write (6, 1058)
+      write (6, 1090) (NSK(K), CN(K), K=1, KNSDN)
   345 continue
 
 C
 C     Seepage
           if (NSEEP.EQ.0) go to 380
-          do 370 K - 1, NSEEP
+          do 370 K = 1, NSEEP
       read (5, 910) MSP(K), MP2
       write (6, 1590) K
       MSPK = MSP(K)
@@ -386,6 +390,8 @@ C     OLD, COLD
       KLP(IC) = I
       COLD(IC) = CONCI(I)
   470 continue
+
+C Group P
           do 474 L = 1, NE
   474 KF(L) = 0
           if (NVS.EQ.0) go to 476
@@ -441,7 +447,7 @@ C
      & 15H MASS TRANSPORT//31X,
      & 31HWITH ISOPARAMETRIC 2-D ELEMENTS//)
   860 format (11X, 70(1H*)//11X, 20A4//11X, 70(1H*)///)
-  910 format (1615)
+  910 format (16I5)
   911 format (//11X, 4HKOD1, I5/11X, 4HKOD2, I5/11X, 4HKOD3,
      & I5/11X, 4HKOD4, I5/11X, 4HKOD7, I5/11X, 4HKOD8, I5/11X,
      & 4HKOD9, I5/11X, 5HKOD10, I4/11X, 5HKOD11, I4/11X,
@@ -553,7 +559,7 @@ C
      & 23H EXCEEDS SPACE PROVIDED/11X, 5HNB = , I3, 10X, 6HKNB = ,
      & I3, 9H MAXBW = , I3)
  2003 format (////11X, 31HWARNING: MAXIMUM HALF-BANDWIDTH,
-     & 22H GREATER THAN ESTIMATE/11X, 5HND = , I3, 10X, 6HKNB = ,
+     & 22H GREATER THAN ESTIMATE/11X, 5HND = , I3, 10X, 6HNB = ,
      & I3)
  2004 format (////11X, 31HWARNING: MAXIMUM HALF-BANDWIDTH,
      & 22H GREATER THAN ESTIMATE/11X, 5HND = , I3, 10X, 6HKNB = ,
