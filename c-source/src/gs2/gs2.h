@@ -109,7 +109,6 @@ typedef struct gs2State {
     Matrix xk;
     Matrix xm;
     Matrix xpsi;
-    Matrix xm;
     Matrix ckt[3];
     Matrix ctt[3];
     Array psio;
