@@ -69,11 +69,3 @@ class MainWindow(QMainWindow):
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.simulationButton)
 
-def main():
-        app = QApplication(sys.argv)
-        mainWindow = MainWindow()
-        mainWindow.show()
-        app.exec_()
-
-if __name__ == "__main__":
-    main()

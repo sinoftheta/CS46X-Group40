@@ -56,7 +56,7 @@ class ParametersPage(QGroupBox):
         #       button container 'self.parametersPageStack'
         importNavBtn = QPushButton("Import")
         importNavBtn.setGeometry(0, 0, 150, 100)
-        importNavBtn.pressed.connect(self.importNavClick)
+        importNavBtn.clicked.connect(self.importNavClick)
         self.parametersPageNav.addWidget(importNavBtn)
 
         basicPNavBtn = QPushButton("Basic Parameters")
@@ -98,7 +98,10 @@ class ParametersPage(QGroupBox):
         self.parametersPageNav.setSpacing(20)
 
     def importNavClick(self):
-        self.parametersPageStack.setCurrentIndex(0)
+        #self.parametersPageStack.setCurrentIndex(0)
+        filename = QFileDialog.getOpenFileName(self, 'Open file',
+            '/home', "Text files (*.txt);;CSV Files (*.csv)")
+
 
     def basicParamClick(self):
         self.parametersPageStack.setCurrentIndex(1)
