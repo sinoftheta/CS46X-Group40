@@ -5,9 +5,10 @@
 
 
 int min(int, int);
-
 int max(int, int);
 
 double absd(double);
+double mind(double, double);
+double maxd(double, double);
 
 #endif /*__CAP_MATHUTIL_H__*/
