@@ -69,7 +69,7 @@ typedef struct gs2State {
     // must be dimensoned to MAXNN
     // MAXNN must be greater than or equal to NN
     Array cfq, conc, conci, fq, klc, klr,
-          ls, lr, phi, phii, x, y;
+          lc, lr, phi, phii, x, y;
 
     // Common BLK3
     // must be dimensioned to MAXNE
@@ -87,11 +87,12 @@ typedef struct gs2State {
     double chng, tdr, stat, statp, oldt, delt, 
            dprdt, betap, clos1, delp, difusn,
            pchng, vmax, stime, ssec, h1, h2,
-           pl, coefi, ei, itmax, iter1, itchng;
+           pl, coefi, ei;
 
     int ne, np, nk, nseep, inc, me, igo, 
         kod1, kod2, kod3, kod4, kod7, 
-        kod8, kod9, kod10, kod11, kod12;
+        kod8, kod9, kod10, kod11, kod12,
+        itmax, itchng, iter1;
 
     
     // Common TWO
@@ -106,6 +107,7 @@ typedef struct gs2State {
     //                in the unsaturated material property tables.
     Array wk;
     Matrix xk;
+    Matrix xm;
     Matrix xpsi;
     Matrix xm;
     Matrix ckt[3];
@@ -114,8 +116,8 @@ typedef struct gs2State {
     Array ispl;
 
     // Common Three
-    int nn, mm, it, nsdn, istop;
-    double km, nb, knb, knb2, mb, mb2, 
+    int nn, mm, km, it, nsdn, nb, knb, knb2, istop;
+    double mb, mb2, 
            kmb, kmb2;
 
    // Common Four
