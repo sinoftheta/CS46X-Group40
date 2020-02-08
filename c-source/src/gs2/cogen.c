@@ -59,7 +59,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
     *arrayAt(&ag, 5) = 0.339981;
     *arrayAt(&ag, 6) = 0.861136;
 
-    int i, j, k, l, m, np2, jj, ik, ispk, ispm, jdi, jdj, ic, jc,  stop, i1;
+    int i, j, k, l, m, np2, ik, ispk, ispm, jdi, jdj, ic, jc,  stop, i1;
     int kase, ms, ii, jj, jdii, jdjj, kc, kb1;
     double vmax, xi, yi, det, st, psik, hmz, x1, x2, x3, teta, ce, pp, ppk;
     double cee, vlx, vly, rd, xcond, ycond, dispx, dispy, dispxy;
@@ -599,9 +599,9 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
         if (state->kod2 - 1 > 0) {
             printf("1          GLOBAL COEFFICIENT MATRICES FOR FLOW\n           ------------------------------------\n");
             printf("0          S COEFFICIENT MATRIX - UPPER HALFBAND\n           -------------------------------------\n");
-            gs2Sos(s, state->mb, state->mm, 1, state->maxbw2, state->maxs);
+            gs2Sos(s, state->mb, state->mm, 1);
             printf("0          P COEFFICIENT MATRIX - UPPER HALFBAND\n           -------------------------------------\n");
-            gs2Sos(p, state->mm, state->mb, 1, state->maxs, state->maxbw);
+            gs2Sos(p, state->mm, state->mb, 1);
         }
 
         if (state->kod2 - 1 >= 0) {
@@ -629,9 +629,9 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
         if (state->kod4 > 0) {
             printf("1          GLOBAL COEFFICIENT MATRICES FOR CONC.\n           -------------------------------------\n");
             printf("0          S COEFFICIENT MATRIX\n           --------------------\n\n\n");
-            gs2Sos(s, state->kmb2, state->km, state->knb - state->kmb + 1, state->maxbw2, state->maxs);
+            gs2Sos(s, state->kmb2, state->km, state->knb - state->kmb + 1);
             printf("0          P COEFFICIENT MATRIX\n           --------------------\n\n\n");
-            gs2Sos(p, state->km, state->kmb, 1, state->maxs, state->maxbw);
+            gs2Sos(p, state->km, state->kmb, 1);
         }
 
         if (state->kod4 >= 0) {
