@@ -11,9 +11,10 @@ void gs2Array(
         lim = ib - n + neq;
         k0 = max(ib - jb + 1, k);
         k1 = min(jb2,lim);
-            for(int m = k0; m < k1; m++){
-                z->elements[j] = *matrixAt(a, m, n);
-            }
+        for(int m = k0; m < k1; m++){
+            z->elements[j] = *matrixAt(a, m, n);
+            j++;
+        }
     }
     *jx = j;
 }

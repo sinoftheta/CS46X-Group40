@@ -7,7 +7,7 @@
  * elements is the first column, the next N the column
  */
 typedef struct {
-    double* elements;
+    double** elements;
     int rows;
     int columns;
 } Matrix;
