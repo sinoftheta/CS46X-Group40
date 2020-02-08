@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from .parameters_window import ParametersPage
-from .simulation_page import SimulationPage
+from .simulation.simulation_page import SimulationPage
 
 class MainWindow(QMainWindow):
     def __init__(self, config, *args, **kwargs):

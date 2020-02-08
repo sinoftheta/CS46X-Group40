@@ -22,6 +22,8 @@ class SimulationPage(QGroupBox):
         contentStack = QStackedLayout()
         pageLayout.addLayout(contentStack)
 
+        #editFileOptions
+
         runSimulationBttn = QPushButton('Run Simulation')
         runSimulationBttn.setGeometry(0, 0, 150, 100)
         runSimulationBttn.pressed.connect(self.onClickRun)
