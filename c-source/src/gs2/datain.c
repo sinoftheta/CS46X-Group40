@@ -134,7 +134,6 @@ void gs2Datain(
     int i1, i2, itype;
 
     CSVFile csvFile = csvLoadFile(csvPath);
-    printf("csvfile: %s\n", csvFile.currentRow->entries[0]);
     gs2DataGroup dataGroup = NUM_DATA_GROUP;
 
     arrayDimension(&wxpsi, 20);
