@@ -149,4 +149,22 @@ gs2MemoryRequirements gs2CreateMemoryRequirements(
     int maxbw
 );
 
+
+extern FILE* gs2stdin;
+extern FILE* gs2stdout;
+extern FILE* gs2stderr;
+
+
+void gs2DefaultIO();
+
+void gs2InputFile(const char* filepath);
+void gs2OutputFile(const char* filepath);
+void gs2ErrorFile(const char* filepath);
+
+
+
+// closes files and defaults all gs2 file descriptors
+void gs2CloseFiles();
+
+
 #endif /* __CAP_GS2_H__ */

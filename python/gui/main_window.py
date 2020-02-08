@@ -4,10 +4,14 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from .parameters_window import ParametersPage
+from .simulation_page import SimulationPage
 
 class MainWindow(QMainWindow):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, config, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+
+        # reference to config.ini
+        self.config = config
 
         #   Set window title
         self.setWindowTitle("GS2")
@@ -34,7 +38,7 @@ class MainWindow(QMainWindow):
         self.meshPage = QGroupBox('Mesh')
         self.homePageStack.addWidget(self.meshPage)
         #   Simulation
-        self.simulationPage = QGroupBox('Simulation')
+        self.simulationPage = SimulationPage(self.config)
         self.homePageStack.addWidget(self.simulationPage)
 
         self.meshPageLayout = QVBoxLayout()

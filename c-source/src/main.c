@@ -12,6 +12,10 @@
 
 
 int main(int argc, char** argv) {
+
+
+    gs2DefaultIO();
+
     gs2MemoryRequirements memReqs = gs2CreateMemoryRequirements(
         12,
         16,
