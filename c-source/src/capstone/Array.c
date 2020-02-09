@@ -43,3 +43,7 @@ void arrayAssertNotNull(Array* array, const char* message) {
         exit(-1);
     }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> installing-gsl

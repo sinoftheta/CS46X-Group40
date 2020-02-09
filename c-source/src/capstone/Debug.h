@@ -8,3 +8,7 @@ void warn(const char* msg);
 void warnf(const char* fmt, ...);
 
 #endif /* __CAP_DEBUG_H__ */
+<<<<<<< HEAD
+=======
+
+>>>>>>> installing-gsl

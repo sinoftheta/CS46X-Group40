@@ -31,3 +31,7 @@ void warnf(const char* fmt, ...) {
     vfprintf(gs2stderr, fmt, args);
     va_end(args);
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> installing-gsl
