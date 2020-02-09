@@ -7,3 +7,4 @@
 int readline(char** oLine, int* oLength, FILE* stream);
 
 #endif /* __CAP_FILE_UTIL_H__ */
+

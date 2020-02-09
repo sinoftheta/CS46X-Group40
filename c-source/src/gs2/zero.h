@@ -14,3 +14,4 @@ void gs2Zero(Matrix* a, Array* v, int ui, int neq, int ib, int n);
 
 
 #endif /* __CAP_ZERO_H__ */
+

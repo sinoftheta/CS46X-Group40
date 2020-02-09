@@ -95,3 +95,4 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l) {
         printf("\n\n\n");
     }
 }
+

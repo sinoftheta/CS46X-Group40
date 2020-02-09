@@ -59,3 +59,4 @@ void matrixAssertNotNull(Matrix* matrix, const char* message) {
         exit(1);
     }
 }
+

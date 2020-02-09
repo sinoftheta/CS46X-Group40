@@ -149,3 +149,4 @@ char** csvTokenizeLine(char* linebase, int* tokenCount) {
     *tokenCount = actualTokenCount;
     return result;
 }
+

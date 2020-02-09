@@ -15,3 +15,4 @@ void arrayAssertNotNull(Array* array, const char* message);
 
 
 #endif /* __CAP_ARRAY_H__ */
+

@@ -21,3 +21,4 @@ double* matrixAt(Matrix* matrix, int row, int col);
 void matrixAssertNotNull(Matrix* matrix, const char* message);
 
 #endif /* __CAP_MATRIX_H__ */
+

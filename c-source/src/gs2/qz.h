@@ -14,3 +14,4 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
        int l, int m, int ik, int* ispk, int* ispm, int* psik, int* istop);
 
 #endif /* __GS2_QZ_H__ */
+

@@ -28,3 +28,4 @@ void warnf(const char* fmt, ...) {
     vfprintf(stderr, fmt, args);
     va_end(args);
 }
+
