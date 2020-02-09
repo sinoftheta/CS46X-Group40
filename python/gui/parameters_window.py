@@ -54,48 +54,51 @@ class ParametersPage(QGroupBox):
 
         #   Add navigation buttons (widgets) to
         #       button container 'self.parametersPageStack'
-        importNavBtn = QPushButton("Import")
-        importNavBtn.setGeometry(0, 0, 150, 100)
-        importNavBtn.clicked.connect(self.importNavClick)
-        self.parametersPageNav.addWidget(importNavBtn)
+        self.importNavBtn = QPushButton("Import")
+        self.importNavBtn.setGeometry(0, 0, 150, 100)
+        self.importNavBtn.clicked.connect(self.importNavClick)
+        self.parametersPageNav.addWidget(self.importNavBtn)
 
-        basicPNavBtn = QPushButton("Basic Parameters")
-        basicPNavBtn.setGeometry(0, 0, 150, 100)
-        basicPNavBtn.pressed.connect(self.basicParamClick)
-        self.parametersPageNav.addWidget(basicPNavBtn)
+        self.basicPNavBtn = QPushButton("Basic Parameters")
+        self.basicPNavBtn.setGeometry(0, 0, 150, 100)
+        self.basicPNavBtn.pressed.connect(self.basicParamClick)
+        self.parametersPageNav.addWidget(self.basicPNavBtn)
 
-        multipliersNavBtn = QPushButton("Multipliers")
-        multipliersNavBtn.setGeometry(0, 0, 150, 100)
-        multipliersNavBtn.pressed.connect(self.multipliersClick)
-        self.parametersPageNav.addWidget(multipliersNavBtn)
+        self.multipliersNavBtn = QPushButton("Multipliers")
+        self.multipliersNavBtn.setGeometry(0, 0, 150, 100)
+        self.multipliersNavBtn.pressed.connect(self.multipliersClick)
+        self.parametersPageNav.addWidget(self.multipliersNavBtn)
 
-        nodesNavBtn = QPushButton("Nodes")
-        nodesNavBtn.setGeometry(0, 0, 150, 100)
-        nodesNavBtn.pressed.connect(self.nodesClick)
-        self.parametersPageNav.addWidget(nodesNavBtn)
+        self.nodesNavBtn = QPushButton("Nodes")
+        self.nodesNavBtn.setGeometry(0, 0, 150, 100)
+        self.nodesNavBtn.pressed.connect(self.nodesClick)
+        self.parametersPageNav.addWidget(self.nodesNavBtn)
 
-        nodeTypesClick = QPushButton("Node Types")
-        nodeTypesClick.setGeometry(0, 0, 150, 100)
-        nodeTypesClick.pressed.connect(self.nodeTypesClick)
-        self.parametersPageNav.addWidget(nodeTypesClick)
+        self.nodeTypesBtn = QPushButton("Node Types")
+        self.nodeTypesBtn.setGeometry(0, 0, 150, 100)
+        self.nodeTypesBtn.pressed.connect(self.nodeTypesClick)
+        self.parametersPageNav.addWidget(self.nodeTypesBtn)
 
-        elemNavBtn = QPushButton("Elements")
-        elemNavBtn.setGeometry(0, 0, 150, 100)
-        elemNavBtn.pressed.connect(self.elementsClick)
-        self.parametersPageNav.addWidget(elemNavBtn)
+        self.elemNavBtn = QPushButton("Elements")
+        self.elemNavBtn.setGeometry(0, 0, 150, 100)
+        self.elemNavBtn.pressed.connect(self.elementsClick)
+        self.parametersPageNav.addWidget(self.elemNavBtn)
 
-        elemIncNavBtn = QPushButton("Element Incidences")
-        elemIncNavBtn.setGeometry(0, 0, 150, 100)
-        elemIncNavBtn.pressed.connect(self.elementIncClick)
-        self.parametersPageNav.addWidget(elemIncNavBtn)
+        self.elemIncNavBtn = QPushButton("Element Incidences")
+        self.elemIncNavBtn.setGeometry(0, 0, 150, 100)
+        self.elemIncNavBtn.pressed.connect(self.elementIncClick)
+        self.parametersPageNav.addWidget(self.elemIncNavBtn)
 
-        matsNavBtn = QPushButton("Materials")
-        matsNavBtn.setGeometry(0, 0, 150, 100)
-        matsNavBtn.pressed.connect(self.materialsClick)
-        self.parametersPageNav.addWidget(matsNavBtn)
+        self.matsNavBtn = QPushButton("Materials")
+        self.matsNavBtn.setGeometry(0, 0, 150, 100)
+        self.matsNavBtn.pressed.connect(self.materialsClick)
+        self.parametersPageNav.addWidget(self.matsNavBtn)
 
         self.parametersPageNav.setContentsMargins(0, 0, 0, 0)
         self.parametersPageNav.setSpacing(20)
+
+        if (self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials()) == 0):
+            self.matsNavBtn.setDisabled(true)
 
     def importNavClick(self):
         #self.parametersPageStack.setCurrentIndex(0)
