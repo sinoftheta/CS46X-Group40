@@ -1,12 +1,16 @@
 CC=gcc
 # -lgsl -lgslcblas
 CFLAGS := -pedantic -Wall -Werror -g -std=c99
-CLIBS := -static -lgsl -lgslcblas -lm
+CLIBS := -lgsl -lm
 
 SRCDIR := src
 BUILDDIR := build/objs
 
-SRCS := $(shell find $(SRCDIR) -name '*.c')
+# SRCS := $(shell find $(SRCDIR) -name '*.c')
+SRCS = $(wildcard src/*.c)
+SRCS += $(wildcard src/gs2/*.c)
+SRCS += $(wildcard src/capstone/*.c)
+
 OBJS := $(addprefix $(BUILDDIR)/,$(SRCS:%.c=%.o))
 
 TARGET := build/gs2
@@ -22,7 +26,7 @@ $(BUILDDIR)/%.o: %.c
  
 clean: 
 	rm -r $(BUILDDIR)
-	rm $(TARGET)
+	rm $(TARGET).*
 
 run:
 	$(TARGET)
