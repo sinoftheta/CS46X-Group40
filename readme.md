@@ -14,7 +14,7 @@ After creating this directory the following workflow should be used:
 $ source env/bin/activate
 
 # on windows
-$ \env\Scripts\activate.bat
+$ .\env\Scripts\activate.bat
 
 # make sure the virtual env has all the required libraries
 $ pip install -r requirements.txt
