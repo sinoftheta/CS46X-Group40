@@ -31,3 +31,28 @@ $ deactivate
 $ git add/commit/push
 
 ```
+
+
+## Installing GSL
+
+Main website [here](https://www.gnu.org/software/gsl/). On the downloads page look for version 2.6.
+
+### Linux/Mac
+
+Download `gsl-2.6.tar.gz`.
+```
+$ tar -xf gsl-2.6.tar.gz
+$ cd gsl-2.6.tar.gz
+$ ./configure
+$ make
+$ sudo make install
+```
+
+### Windows
+
+Building GSL on windows is slightly different from Linux/Mac. This [stackoverflow](https://stackoverflow.com/questions/30015656/using-gnu-scientific-library-gsl-under-windows-x64-with-mingw) post should shed some light on the matter.
+
+
+
+
+
