@@ -74,6 +74,15 @@ class Nodes(QGroupBox):
         self.nodeTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.layout.addWidget(self.nodeTable)
 
+    def getCONCI(self):
+        CONCI = []
+
+        for row in range(0, self.nodeTable.rowCount()):
+            nodeValue = self.nodeTable.cellWidget(row, 5).value()
+            CONCI.append(nodeValue)
+
+        return CONCI
+
 class BoundaryComboBox(QComboBox):
     def __init__(self):
         super(BoundaryComboBox, self).__init__()

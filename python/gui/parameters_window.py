@@ -116,6 +116,8 @@ class ParametersPage(QGroupBox):
         numNodes = self.parametersPageBasic.getNumNodes()
         self.parametersPageNodes.buildTable(numNodes)
         self.parametersPageStack.setCurrentIndex(3)
+        #Test accessor
+        #print(self.parametersPageNodes.getCONCI())
 
     def nodeTypesClick(self):
         self.parametersPageStack.setCurrentIndex(4)
