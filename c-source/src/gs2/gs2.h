@@ -134,3 +134,4 @@ typedef struct gs2State {
 } gs2State;
 
 #endif /* __CAP_GS2_H__ */
+

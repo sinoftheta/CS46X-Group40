@@ -6,3 +6,4 @@
 void gs2UPD(Array* a, Array* b, Array* kod, Array* lq, int nn);
 
 #endif /* __CAP_UPD_H__ */
+

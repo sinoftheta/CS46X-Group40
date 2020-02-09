@@ -11,3 +11,4 @@ void gs2UPD(Array* a, Array* b, Array* kod, Array* lq, int nn) {
         *arrayAt(b, k) = *arrayAt(a, i);
     }
 }
+
