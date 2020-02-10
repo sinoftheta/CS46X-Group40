@@ -70,3 +70,4 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
     }
     // 50
 }
+

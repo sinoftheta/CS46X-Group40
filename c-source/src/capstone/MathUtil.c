@@ -20,3 +20,4 @@ double mind(double a, double b) {
 double maxd(double a, double b) {
     return a > b ? a : b;
 }
+

@@ -18,3 +18,4 @@
 void gs2Dband(Matrix* s, int n, int nb, int* iex); 
 
 #endif /*__CAP_GS2_DBAND_H__*/
+

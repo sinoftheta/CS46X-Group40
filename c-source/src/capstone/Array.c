@@ -41,3 +41,4 @@ void arrayAssertNotNull(Array* array, const char* message) {
         exit(-1);
     }
 }
+

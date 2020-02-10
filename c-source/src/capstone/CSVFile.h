@@ -37,3 +37,4 @@ void csvFreeFile(CSVFile* csvFile);
 
 
 #endif /* __CAP_CSV_FILE_H__ */
+
