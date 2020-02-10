@@ -44,9 +44,6 @@ To build on Linux and presumably Mac, just:
 $ bash build.sh
 ```
 
-<<<<<<< HEAD
-Running `build.sh` creates a top-level directory, `dist`. In dist there is an executable `main`. Running main launches the application.
-=======
 Running `build.sh` creates a top-level directory, `dist`. In dist there is an executable `main`. Running main should launch the application.
 
 ## Building on Windows
@@ -110,4 +107,3 @@ Should then be good to go.
 
 
 
->>>>>>> 605c3b426a69148698037eced75e75a9d694d39e
