@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from parameters_page import ParametersPage
+from .parameters_window import ParametersPage
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -69,9 +69,3 @@ class MainWindow(QMainWindow):
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.simulationButton)
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    mainWindow = MainWindow()
-    mainWindow.show()
-    app.exec_()
