@@ -27,6 +27,9 @@ $ pip freeze > requirements.txt
 # deactivate env
 $ deactivate
 
+# deactivate env on windows
+$ .\env\Scripts\deactivate.bat
+
 # do git stuff
 $ git add/commit/push
 

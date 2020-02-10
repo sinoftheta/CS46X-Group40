@@ -16,7 +16,7 @@ OBJS := $(addprefix $(BUILDDIR)/,$(SRCS:%.c=%.o))
 LIB_SRCS := $(filter-out src/main.c, $(SRCS))
 LIB_OBJS := $(filter-out build/objs/main.o, $(OBJS))
 
-TARGET := build/gs2.exe
+TARGET := build/gs2
 LIBRARY := build/libgs2.so
 
 
@@ -36,7 +36,7 @@ $(BUILDDIR)/%.o: %.c
  
 clean: 
 	rm -r $(BUILDDIR)
-	rm $(TARGET).*
+	rm $(TARGET)*
 
 run:
 	$(TARGET)
