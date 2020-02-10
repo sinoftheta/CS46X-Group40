@@ -5,3 +5,4 @@ python/capstone/__pycache__/
 python/__pycache__/
 c-source/build/**
 python/gui/__pycache__/
+python/parameters.csv

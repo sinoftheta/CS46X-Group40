@@ -116,6 +116,7 @@ class ParametersPage(QGroupBox):
 
     def multipliersClick(self):
         self.parametersPageStack.setCurrentIndex(2)
+        print(self.parametersPageMult.getVals())
 
     def nodesClick(self):
         numNodes = self.parametersPageBasic.getNumNodes()
@@ -149,44 +150,49 @@ class ParametersPage(QGroupBox):
         with open('parameters.csv', 'w', newline='') as csvfile:
             writer = csv.writer(
                 csvfile, 
-                delimiter=' ',
-                quotechar='|',
-                quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['spam'] * 5 + ['end'])
-            writer.writerow(['idk', 'what', 'this', 'will', 'do'])
-        #write group A
+                delimiter=',',
+                quotechar='|', #unused, I think
+                quoting=csv.QUOTE_MINIMAL) #also unused
+            
+            
+            #write group A
+            group = 'A'
 
-        #write group B
+            #write group B
+            group = 'B'
 
-        #write group C, multipliers
-
-        #write group D
-        
-        #write group E
-        
-        #write group F
-        
-        #write group G
-        
-        #write group H
-        
-        #write group I
-        
-        #write group J
-        
-        #write group K
-        
-        #write group L
-        
-        #write group M
-        
-        #write group N
-        
-        #write group O
-        
-        #write group P
-        
-        #write group Q
+            #write group C, multipliers
+            group = 'C'
+            vals = self.parametersPageMult.getVals()
+            writer.writerow([group, vals['AFMOBX'], vals['AFMOBY'], vals['APOR'], vals['AELONG'], vals['AETRANS'], vals['APHII'], vals['ACONCI'], vals['XFACT'], '', '']) # page 8 
+            writer.writerow([group, vals['YFACT'], vals['ATETA'], vals['AAL'], vals['AKD'], vals['ALAM'], vals['ARHO'], '', '', '', '']) # page 8 
+            #write group D
+            
+            #write group E
+            
+            #write group F
+            
+            #write group G
+            
+            #write group H
+            
+            #write group I
+            
+            #write group J
+            
+            #write group K
+            
+            #write group L
+            
+            #write group M
+            
+            #write group N
+            
+            #write group O
+            
+            #write group P
+            
+            #write group Q
 
         
         
