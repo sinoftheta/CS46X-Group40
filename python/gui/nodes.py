@@ -76,11 +76,12 @@ class Nodes(QGroupBox):
 
     def getCONCI(self):
         CONCI = []
+        if hasattr(self, 'nodeTable'):
+            for row in range(0, self.nodeTable.rowCount()):
+                # The hardcode 5 = column number, specified in buildTable() method above
 
-        for row in range(0, self.nodeTable.rowCount()):
-            # The hardcode 5 = column number, specified in buildTable() method above
-            nodeValue = self.nodeTable.cellWidget(row, 5).value()
-            CONCI.append(nodeValue)
+                nodeValue = self.nodeTable.cellWidget(row, 5).value()
+                CONCI.append(nodeValue)
 
         return CONCI
 

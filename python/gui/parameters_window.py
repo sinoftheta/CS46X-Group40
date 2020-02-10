@@ -59,6 +59,11 @@ class ParametersPage(QGroupBox):
         self.importNavBtn.clicked.connect(self.importNavClick)
         self.parametersPageNav.addWidget(self.importNavBtn)
 
+        self.exportNavBtn = QPushButton("Export")
+        self.exportNavBtn.setGeometry(0, 0, 150, 100)
+        self.exportNavBtn.clicked.connect(self.exportNavClick)
+        self.parametersPageNav.addWidget(self.exportNavBtn)
+
         self.basicPNavBtn = QPushButton("Basic Parameters")
         self.basicPNavBtn.setGeometry(0, 0, 150, 100)
         self.basicPNavBtn.pressed.connect(self.basicParamClick)
@@ -105,7 +110,6 @@ class ParametersPage(QGroupBox):
         filename = QFileDialog.getOpenFileName(self, 'Open file',
             '/home', "Text files (*.txt);;CSV Files (*.csv)")
 
-
     def basicParamClick(self):
         self.parametersPageStack.setCurrentIndex(1)
 
@@ -117,7 +121,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageNodes.buildTable(numNodes)
         self.parametersPageStack.setCurrentIndex(3)
         #Test accessor
-        #print(self.parametersPageNodes.getCONCI())
+        print(self.parametersPageNodes.getCONCI())
 
     def nodeTypesClick(self):
         self.parametersPageStack.setCurrentIndex(4)
@@ -137,3 +141,43 @@ class ParametersPage(QGroupBox):
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
         self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())
+
+    def exportNavClick(self):
+
+        
+        #write group A
+
+        #write group B
+
+        #write group C, multipliers
+
+        #write group D
+        
+        #write group E
+        
+        #write group F
+        
+        #write group G
+        
+        #write group H
+        
+        #write group I
+        
+        #write group J
+        
+        #write group K
+        
+        #write group L
+        
+        #write group M
+        
+        #write group N
+        
+        #write group O
+        
+        #write group P
+        
+        #write group Q
+
+        print('exporting')
+        
