@@ -160,6 +160,8 @@ class ParametersPage(QGroupBox):
 
             #write group B
             group = 'B'
+            vals = self.parametersPageBasic.getVals()
+            print(vals)
 
             #write group C, multipliers
             group = 'C'
