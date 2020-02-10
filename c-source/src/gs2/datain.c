@@ -755,7 +755,7 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
                 if (*matrixAt(stateInRef, j, l) == 0.0)
                     break;
                 
-                nd = abs(*matrixAt(stateInRef, i, l) - *matrixAt(stateInRef, j, l));
+                nd = abs( (int)*matrixAt(stateInRef, i, l) - (int)*matrixAt(stateInRef, j, l));
                 // printf("l = %d, i = %d, j = %d, nd = %lf\n", l, i, j, nd);
                 mnd = maxd(nd, mnd);
                 *maxdif = maxd(nd, *maxdif);
