@@ -45,7 +45,12 @@ $ bash build.sh
 ```
 
 Running `build.sh` creates a top-level directory, `dist`. In dist there is an executable `main`. Running main should launch the application.
+
 ## Building on Windows
+
+Just run the `build.bat` file.
+
+## Compiling on Windows
 
 Install MinGW by following the instructions [here](http://www.mingw.org/wiki/Getting_Started). 
 Assuming MinGW is installed to `C:\MinGW`, make sure to add `C:\MinGW\bin` to your path.
