@@ -84,6 +84,11 @@ class Nodes(QGroupBox):
                 CONCI.append(nodeValue)
 
         return CONCI
+    
+    def getVal(self, row, col) #row and col are 1 indexed
+        if hasattr(self, 'nodeTable') and (row <= self.nodeTable.rowCount()) and (col <= len(nodeTableLabels)):
+            return self.nodeTable.cellWidget(row, col).value()
+        return False
 
 class BoundaryComboBox(QComboBox):
     def __init__(self):

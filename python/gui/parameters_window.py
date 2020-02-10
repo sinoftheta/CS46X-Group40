@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import csv
 
 from .parameters_basic import BasicParameters
 from .multipliers import Multipliers
@@ -144,7 +145,15 @@ class ParametersPage(QGroupBox):
 
     def exportNavClick(self):
 
-        
+        print('exporting')
+        with open('parameters.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(
+                csvfile, 
+                delimiter=' ',
+                quotechar='|',
+                quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(['spam'] * 5 + ['end'])
+            writer.writerow(['idk', 'what', 'this', 'will', 'do'])
         #write group A
 
         #write group B
@@ -179,5 +188,5 @@ class ParametersPage(QGroupBox):
         
         #write group Q
 
-        print('exporting')
+        
         
