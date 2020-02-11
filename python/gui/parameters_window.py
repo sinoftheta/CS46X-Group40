@@ -163,8 +163,9 @@ class ParametersPage(QGroupBox):
             group = 'B'
             vals = self.parametersPageBasic.getVals()
             writer.writerow([group, vals['NN'], vals['NE'], 'NS', 'KNS', vals['NB'], vals['KNB'], 'NF', vals['INC'], vals['NK'], 'NSEEP']) # page 3
-            writer.writerow([group, 'NSDN', 'MQ4', 'KNSDN', vals['PL'], 'COEFI', vals['EI'], 'NVS', '', '', '']) # page 3
-            writer.writerow([group, '', '', '', '', '', '', '', '', '', '']) # page 3, unfinished
+            writer.writerow([group, 'NSDN', 'MQ4', 'KNSDN', vals['PL'], 'COEFI', vals['EI'], 'NVS', '', '', '']) # page 4
+            writer.writerow([group, vals['DELT'], vals['CHNG'], vals['ITMAX'], vals['ITCHNG'], vals['PCHNG'], vals['BETAP'], 'TYPE', '', '', '']) # page 5, TODO: implement TYPE
+            writer.writerow([group, vals['DIFUSN'], 'DPRDT', vals['STAT'], vals['STATP'], vals['CLOS1'], vals['ITER1'], vals['IGO']]) # page 6
             
 
             #write group C, multipliers

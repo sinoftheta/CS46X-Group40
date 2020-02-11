@@ -222,7 +222,7 @@ class BasicParameters(QGroupBox):
 
             # return as key value pairs
             if isinstance(getattr(self, var), QComboBox): #will deal with these cases later
-                continue
+                values[var] = getattr(self, var).currentText()
             elif isinstance(getattr(self, var), QRadioButton):
                 continue
             else:
