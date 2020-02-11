@@ -23,10 +23,9 @@ class SimulationPage(QGroupBox):
 
         sideNav = QVBoxLayout()
         sideNav.setAlignment(Qt.AlignCenter | Qt.AlignTop)
+        sideNav.setGeometry(QRect(0, 0, 150, 100))
+        sideNav.setSizeConstraint(QLayout.SetFixedSize)
         pageLayout.addLayout(sideNav)
-
-        contentStack = QStackedLayout()
-        pageLayout.addLayout(contentStack)
 
         #editFileOptions
         fileOptions = FileOptions(self.config)
@@ -56,7 +55,7 @@ class SimulationPage(QGroupBox):
         simulationRunner.openFiles()
 
         stdout = simulationRunner.stdout
-    
+
         if stdout not in self.fileWatcher.files():
             self.fileWatcher.removePaths(self.fileWatcher.files())
             self.fileWatcher.addPath(stdout)

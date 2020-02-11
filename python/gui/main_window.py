@@ -55,6 +55,7 @@ class MainWindow(QMainWindow):
         self.homePageWidget.setLayout(self.homePageLayout)
         self.setCentralWidget(self.homePageWidget)
 
+
     def setHomePageButtons(self):
         #   Add navigation buttons (widgets) to
         #       button container 'self.homePageButtons'

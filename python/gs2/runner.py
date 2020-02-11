@@ -6,7 +6,7 @@ from ctypes import *
 class Runner:
     def __init__(self, config):
         gs2_lib_path = path.abspath(path.join(config['paths']['bundle'], config['paths']['gs2Lib']))
-        self.example_path = path.abspath(path.join(config['paths']['bundle'], config['paths']['exampleCsv']))
+        self.example_path = path.abspath(path.join(config['paths']['bundle'], config['paths']['data-in']))
 
         self.stdout = ""
         self.stdin = ""
