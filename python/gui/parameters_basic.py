@@ -221,6 +221,13 @@ class BasicParameters(QGroupBox):
             #)
 
             # return as key value pairs
-            values[var] = getattr(self, var).value()
+            if isinstance(getattr(self, var), QComboBox): #will deal with these cases later
+                continue
+            elif isinstance(getattr(self, var), QRadioButton):
+                continue
+            else:
+                values[var] = getattr(self, var).value()
+            
         return values
+
 

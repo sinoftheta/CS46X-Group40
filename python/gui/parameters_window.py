@@ -113,6 +113,7 @@ class ParametersPage(QGroupBox):
 
     def basicParamClick(self):
         self.parametersPageStack.setCurrentIndex(1)
+        print(self.parametersPageBasic.getVals())
 
     def multipliersClick(self):
         self.parametersPageStack.setCurrentIndex(2)
@@ -161,7 +162,10 @@ class ParametersPage(QGroupBox):
             #write group B
             group = 'B'
             vals = self.parametersPageBasic.getVals()
-            print(vals)
+            writer.writerow([group, vals['NN'], vals['NE'], 'NS', 'KNS', vals['NB'], vals['KNB'], 'NF', vals['INC'], vals['NK'], 'NSEEP']) # page 3
+            writer.writerow([group, 'NSDN', 'MQ4', 'KNSDN', vals['PL'], 'COEFI', vals['EI'], 'NVS', '', '', '']) # page 3
+            writer.writerow([group, '', '', '', '', '', '', '', '', '', '']) # page 3, unfinished
+            
 
             #write group C, multipliers
             group = 'C'
