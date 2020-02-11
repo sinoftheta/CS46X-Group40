@@ -3,7 +3,6 @@ from gs2 import types
 
 from ctypes import *
 
-
 class Runner:
     def __init__(self, config):
         gs2_lib_path = path.abspath(path.join(config['paths']['bundle'], config['paths']['gs2Lib']))

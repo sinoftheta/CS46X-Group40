@@ -6,7 +6,8 @@ import ctypes
 from gs2 import types
 from gs2.runner import Runner
 
-import os
+import sys
+import pathlib
 
 from .file_options import FileOptions
 
@@ -55,6 +56,7 @@ class SimulationPage(QGroupBox):
         simulationRunner.openFiles()
 
         stdout = simulationRunner.stdout
+    
         if stdout not in self.fileWatcher.files():
             self.fileWatcher.removePaths(self.fileWatcher.files())
             self.fileWatcher.addPath(stdout)
