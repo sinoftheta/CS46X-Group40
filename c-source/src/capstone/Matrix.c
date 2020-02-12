@@ -1,5 +1,7 @@
 #include "Matrix.h"
 
+#include "../gs2/gs2.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,14 +10,14 @@ void matrixDimension(Matrix* oMatrix, int rows, int columns) {
 
     oMatrix->elements = calloc(rows, sizeof(double*));
     if(oMatrix->elements == NULL){
-        fprintf(stderr, "Matrix memory allocation failed in matrixDimension!");
+        fprintf(gs2stderr, "Matrix memory allocation failed in matrixDimension!");
         exit(1);
     }
 
     for(int i = 0; i < rows; ++i){
         oMatrix->elements[i] = calloc(columns, sizeof(double));
         if(oMatrix->elements[i] == NULL){
-            fprintf(stderr, "Matrix allocation failed in matrixDimension!");
+            fprintf(gs2stderr, "Matrix allocation failed in matrixDimension!");
             exit(1);
         }
     }
@@ -46,7 +48,7 @@ double* matrixAt(Matrix* matrix, int row, int col) {
 
 
     if (col - 1 >= matrix->columns || row - 1 >= matrix->rows) {
-        fprintf(stderr, "matrixAt index out of bounds at row: %d, column: %d\n", row, col);
+        fprintf(gs2stderr, "matrixAt index out of bounds at row: %d, column: %d\n", row, col);
         exit(1);
     }
 
@@ -55,8 +57,7 @@ double* matrixAt(Matrix* matrix, int row, int col) {
 
 void matrixAssertNotNull(Matrix* matrix, const char* message) {
     if (matrix == NULL) {
-        fprintf(stderr, "%s\n", message);
+        fprintf(gs2stderr, "%s\n", message);
         exit(1);
     }
 }
-

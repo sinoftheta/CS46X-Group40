@@ -1,4 +1,6 @@
 #include "Array.h"
+#include "../gs2/gs2.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -7,7 +9,7 @@ void arrayDimension(Array* array, int size) {
 
     array->elements = calloc(size, sizeof(double));
     if(array->elements == NULL){
-        fprintf(stderr, "Memory allocation failed in arrayDimension!\n");
+        fprintf(gs2stderr, "Memory allocation failed in arrayDimension!\n");
         exit(-1);
     }
     array->size = size;
@@ -27,7 +29,7 @@ double* arrayAt(Array* array, int index) {
 
 
     if (index - 1 >= array->size) {
-        fprintf(stderr, "arrayAt index out of bounds: %d\n", index);
+        fprintf(gs2stderr, "arrayAt index out of bounds: %d\n", index);
         int a = ((Array*)(NULL))->elements[0];
         exit(a);
     }
@@ -37,8 +39,7 @@ double* arrayAt(Array* array, int index) {
 
 void arrayAssertNotNull(Array* array, const char* message) {
     if (array == NULL) {
-        fprintf(stderr, "%s\n", message);
+        fprintf(gs2stderr, "%s\n", message);
         exit(-1);
     }
 }
-

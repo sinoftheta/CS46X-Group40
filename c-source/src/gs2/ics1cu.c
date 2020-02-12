@@ -73,4 +73,3 @@ void gs2ICS1CU(
     gsl_vector_free(B);
     gsl_matrix_free(X);
 }
-

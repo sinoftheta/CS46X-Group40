@@ -256,4 +256,3 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
 
     return;
 }
-

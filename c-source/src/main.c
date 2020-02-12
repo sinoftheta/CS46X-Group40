@@ -13,22 +13,21 @@
 
 int main(int argc, char** argv) {
 
-    gs2MemoryRequirements memReqs;
-    memReqs.mxc = 12;
-    memReqs.mxt = 16;
-    memReqs.maxnn = 52;
-    memReqs.maxne = 25;
-    memReqs.ns1 = 2;
-    memReqs.kns1 = 0;
-    memReqs.maxm4 = 2;
-    memReqs.maxm5 = 1;
-    memReqs.maxeep = 1;
-    memReqs.maxbw = 4;
-    memReqs.maxbw2 = 7;
-    memReqs.maxm1 = memReqs.maxnn - memReqs.ns1;
-    memReqs.maxm2 = memReqs.maxnn - memReqs.kns1;
-    memReqs.maxs = max(memReqs.maxm1, memReqs.maxm2);
-    memReqs.mx = memReqs.maxbw2 * memReqs.maxs;
+
+    gs2DefaultIO();
+
+    gs2MemoryRequirements memReqs = gs2CreateMemoryRequirements(
+        12,
+        16,
+        52,
+        25,
+        2,
+        0,
+        2,
+        1,
+        1,
+        4
+    );
 
     gs2State state;
     state.memoryRequirements = memReqs;
@@ -76,4 +75,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-

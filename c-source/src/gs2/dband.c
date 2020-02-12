@@ -1,4 +1,5 @@
 #include "dband.h"
+#include "gs2.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -56,8 +57,8 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
 
                 //write error messages
                 //change to fprintf? write to stderr? need file pointer
-                fprintf(stderr, "Dband fails at row %d\n", i); 
-                fprintf(stderr, "N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
+                fprintf(gs2stderr, "Dband fails at row %d\n", i); 
+                fprintf(gs2stderr, "N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
                     n, nb, ip, iq, i, j, sum
                 );
                 
@@ -70,4 +71,3 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
     }
     // 50
 }
-

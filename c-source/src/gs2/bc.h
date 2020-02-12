@@ -11,4 +11,3 @@ void gs2BoundaryCondition(Array* lx, Array* lrt, int ln, double kbc, int neq, in
 
 
 #endif /* __CAP_BC_H__ */
-
