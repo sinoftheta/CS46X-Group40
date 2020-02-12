@@ -7,3 +7,4 @@
 void gs2Sos(Matrix* a, int neq, int iband, int istart);
 
 #endif /* __GS2_SOS_H__ */
+

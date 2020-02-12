@@ -59,7 +59,7 @@ Main website [here](https://www.gnu.org/software/gsl/). On the downloads page lo
 Download `gsl-2.6.tar.gz`.
 ```
 $ tar -xf gsl-2.6.tar.gz
-$ cd gsl-2.6.tar.gz
+$ cd gsl-2.6
 $ ./configure
 $ make
 $ sudo make install

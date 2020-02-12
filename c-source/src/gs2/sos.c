@@ -23,3 +23,4 @@ void gs2Sos(Matrix* a, int neq, int iband, int istart) {
         printf("\n\n\n");
     }
 }
+
