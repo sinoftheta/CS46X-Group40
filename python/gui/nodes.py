@@ -2,13 +2,17 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-nodeTableLabels = ["Node", "Boundary Type", "X-Coordinate",
-            "Y-Coordinate", "Initial Pressure", "Initial Concentration"]
+nodeTableLabels = [ "Node",
+            "Boundary Type",
+            "X-Coordinate",
+            "Y-Coordinate",
+            "Initial Pressure", 
+            "Initial Concentration" ]
 
 nodeTypeLabels = [
         "Constant Head (Dirichlet)",
         "Source/Sink",
-        "Infiltration/Evaporation (Variable Boundary)",
+        "Infiltration/Evaporation",
         "Seepage Face",
         "Mixed Boundary Condition"
 ]
@@ -19,7 +23,6 @@ class Nodes(QGroupBox):
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
-        # self.layout.addWidget(self.nodeTable)
 
     def buildTable(self, numNodes):
         if (numNodes == 0):
@@ -73,6 +76,18 @@ class Nodes(QGroupBox):
         # Set table column widths to match label size
         self.nodeTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.layout.addWidget(self.nodeTable)
+
+    def nodeTypeCounts(self):
+        # get node type from QComboBox widget in nodeTable
+        if (hasattr(self, 'nodeTable')):
+            nodeTypes = { type: [] for type in nodeTypeLabels }
+            numNodes = self.nodeTable.rowCount()
+            for row in range(0, numNodes):
+                if (self.nodeTable.cellWidget(row, 1).currentText() != '-Select Boundary Type-'):
+                    nodeTypes[self.nodeTable.cellWidget(row, 1).currentText()].append(row+1)
+        return nodeTypes
+
+
 
 class BoundaryComboBox(QComboBox):
     def __init__(self):

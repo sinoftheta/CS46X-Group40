@@ -37,7 +37,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageBasic = BasicParameters()
         self.parametersPageMult = Multipliers()
         self.parametersPageNodes = Nodes()
-        self.parametersPageNodesT = NodeTypes()
+        self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
         self.parametersPageElemIncid = ElementIncidences()
         self.parametersPageMat = Materials()
@@ -47,7 +47,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageBasic)
         self.parametersPageStack.addWidget(self.parametersPageMult)
         self.parametersPageStack.addWidget(self.parametersPageNodes)
-        self.parametersPageStack.addWidget(self.parametersPageNodesT)
+        self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
         self.parametersPageStack.addWidget(self.parametersPageElem)
         self.parametersPageStack.addWidget(self.parametersPageElemIncid)
         self.parametersPageStack.addWidget(self.parametersPageMat)
@@ -99,7 +99,7 @@ class ParametersPage(QGroupBox):
 
     def importNavClick(self):
         #self.parametersPageStack.setCurrentIndex(0)
-        filename = QFileDialog.getOpenFileName(self, 'Open file',
+        filename[0] = QFileDialog.getOpenFileName(self, 'Open file',
             '/home', "Text files (*.txt);;CSV Files (*.csv)")
 
 
@@ -116,6 +116,8 @@ class ParametersPage(QGroupBox):
 
     def nodeTypesClick(self):
         self.parametersPageStack.setCurrentIndex(4)
+        nodeTypes = self.parametersPageNodes.nodeTypeCounts()
+        self.parametersPageNodeTypes.buildTables(nodeTypes)
 
     def elementsClick(self):
         numElements = self.parametersPageBasic.getNumElements()
