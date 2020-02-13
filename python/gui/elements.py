@@ -105,6 +105,14 @@ class Elements(QGroupBox):
         self.elementTable.verticalHeader().hide()
         self.layout.addWidget(self.elementTable)
 
+    def getRHO(self):
+        RHO = []
+
+        for row in range(0, self.elementTable.rowCount()):
+            elementValue = self.elementTable.cellWidget(row, 11).value()
+            RHO.append(elementValue)
+
+        return RHO
 
 class MaterialsComboBox(QComboBox):
     def __init__(self, numMaterials):

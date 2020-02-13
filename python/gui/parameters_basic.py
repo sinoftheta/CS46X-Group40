@@ -209,3 +209,25 @@ class BasicParameters(QGroupBox):
 
     def getNumMaterials(self):
         return self.NK.value()
+
+    def getVals(self):
+        values = {}
+        for var in vars(self):
+            if var == 'layout':
+                continue
+            # return as unordered array
+            #values.append(
+            #    getattr(self, var).value()
+            #)
+
+            # return as key value pairs
+            if isinstance(getattr(self, var), QComboBox): #will deal with these cases later
+                values[var] = getattr(self, var).currentText()
+            elif isinstance(getattr(self, var), QRadioButton):
+                continue
+            else:
+                values[var] = getattr(self, var).value()
+            
+        return values
+
+

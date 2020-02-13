@@ -24,6 +24,7 @@ class Nodes(QGroupBox):
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
+        # self.layout.addWidget(self.nodeTable)
 
     def buildTable(self, numNodes):
         if (numNodes == 0):
@@ -87,6 +88,39 @@ class Nodes(QGroupBox):
                 if (self.nodeTable.cellWidget(row, 1).currentText() != '-Select Boundary Type-'):
                     nodeTypes[self.nodeTable.cellWidget(row, 1).currentText()].append(row+1)
             return nodeTypes
+          
+    def getCONCI(self):
+        CONCI = []
+        if hasattr(self, 'nodeTable'):
+            for row in range(0, self.nodeTable.rowCount()):
+                # The hardcode 5 = column number, specified in buildTable() method above
+
+                nodeValue = self.nodeTable.cellWidget(row, 5).value()
+                CONCI.append(nodeValue)
+
+        return CONCI
+    
+    def getNumRows():
+        if hasattr(self, 'nodeTable'):
+            return self.nodeTable.rowCount()
+        return 0
+    def getRow(self, row):
+        rowData = {}
+        if hasattr(self, 'nodeTable') and (row <= self.nodeTable.rowCount()):
+            #Node
+            rowData['NodeNum'] = self.nodeTable.cellWidget(row, 0).text()
+            #Boundary Type (q combo box)
+            rowData['Boundary'] = self.nodeTable.cellWidget(row, 1).currentText()
+            #x - coord
+            rowData['XCoord'] = self.nodeTable.cellWidget(row, 2).value()
+            #y - coord
+            rowData['YCoord'] = self.nodeTable.cellWidget(row, 3).value()
+            #init pressure
+            rowData['Pressure'] = self.nodeTable.cellWidget(row, 4).value()
+            #init concentration
+            rowData['Conce'] = self.nodeTable.cellWidget(row, 5).value()
+        return rowData
+
 
 
 
