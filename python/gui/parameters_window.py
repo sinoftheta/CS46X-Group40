@@ -113,18 +113,16 @@ class ParametersPage(QGroupBox):
 
     def basicParamClick(self):
         self.parametersPageStack.setCurrentIndex(1)
-        print(self.parametersPageBasic.getVals())
 
     def multipliersClick(self):
         self.parametersPageStack.setCurrentIndex(2)
-        print(self.parametersPageMult.getVals())
 
     def nodesClick(self):
         numNodes = self.parametersPageBasic.getNumNodes()
         self.parametersPageNodes.buildTable(numNodes)
         self.parametersPageStack.setCurrentIndex(3)
         #Test accessor
-        print(self.parametersPageNodes.getCONCI())
+        #print(self.parametersPageNodes.getCONCI())
 
     def nodeTypesClick(self):
         self.parametersPageStack.setCurrentIndex(4)
@@ -145,8 +143,13 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(7)
         self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())
 
+
     def exportNavClick(self):
 
+        #check that node table has been opened, should probably grey out export button
+        if(not hasattr(self.parametersPageNodes, 'nodeTable')):
+            print('You have not set node properties yet')
+            return
         print('exporting')
         with open('parameters.csv', 'w', newline='') as csvfile:
             writer = csv.writer(
@@ -155,13 +158,16 @@ class ParametersPage(QGroupBox):
                 quotechar='|', #unused, I think
                 quoting=csv.QUOTE_MINIMAL) #also unused
             
+            # TODO: values that are hard-coded must be derived 
             
-            #write group A
+            #write group A, problem title
             group = 'A'
 
-            #write group B
+            #write group B, basic parameters
             group = 'B'
             vals = self.parametersPageBasic.getVals()
+            numNodes = vals['NN']
+
             writer.writerow([group, vals['NN'], vals['NE'], 'NS', 'KNS', vals['NB'], vals['KNB'], 'NF', vals['INC'], vals['NK'], 'NSEEP']) # page 3
             writer.writerow([group, 'NSDN', 'MQ4', 'KNSDN', vals['PL'], 'COEFI', vals['EI'], 'NVS', '', '', '']) # page 4
             writer.writerow([group, vals['DELT'], vals['CHNG'], vals['ITMAX'], vals['ITCHNG'], vals['PCHNG'], vals['BETAP'], 'TYPE', '', '', '']) # page 5, TODO: implement TYPE
@@ -173,9 +179,12 @@ class ParametersPage(QGroupBox):
             vals = self.parametersPageMult.getVals()
             writer.writerow([group, vals['AFMOBX'], vals['AFMOBY'], vals['APOR'], vals['AELONG'], vals['AETRANS'], vals['APHII'], vals['ACONCI'], vals['XFACT'], '', '']) # page 8 
             writer.writerow([group, vals['YFACT'], vals['ATETA'], vals['AAL'], vals['AKD'], vals['ALAM'], vals['ARHO'], '', '', '', '']) # page 8 
-            #write group D
+            #write group D, output control
             
-            #write group E
+            #write group E, node coordinates
+            group = 'E'
+            for i in range(numNodes):
+                print(self.parametersPageNodes.getRow(i))
             
             #write group F
             

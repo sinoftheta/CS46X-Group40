@@ -20,7 +20,7 @@ class Nodes(QGroupBox):
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
         # self.layout.addWidget(self.nodeTable)
-
+    
     def buildTable(self, numNodes):
         if (numNodes == 0):
             return
@@ -89,12 +89,24 @@ class Nodes(QGroupBox):
         if hasattr(self, 'nodeTable'):
             return self.nodeTable.rowCount()
         return 0
-    def getRow(self, row):
-        rowData = []
+        def getRow(self, row):
+        rowData = {}
         if hasattr(self, 'nodeTable') and (row <= self.nodeTable.rowCount()):
-            for col in range(0, len(nodeTableLabels)):
-                rowData.append(self.nodeTable.cellWidget(row, col).value())
+            #Node
+            rowData['NodeNum'] = self.nodeTable.cellWidget(row, 0).text()
+            #Boundary Type (q combo box)
+            rowData['Boundary'] = self.nodeTable.cellWidget(row, 1).currentText()
+            #x - coord
+            rowData['XCoord'] = self.nodeTable.cellWidget(row, 2).value()
+            #y - coord
+            rowData['YCoord'] = self.nodeTable.cellWidget(row, 3).value()
+            #init pressure
+            rowData['Pressure'] = self.nodeTable.cellWidget(row, 4).value()
+            #init concentration
+            rowData['Conce'] = self.nodeTable.cellWidget(row, 5).value()
         return rowData
+
+
 
 class BoundaryComboBox(QComboBox):
     def __init__(self):
