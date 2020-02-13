@@ -36,7 +36,7 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
          *arrayAt(r, iter) += (*matrixAt(b, iter, 1) * (*arrayAt(rold, iter) *
             a3 + *arrayAt(u, iter) * a2));
 
-            for(int iter2 = 2; iter2 <= l1; iter++){
+            for(int iter2 = 2; iter2 <= l1; iter2++){
 
               ll = iter + iter2 - 1;
 

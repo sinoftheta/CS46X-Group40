@@ -11,8 +11,15 @@ from .elements import Elements
 from .elementIncidences import ElementIncidences
 from .materials import Materials
 
-parameters = ['Import', 'Basic Parameters', 'Multipliers',
-            'Nodes', 'Node Types', 'Elements', 'Materials']
+parameters = [
+        'Import',
+        'Basic Parameters',
+        'Multipliers',
+        'Nodes',
+        'Node Types',
+        'Elements',
+        'Element Incidences',
+        'Materials' ]
 
 class ParametersPage(QGroupBox):
     def __init__(self):
@@ -38,7 +45,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageBasic = BasicParameters()
         self.parametersPageMult = Multipliers()
         self.parametersPageNodes = Nodes()
-        self.parametersPageNodesT = NodeTypes()
+        self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
         self.parametersPageElemIncid = ElementIncidences()
         self.parametersPageMat = Materials()
@@ -48,7 +55,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageBasic)
         self.parametersPageStack.addWidget(self.parametersPageMult)
         self.parametersPageStack.addWidget(self.parametersPageNodes)
-        self.parametersPageStack.addWidget(self.parametersPageNodesT)
+        self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
         self.parametersPageStack.addWidget(self.parametersPageElem)
         self.parametersPageStack.addWidget(self.parametersPageElemIncid)
         self.parametersPageStack.addWidget(self.parametersPageMat)
@@ -103,13 +110,18 @@ class ParametersPage(QGroupBox):
         self.parametersPageNav.setContentsMargins(0, 0, 0, 0)
         self.parametersPageNav.setSpacing(20)
 
+        # open on the basic parameters page
+        self.parametersPageStack.setCurrentIndex(1)
+
         if (self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials()) == 0):
             self.matsNavBtn.setDisabled(true)
 
     def importNavClick(self):
         #self.parametersPageStack.setCurrentIndex(0)
         filename = QFileDialog.getOpenFileName(self, 'Open file',
-            '/home', "Text files (*.txt);;CSV Files (*.csv)")
+
+            '/home', "CSV Files (*.csv);;Text files (*.txt)")
+
 
     def basicParamClick(self):
         self.parametersPageStack.setCurrentIndex(1)
@@ -125,6 +137,8 @@ class ParametersPage(QGroupBox):
         #print(self.parametersPageNodes.getCONCI())
 
     def nodeTypesClick(self):
+        nodeTypes = self.parametersPageNodes.nodeTypeCounts()
+        self.parametersPageNodeTypes.setNodeTypes(nodeTypes)
         self.parametersPageStack.setCurrentIndex(4)
 
     def elementsClick(self):

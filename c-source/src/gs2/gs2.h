@@ -45,8 +45,8 @@ typedef struct gs2State {
     // tape6 = output
     FILE* output;
     
-    FILE* tape7, tape8, tape2,
-          tape4, tape11, tape13;
+    FILE *tape7, *tape8, *tape2,
+          *tape4, *tape11, *tape13;
 
     // Common BLK1
     // should be dimensioned (MAXBW2, MAXS)
@@ -127,10 +127,44 @@ typedef struct gs2State {
    // INC = 4), both MXC and MXT can be set to 4 and all variables
    // in common block four changed to dimensions of 4.
    Matrix pe, se, f, dx, dy;
-   Array q, detj, cphi, vkx, vky, dpordt,
+   Array q, qp, detj, cphi, vkx, vky, dpordt,
          d0, dk, dh, srcrt, ff, dgx, dgy,
          srcr;
 
 } gs2State;
+
+
+// This function exists as a convience for creating a memReqs
+// struct in python
+gs2MemoryRequirements gs2CreateMemoryRequirements(
+    int mxc,
+    int mxt,
+    int maxnn,
+    int maxne,
+    int ns1,
+    int kns1,
+    int maxm4,
+    int maxm5,
+    int maxeep,
+    int maxbw
+);
+
+
+extern FILE* gs2stdin;
+extern FILE* gs2stdout;
+extern FILE* gs2stderr;
+
+
+void gs2DefaultIO();
+
+void gs2InputFile(const char* filepath);
+void gs2OutputFile(const char* filepath);
+void gs2ErrorFile(const char* filepath);
+
+
+
+// closes files and defaults all gs2 file descriptors
+void gs2CloseFiles();
+
 
 #endif /* __CAP_GS2_H__ */

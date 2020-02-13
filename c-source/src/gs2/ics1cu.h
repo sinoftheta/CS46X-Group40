@@ -14,4 +14,5 @@ void gs2ICS1CU(
     int* ier
 );
 
-#endif /* __CAP_ICS1CU_H__ */ 
+#endif /* __CAP_ICS1CU_H__ */
+
