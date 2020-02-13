@@ -157,7 +157,12 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(7)
         self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())
 
-
+    # pad csv rows with blank entries
+    def csvPad(self, cols):
+        maxCols = 20
+        while len(cols) < maxCols:
+            cols.append('')
+        return cols
     def exportNavClick(self):
 
         #check that node table has been opened, should probably grey out export button
@@ -182,24 +187,24 @@ class ParametersPage(QGroupBox):
             vals = self.parametersPageBasic.getVals()
             numNodes = vals['NN']
 
-            writer.writerow([group, vals['NN'], vals['NE'], 'NS', 'KNS', vals['NB'], vals['KNB'], 'NF', vals['INC'], vals['NK'], 'NSEEP']) # page 3
-            writer.writerow([group, 'NSDN', 'MQ4', 'KNSDN', vals['PL'], 'COEFI', vals['EI'], 'NVS', '', '', '']) # page 4
-            writer.writerow([group, vals['DELT'], vals['CHNG'], vals['ITMAX'], vals['ITCHNG'], vals['PCHNG'], vals['BETAP'], 'TYPE', '', '', '']) # page 5, TODO: implement TYPE
-            writer.writerow([group, vals['DIFUSN'], 'DPRDT', vals['STAT'], vals['STATP'], vals['CLOS1'], vals['ITER1'], vals['IGO']]) # page 6
+            writer.writerow(self.csvPad([group, vals['NN'], vals['NE'], 'NS', 'KNS', vals['NB'], vals['KNB'], 'NF', vals['INC'], vals['NK'], 'NSEEP'])) # page 3
+            writer.writerow(self.csvPad([group, 'NSDN', 'MQ4', 'KNSDN', vals['PL'], 'COEFI', vals['EI'], 'NVS'])) # page 4
+            writer.writerow(self.csvPad([group, vals['DELT'], vals['CHNG'], vals['ITMAX'], vals['ITCHNG'], vals['PCHNG'], vals['BETAP'], 'TYPE'])) # page 5, TODO: implement TYPE
+            writer.writerow(self.csvPad([group, vals['DIFUSN'], 'DPRDT', vals['STAT'], vals['STATP'], vals['CLOS1'], vals['ITER1'], vals['IGO']])) # page 6
             
 
             #write group C, multipliers
             group = 'C'
             vals = self.parametersPageMult.getVals()
-            writer.writerow([group, vals['AFMOBX'], vals['AFMOBY'], vals['APOR'], vals['AELONG'], vals['AETRANS'], vals['APHII'], vals['ACONCI'], vals['XFACT'], '', '']) # page 8 
-            writer.writerow([group, vals['YFACT'], vals['ATETA'], vals['AAL'], vals['AKD'], vals['ALAM'], vals['ARHO'], '', '', '', '']) # page 8 
+            writer.writerow(self.csvPad([group, vals['AFMOBX'], vals['AFMOBY'], vals['APOR'], vals['AELONG'], vals['AETRANS'], vals['APHII'], vals['ACONCI'], vals['XFACT']])) # page 8 
+            writer.writerow(self.csvPad([group, vals['YFACT'], vals['ATETA'], vals['AAL'], vals['AKD'], vals['ALAM'], vals['ARHO']])) # page 8 
             #write group D, output control
             
             #write group E, node coordinates
             group = 'E'
             for i in range(numNodes):
                 row = self.parametersPageNodes.getRow(i)
-                writer.writerow([group, row['NodeNum'], row['XCoord'], row['YCoord'], '', '', '', '', '', '', '']) # page 10
+                writer.writerow(self.csvPad([group, row['NodeNum'], row['XCoord'], row['YCoord']])) # page 10
                 
             
             #write group F
