@@ -2,7 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-nodeTableLabels = [ "Node",
+nodeTableLabels = [
+            "Node",
             "Boundary Type",
             "X-Coordinate",
             "Y-Coordinate",
@@ -12,9 +13,9 @@ nodeTableLabels = [ "Node",
 nodeTypeLabels = [
         "Constant Head (Dirichlet)",
         "Source/Sink",
-        "Infiltration/Evaporation",
+        "Variable Boundary Condition (Flow)",
         "Seepage Face",
-        "Mixed Boundary Condition"
+        "Mixed Boundary Condition (Mass Transport)"
 ]
 
 class Nodes(QGroupBox):

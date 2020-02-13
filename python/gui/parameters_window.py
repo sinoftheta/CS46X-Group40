@@ -10,8 +10,15 @@ from .elements import Elements
 from .elementIncidences import ElementIncidences
 from .materials import Materials
 
-parameters = ['Import', 'Basic Parameters', 'Multipliers',
-            'Nodes', 'Node Types', 'Elements', 'Materials']
+parameters = [
+        'Import',
+        'Basic Parameters',
+        'Multipliers',
+        'Nodes',
+        'Node Types',
+        'Elements',
+        'Element Incidences',
+        'Materials' ]
 
 class ParametersPage(QGroupBox):
     def __init__(self):
@@ -118,9 +125,9 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(3)
 
     def nodeTypesClick(self):
-        self.parametersPageStack.setCurrentIndex(4)
         nodeTypes = self.parametersPageNodes.nodeTypeCounts()
-        self.parametersPageNodeTypes.buildTables(nodeTypes)
+        self.parametersPageNodeTypes.setNodeTypes(nodeTypes)
+        self.parametersPageStack.setCurrentIndex(4)
 
     def elementsClick(self):
         numElements = self.parametersPageBasic.getNumElements()
