@@ -89,7 +89,7 @@ class Nodes(QGroupBox):
         if hasattr(self, 'nodeTable'):
             return self.nodeTable.rowCount()
         return 0
-        def getRow(self, row):
+    def getRow(self, row):
         rowData = {}
         if hasattr(self, 'nodeTable') and (row <= self.nodeTable.rowCount()):
             #Node

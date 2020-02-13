@@ -184,7 +184,9 @@ class ParametersPage(QGroupBox):
             #write group E, node coordinates
             group = 'E'
             for i in range(numNodes):
-                print(self.parametersPageNodes.getRow(i))
+                row = self.parametersPageNodes.getRow(i)
+                writer.writerow([group, row['NodeNum'], row['XCoord'], row['YCoord'], '', '', '', '', '', '', '']) # page 10
+                
             
             #write group F
             
