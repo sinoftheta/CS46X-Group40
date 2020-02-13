@@ -24,7 +24,7 @@ class Nodes(QGroupBox):
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
-        # self.layout.addWidget(self.nodeTable)
+        self.createTable(0)
 
     def buildTable(self, numNodes):
         if (numNodes == 0):
@@ -33,8 +33,6 @@ class Nodes(QGroupBox):
             self.nodeTable.setRowCount(numNodes)
         elif (hasattr(self, 'nodeTable') and (numNodes == self.nodeTable.rowCount())):
             return
-        else:
-            self.createTable(numNodes)
 
         for row in range(0, numNodes):
             nodeLabel = QLabel(str(row+1))
@@ -88,7 +86,7 @@ class Nodes(QGroupBox):
                 if (self.nodeTable.cellWidget(row, 1).currentText() != '-Select Boundary Type-'):
                     nodeTypes[self.nodeTable.cellWidget(row, 1).currentText()].append(row+1)
             return nodeTypes
-          
+
     def getCONCI(self):
         CONCI = []
         if hasattr(self, 'nodeTable'):
@@ -99,7 +97,7 @@ class Nodes(QGroupBox):
                 CONCI.append(nodeValue)
 
         return CONCI
-    
+
     def getNumRows():
         if hasattr(self, 'nodeTable'):
             return self.nodeTable.rowCount()
