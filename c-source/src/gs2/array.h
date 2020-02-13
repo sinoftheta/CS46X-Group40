@@ -8,4 +8,3 @@
 void gs2Array(Matrix*, Array*, int, int, int, int, int, int, int, int*);
 
 #endif /*__CAP_GS2_ARRAY_H__*/
-

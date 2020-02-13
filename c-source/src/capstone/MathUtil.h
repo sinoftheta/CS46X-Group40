@@ -12,4 +12,3 @@ double mind(double, double);
 double maxd(double, double);
 
 #endif /*__CAP_MATHUTIL_H__*/
-

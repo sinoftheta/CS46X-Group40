@@ -19,3 +19,4 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
              Array* lc, Array* klc, Matrix* ie, int jtest);
 
 #endif /* __GS2_COGEN_H__ */
+

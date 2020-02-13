@@ -315,4 +315,3 @@ void gs2ReadGroupR(
 );
 
 #endif /* __CAP_DATAIN_H__ */
-

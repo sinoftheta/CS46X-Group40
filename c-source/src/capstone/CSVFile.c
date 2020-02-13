@@ -3,6 +3,8 @@
 #include "../capstone/CSVFile.h"
 #include "../capstone/FileUtil.h"
 
+#include "../gs2/gs2.h"
+
 #include <string.h>
 
 CSVRow CSV_NULL_ROW = {
@@ -23,7 +25,7 @@ CSVFile csvLoadFile(const char* filepath) {
     fp = fopen(filepath, "r");
 
     if (fp == NULL) {
-        fprintf(stderr, "Failed To read file: %s\n", filepath);
+        fprintf(gs2stderr, "Failed To read file: %s\n", filepath);
         exit(1);
     }
 
@@ -149,4 +151,3 @@ char** csvTokenizeLine(char* linebase, int* tokenCount) {
     *tokenCount = actualTokenCount;
     return result;
 }
-
