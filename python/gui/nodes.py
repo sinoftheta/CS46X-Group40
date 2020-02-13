@@ -6,7 +6,7 @@ nodeTableLabels = [ "Node",
             "Boundary Type",
             "X-Coordinate",
             "Y-Coordinate",
-            "Initial Pressure", 
+            "Initial Pressure",
             "Initial Concentration" ]
 
 nodeTypeLabels = [
@@ -85,7 +85,7 @@ class Nodes(QGroupBox):
             for row in range(0, numNodes):
                 if (self.nodeTable.cellWidget(row, 1).currentText() != '-Select Boundary Type-'):
                     nodeTypes[self.nodeTable.cellWidget(row, 1).currentText()].append(row+1)
-        return nodeTypes
+            return nodeTypes
 
 
 

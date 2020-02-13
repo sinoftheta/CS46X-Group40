@@ -33,6 +33,6 @@ class NodeTypes(QGroupBox):
 
 class TypeSelectorComboBox(QComboBox):
     def __init__(self):
-        super(BoundaryComboBox, self).__init__()
+        super(TypeSelectorComboBox, self).__init__()
         for nodeType in nodeTypeLabels:
             self.addItem(nodeType)
