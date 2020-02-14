@@ -56,18 +56,28 @@ class NodeTypes(QGroupBox):
 
         self.dirichlet = QGroupBox(nodeTypeLabels[0])
         self.dirichlet.setLayout(QVBoxLayout())
+        # Create table for constant head nodes
+        self.createDirichletTable()
 
         self.neumann = QGroupBox(nodeTypeLabels[1])
         self.neumann.setLayout(QVBoxLayout())
+        # Create table for source/sink nodes
+        self.createNeumannTable()
 
         self.variableBoundary = QGroupBox(nodeTypeLabels[2])
         self.variableBoundary.setLayout(QVBoxLayout())
+        # Create table for infiltration/evaporation nodes
+        self.createVariableBoundaryTable()
 
         self.seepageFace = QGroupBox(nodeTypeLabels[3])
         self.seepageFace.setLayout(QVBoxLayout())
+        # Create table for nodes belonging to a seepage face element
+        self.createSeepageFaceTable()
 
         self.mixedBoundary = QGroupBox(nodeTypeLabels[4])
         self.mixedBoundary.setLayout(QVBoxLayout())
+        # Create table for mixed boundary condition nodes
+        self.createMixedBoundaryTable()
 
         self.typeStack = QStackedLayout()
         self.layout.addLayout(self.typeStack)
@@ -82,44 +92,41 @@ class NodeTypes(QGroupBox):
         if (not self.nodeTypes):
             return
         if (type == nodeTypeLabels[0]):
-            if (not hasattr(self, 'dirichletTable') and
-                len(self.nodeTypes[type]) > 0):
-                # Create table for constant head nodes
-                self.createDirichletTable(self.nodeTypes[nodeTypeLabels[0]])
-            # todo: else to update table
+            if (hasattr(self, 'dirichletTable') and
+                len(self.nodeTypes[type]) != self.dirichletTable.rowCount()):
+                self.dirichletTable.clearContents()
+                self.buildDirichletTable(self.nodeTypes[type])
         elif (type == nodeTypeLabels[1]):
-            if (not hasattr(self, 'neumannTable') and
-                len(self.nodeTypes[type]) > 0):
-                # Create table for source/sink nodes
-                self.createNeumannTable(self.nodeTypes[nodeTypeLabels[1]])
-            # todo: else to update table
+            if (hasattr(self, 'neumannTable') and
+                len(self.nodeTypes[type]) != self.neumannTable.rowCount()):
+                self.neumannTable.clearContents()
+                self.buildNeumannTable(self.nodeTypes[type])
         elif (type == nodeTypeLabels[2]):
-            if (not hasattr(self, 'variableBoundaryTable') and
-                len(self.nodeTypes[type]) > 0):
-                # Create table for infiltration/evaporation nodes
-                self.createVariableBoundaryTable(self.nodeTypes[nodeTypeLabels[2]])
-            # todo: else to update table
+            if (hasattr(self, 'variableBoundaryTable') and
+                len(self.nodeTypes[type]) != self.variableBoundaryTable.rowCount()):
+                self.variableBoundaryTable.clearContents()
+                self.buildVariableBoundaryTable(self.nodeTypes[type])
         elif (type == nodeTypeLabels[3]):
-            if (not hasattr(self, 'seepageFaceTable') and
-                len(self.nodeTypes[type]) > 0):
-                # Create table for nodes belonging to a seepage face element
-                self.createSeepageFaceTable(self.nodeTypes[nodeTypeLabels[3]])
-            # todo: else to update table
+            if (hasattr(self, 'seepageFaceTable') and
+                len(self.nodeTypes[type]) != self.seepageFaceTable.rowCount()):
+                self.seepageFaceTable.clearContents()
+                self.buildSeepageFaceTable(self.nodeTypes[type])
         elif (type == nodeTypeLabels[4]):
-            if (not hasattr(self, 'mixedBoundaryTable') and
-                len(self.nodeTypes[type]) > 0):
-                # Create table for mixed boundary condition nodes
-                self.createMixedBoundaryTable(self.nodeTypes[nodeTypeLabels[4]])
-            # todo: else to update table
+            if (hasattr(self, 'mixedBoundaryTable') and
+                len(self.nodeTypes[type]) != self.mixedBoundaryTable.rowCount()):
+                self.buildMixedBoundaryTable(self.nodeTypes[type])
 
-    def createDirichletTable(self, nodes):
-        numNodes = len(nodes)
+    def createDirichletTable(self):
         self.dirichletTable = QTableWidget()
-        self.dirichletTable.setRowCount(numNodes)
         self.dirichletTable.setColumnCount(len(dirichletNodeLabels))
         self.dirichletTable.verticalHeader().hide()
         self.dirichletTable.setHorizontalHeaderLabels(dirichletNodeLabels)
         self.dirichletTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.dirichlet.layout().addWidget(self.dirichletTable)
+
+    def buildDirichletTable(self, nodes):
+        numNodes = len(nodes)
+        self.dirichletTable.setRowCount(numNodes)
 
         for row in range(0, numNodes):
             nodeLabel = QLabel(str(nodes[row]))
@@ -133,16 +140,17 @@ class NodeTypes(QGroupBox):
             massTransCB.setStyleSheet("margin-left: 50%; margin-right: 50%;")
             self.dirichletTable.setCellWidget(row, 2, massTransCB)
 
-        self.dirichlet.layout().addWidget(self.dirichletTable)
-
-    def createNeumannTable(self, nodes):
-        numNodes = len(nodes)
+    def createNeumannTable(self):
         self.neumannTable = QTableWidget()
-        self.neumannTable.setRowCount(numNodes)
         self.neumannTable.setColumnCount(len(neumannNodeLabels))
         self.neumannTable.verticalHeader().hide()
         self.neumannTable.setHorizontalHeaderLabels(neumannNodeLabels)
         self.neumannTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.neumann.layout().addWidget(self.neumannTable)
+
+    def buildNeumannTable(self, nodes):
+        numNodes = len(nodes)
+        self.neumannTable.setRowCount(numNodes)
 
         for node in range(0, numNodes):
             nodeLabel = QLabel(str(nodes[node]))
@@ -163,17 +171,17 @@ class NodeTypes(QGroupBox):
             CFQ.setSingleStep(0.00000001)
             self.neumannTable.setCellWidget(node, 2, CFQ)
 
-        self.neumann.layout().addWidget(self.neumannTable)
-
-    def createVariableBoundaryTable(self, nodes):
-        numNodes = len(nodes)
+    def createVariableBoundaryTable(self):
         self.variableBoundaryTable = QTableWidget()
-        self.variableBoundaryTable.setRowCount(numNodes)
         self.variableBoundaryTable.setColumnCount(len(variableBoundaryLabels))
         self.variableBoundaryTable.verticalHeader().hide()
         self.variableBoundaryTable.setHorizontalHeaderLabels(variableBoundaryLabels)
         self.variableBoundaryTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.variableBoundary.layout().addWidget(self.variableBoundaryTable)
 
+    def buildVariableBoundaryTable(self, nodes):
+        numNodes = len(nodes)
+        self.variableBoundaryTable.setRowCount(numNodes)
         for node in range(0, numNodes):
             nodeLabel = QLabel(str(nodes[node]))
             nodeLabel.setAlignment(Qt.AlignCenter)
@@ -201,18 +209,17 @@ class NodeTypes(QGroupBox):
             VN.setSingleStep(0.0001)
             self.variableBoundaryTable.setCellWidget(node, 2, VN)
 
-        self.variableBoundary.layout().addWidget(self.variableBoundaryTable)
-
-
-    def createSeepageFaceTable(self, nodes):
-        numNodes = len(nodes)
+    def createSeepageFaceTable(self):
         self.seepageFaceTable = QTableWidget()
-        self.seepageFaceTable.setRowCount(numNodes)
         self.seepageFaceTable.setColumnCount(len(seepageFaceLabels))
         self.seepageFaceTable.verticalHeader().hide()
         self.seepageFaceTable.setHorizontalHeaderLabels(seepageFaceLabels)
         self.seepageFaceTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.seepageFace.layout().addWidget(self.seepageFaceTable)
 
+    def buildSeepageFaceTable(self, nodes):
+        numNodes = len(nodes)
+        self.seepageFaceTable.setRowCount(numNodes)
         for node in range(0, numNodes):
             nodeLabel = QLabel(str(nodes[node]))
             nodeLabel.setAlignment(Qt.AlignCenter)
@@ -226,20 +233,17 @@ class NodeTypes(QGroupBox):
             neumannCB.setStyleSheet("margin-left: 50%; margin-right: 50%;")
             self.seepageFaceTable.setCellWidget(node, 2, neumannCB)
 
-        self.seepageFace.layout().addWidget(self.seepageFaceTable)
-
-
-
-
-    def createMixedBoundaryTable(self, nodes):
-        numNodes = len(nodes)
+    def createMixedBoundaryTable(self):
         self.mixedBoundaryTable = QTableWidget()
-        self.mixedBoundaryTable.setRowCount(numNodes)
         self.mixedBoundaryTable.setColumnCount(len(mixedBoundaryLabels))
         self.mixedBoundaryTable.verticalHeader().hide()
         self.mixedBoundaryTable.setHorizontalHeaderLabels(mixedBoundaryLabels)
         self.mixedBoundaryTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.mixedBoundary.layout().addWidget(self.mixedBoundaryTable)
 
+    def buildMixedBoundaryTable(self, nodes):
+        numNodes = len(nodes)
+        self.mixedBoundaryTable.setRowCount(numNodes)
         for node in range(0, numNodes):
             nodeLabel = QLabel(str(nodes[node]))
             nodeLabel.setAlignment(Qt.AlignCenter)
@@ -251,9 +255,6 @@ class NodeTypes(QGroupBox):
             CN.setDecimals(4)
             CN.setSingleStep(0.0001)
             self.mixedBoundaryTable.setCellWidget(node, 1, CN)
-
-        self.mixedBoundary.layout().addWidget(self.mixedBoundaryTable)
-
 
     def typeSelectionChanged(self, index):
         self.buildTable(nodeTypeLabels[index])
