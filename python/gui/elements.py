@@ -3,12 +3,17 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 elementTableLabels = [
-    "Element", "Material \n Group",
-    "Horiz. Sat. \n H. Conductivity",
-    "Vert. Sat. \n H. Conductivity",
-    "Longitudinal \n Dispersivity", "Transverse \n Dispersivity",
-    "Porosity", "Moisture \n Content", "Compressibility",
-    "Distribution \n Coefficient", "Decay \n Constant", "Dry Bulk \n Density"
+    "Element", "Material\nGroup",
+    "Horiz. Sat.\nH. Conductivity",
+    "Vert. Sat.\nH. Conductivity",
+    "Longitudinal\nDispersivity",
+    "Transverse\nDispersivity",
+    "Porosity",
+    "Moisture\nContent",
+    "Compressibility",
+    "Distribution\nCoefficient",
+    "Decay\nConstant",
+    "Dry Bulk\nDensity"
 ]
 
 class Elements(QGroupBox):
@@ -17,16 +22,16 @@ class Elements(QGroupBox):
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
+        self.createTable()
 
     def buildTable(self, numElements, numMaterials):
         if (numElements == 0):
             return
         elif (hasattr(self, 'elementTable') and (numElements != self.elementTable.rowCount())):
+            self.elementTable.clearContents()
             self.elementTable.setRowCount(numElements)
         elif (hasattr(self, 'elementTable') and (numElements == self.elementTable.rowCount())):
             return
-        else:
-            self.createTable(numElements)
 
         for row in range(0, numElements):
             elementLabel = QLabel(str(row+1))
@@ -95,9 +100,8 @@ class Elements(QGroupBox):
             dryBulk.setSingleStep(0.00001)
             self.elementTable.setCellWidget(row, 11, dryBulk)
 
-    def createTable(self, numElements):
+    def createTable(self):
         self.elementTable = QTableWidget()
-        self.elementTable.setRowCount(numElements)
         self.elementTable.setColumnCount(len(elementTableLabels))
         # Set labels
         self.elementTable.setHorizontalHeaderLabels(elementTableLabels)

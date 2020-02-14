@@ -24,12 +24,13 @@ class Nodes(QGroupBox):
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
-        self.createTable(0)
+        self.createTable()
 
     def buildTable(self, numNodes):
         if (numNodes == 0):
             return
         elif (hasattr(self, 'nodeTable') and (numNodes != self.nodeTable.rowCount())):
+            self.nodeTable.clearContents()
             self.nodeTable.setRowCount(numNodes)
         elif (hasattr(self, 'nodeTable') and (numNodes == self.nodeTable.rowCount())):
             return
@@ -65,9 +66,8 @@ class Nodes(QGroupBox):
             iConcentration.setSingleStep(0.001)
             self.nodeTable.setCellWidget(row, 5, iConcentration)
 
-    def createTable(self, numNodes):
+    def createTable(self):
         self.nodeTable = QTableWidget()
-        self.nodeTable.setRowCount(numNodes)
         self.nodeTable.setColumnCount(len(nodeTableLabels))
         self.nodeTable.setMaximumWidth(730)
         # Set labels

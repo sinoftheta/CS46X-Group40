@@ -8,16 +8,25 @@ class ElementIncidences(QGroupBox):
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
+        self.createTable()
+
 
     def buildTable(self, numElements, maxNodes):
         if (numElements == 0):
             return
         elif (hasattr(self, 'incidenceTable') and (numElements != self.incidenceTable.rowCount())):
-            self.incidenceTable.setRowCount(numElements)
+            self.incidenceTable.clear()
         elif (hasattr(self, 'incidenceTable') and (numElements == self.incidenceTable.rowCount())):
             return
-        else:
-            self.createTable(numElements, maxNodes)
+
+        self.incidenceTable.setRowCount(numElements)
+        self.incidenceTable.setColumnCount(maxNodes+1)
+
+        # Set labels
+        incidenceTableLabels = ["Element", ]
+        for i in range(0, numElements):
+            incidenceTableLabels.append(str(i+1))
+        self.incidenceTable.setHorizontalHeaderLabels(incidenceTableLabels)
 
         for row in range(0, numElements):
             elementLabel = QLabel(str(row+1))
@@ -29,16 +38,8 @@ class ElementIncidences(QGroupBox):
                 cell.setRange(0, 999)
                 self.incidenceTable.setCellWidget(row, col, cell)
 
-
-    def createTable(self, numElements, maxNodes):
-        incidenceTableLabels = ["Element", ]
-        for i in range(0, numElements):
-            incidenceTableLabels.append(str(i+1))
+    def createTable(self):
         self.incidenceTable = QTableWidget()
-        self.incidenceTable.setRowCount(numElements)
-        self.incidenceTable.setColumnCount(maxNodes+1)
-        # Set labels
-        self.incidenceTable.setHorizontalHeaderLabels(incidenceTableLabels)
         self.incidenceTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.incidenceTable.verticalHeader().hide()
         self.layout.addWidget(self.incidenceTable)
