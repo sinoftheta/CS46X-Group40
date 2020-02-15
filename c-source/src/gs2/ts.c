@@ -89,7 +89,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     *arrayAt(est, i) = *arrayAt(old, i);
                 }
 
-                gs2Upd(phi, old, lr, lc, state->nn);
+                gs2UPD(phi, old, lr, lc, state->nn);
 
                 if (state->it % state->itchng == 0) {
 
@@ -487,7 +487,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
             // Update cold
             if (ktcal != 0) {
-                gs2Upd(conc, cold, klr, klc, state->nn);
+                gs2UPD(conc, cold, klr, klc, state->nn);
             }
 
             // Add time-dependent part
