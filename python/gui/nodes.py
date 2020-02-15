@@ -39,26 +39,31 @@ class Nodes(QGroupBox):
             nodeLabel = QLabel(str(row+1))
             nodeLabel.setAlignment(Qt.AlignCenter)
             self.nodeTable.setCellWidget(row, 0, nodeLabel)
+
             bComboBox = BoundaryComboBox()
             self.nodeTable.setCellWidget(row, 1, bComboBox)
+
             nodeX = QDoubleSpinBox()
             nodeX.setAlignment(Qt.AlignRight)
             nodeX.setRange(-9999.999, 9999.999)
             nodeX.setDecimals(3)
             nodeX.setSingleStep(0.001)
             self.nodeTable.setCellWidget(row, 2, nodeX)
+
             nodeY = QDoubleSpinBox()
             nodeY.setAlignment(Qt.AlignRight)
             nodeY.setRange(-9999.999, 9999.999)
             nodeY.setDecimals(3)
             nodeY.setSingleStep(0.001)
             self.nodeTable.setCellWidget(row, 3, nodeY)
+
             iPressure = QDoubleSpinBox()
             iPressure.setAlignment(Qt.AlignRight)
             iPressure.setRange(-9999.999, 9999.999)
             iPressure.setDecimals(3)
             iPressure.setSingleStep(0.001)
             self.nodeTable.setCellWidget(row, 4, iPressure)
+
             iConcentration = QDoubleSpinBox()
             iConcentration.setAlignment(Qt.AlignRight)
             iConcentration.setRange(-9999.999, 9999.999)
@@ -102,6 +107,7 @@ class Nodes(QGroupBox):
         if hasattr(self, 'nodeTable'):
             return self.nodeTable.rowCount()
         return 0
+
     def getRow(self, row):
         rowData = {}
         if hasattr(self, 'nodeTable') and (row <= self.nodeTable.rowCount()):
@@ -118,6 +124,16 @@ class Nodes(QGroupBox):
             #init concentration
             rowData['Conce'] = self.nodeTable.cellWidget(row, 5).value()
         return rowData
+
+
+    def getRowsWhere(self, rowFilter):
+        rows = []
+        for rowIndex in range(self.nodeTable.rowCount()):
+            row = self.getRow(rowIndex)
+            if rowFilter(row):
+                rows.append(row)
+
+        return rows
 
 
 

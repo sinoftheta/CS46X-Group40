@@ -158,11 +158,14 @@ class ParametersPage(QGroupBox):
         self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())
 
     # pad csv rows with blank entries
-    def csvPad(self, cols):
-        maxCols = 20
+    # most limit themselves to 20 entries, maxCols 
+    # defaults to 21 as the group needs to be included
+    def csvPad(self, cols, maxCols=21):
         while len(cols) < maxCols:
             cols.append('')
         return cols
+
+
     def exportNavClick(self):
 
         #check that node table has been opened, should probably grey out export button
@@ -185,6 +188,7 @@ class ParametersPage(QGroupBox):
             #write group B, basic parameters
             group = 'B'
             vals = self.parametersPageBasic.getVals()
+            
             numNodes = vals['NN']
 
             writer.writerow(self.csvPad([group, vals['NN'], vals['NE'], 'NS', 'KNS', vals['NB'], vals['KNB'], 'NF', vals['INC'], vals['NK'], 'NSEEP'])) # page 3
@@ -224,6 +228,17 @@ class ParametersPage(QGroupBox):
             #write group M
             
             #write group N
+            group = 'N-1'
+            mixedBoundaryNodes = self.parametersPageNodes.getRowsWhere(lambda row: row["Boundary"] == "Mixed Boundary Condition (Mass Transport)")
+            csvRow = [group]
+            for node in mixedBoundaryNodes:
+                csvRow.append(node['NodeNum'])
+                if (len(csvRow) == 21):
+                    writer.writerow(csvRow)
+                    csvRow = [group]
+            writer.writerow(self.csvPad(csvRow))
+
+
             
             #write group O
             
