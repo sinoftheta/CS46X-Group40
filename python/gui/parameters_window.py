@@ -252,6 +252,7 @@ class ParametersPage(QGroupBox):
  
             
             #write group O
+            # need to implement seepage face tab
             
             #write group P
             
