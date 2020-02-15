@@ -604,7 +604,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
         if (state->kod11 != 0) {
             if (state->it % state->kod11 == 0) {
-                gs2Po(conc, phi, state->nn, state->it, state->stime, rdate, rtime);
+                gs2Po(state, conc, phi, state->nn, state->it, state->stime, rdate, rtime);
             }
         }
 
@@ -614,7 +614,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
     if (state->kod11 != 0) {
         if (state->it % state->kod11 != 0) {
-            gs2Po(conc, phi, state->nn, state->it, state->stime, rdate, rtime);
+            gs2Po(state, conc, phi, state->nn, state->it, state->stime, rdate, rtime);
         }
     }
 }
