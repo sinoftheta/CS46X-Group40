@@ -233,12 +233,23 @@ class ParametersPage(QGroupBox):
             csvRow = [group]
             for node in mixedBoundaryNodes:
                 csvRow.append(node['NodeNum'])
-                if (len(csvRow) == 21):
+                if len(csvRow) == 21:
                     writer.writerow(csvRow)
                     csvRow = [group]
             writer.writerow(self.csvPad(csvRow))
 
+            group = 'N-2'
+            csvRow = [group]
+            for node in mixedBoundaryNodes:
+                csvRow.append(node['NodeNum'])
+                csvRow.append(node['Conce'])
 
+                # 5 pairs plus group = 2*5 + 1 = 11
+                if len(csvRow) == 11:
+                    writer.writerow(self.csvPad(csvRow))
+                    csvRow = [group]
+            writer.writerow(self.csvPad(csvRow))
+ 
             
             #write group O
             
