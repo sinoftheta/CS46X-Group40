@@ -85,6 +85,8 @@ class MaterialOptions(QGroupBox):
 
     def updateInputs(self):
         numPoints = int(self.ISPL.text())
+        if numPoints > 15:
+            numPoints = 15
         if (hasattr(self, "XPSI")):
             self.clearLayouts()
             self.setInputs(numPoints)
