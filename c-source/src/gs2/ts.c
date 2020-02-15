@@ -330,7 +330,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                         }
 
                                         *arrayAt(coef, k) = max(*arrayAt(coef, k), 1.0);
-                                        *arrayAt(fq, i) = *arrayAt(coef, k) * state->ei * arrayAt(vn, k);
+                                        *arrayAt(fq, i) = *arrayAt(coef, k) * state->ei * *arrayAt(vn, k);
                                     }
                                 }
                             }
@@ -338,7 +338,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                             if ((state->it + 1) % state->kod9 == 0) {
                                 // write (6, 1877)
 
-                                for (k = 1, k <= state->nsdn; k++) {
+                                for (k = 1; k <= state->nsdn; k++) {
                                     i = *arrayAt(nsf, k);
                                     j = i - *arrayAt(lc, i);
 
