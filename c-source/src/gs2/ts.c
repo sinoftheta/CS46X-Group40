@@ -511,7 +511,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     gs2Sos(p, state->km, state->kmb, 1);
                 }
 
-                gs2Array(s, w, state->km, state->knb, state->kmb, state->kmb2, &jx);
+                gs2Array(s, w, state->km, state->knb, state->kmb, state->kmb2, (state->memoryRequirements).maxbw2, 
+                         (state->memoryRequirements).maxs, (state->memoryRequirements).mx, &jx);
                 // write (4) (W(I), I = 1, JX)
 
             } else {
