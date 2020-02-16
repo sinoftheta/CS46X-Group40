@@ -255,8 +255,48 @@ class ParametersPage(QGroupBox):
             # need to implement seepage face tab
             
             #write group P
+            group = "P"
+            def elementsWithMixedBoundaryNodesPredicate(elementIncidence):
+                print(elementIncidence['IncidentNodes'])
+                for mixedBoundaryNode in mixedBoundaryNodes:
+                    if mixedBoundaryNode['NodeNum'] in elementIncidence['IncidentNodes']:
+                        return True
+                return False
+        
+            def elementWithMixedBoundarySide(elementIncidence):
+                nodeNums = list(map(lambda node: node['NodeNum'], mixedBoundaryNodes))
+                incidence = elementIncidence['IncidentNodes']
+                if incidence[0] in nodeNums and incidence[1] in nodeNums:
+                    return (elementIncidence['ElementNum'], 1)
+                elif incidence[1] in nodeNums and incidence[2] in nodeNums:
+                    return (elementIncidence['ElementNum'], 2)
+                elif incidence[2] in nodeNums and incidence[3] in nodeNums:
+                    return (elementIncidence['ElementNum'], 3)
+                elif incidence[3] in nodeNums and incidence[0] in nodeNums:
+                    return (elementIncidence['ElementNum'], 4)
+                else:
+                    return None
+
+            elementsWithMixedBoundaryNodes = self.parametersPageElemIncid.getRowsWhere(elementsWithMixedBoundaryNodesPredicate)
             
+            elementSidePairs = list(map(elementWithMixedBoundarySide, elementsWithMixedBoundaryNodes))
+            elementSidePairs = list(filter(None, elementSidePairs))
+
+            csvRow = [group]
+            for elem, kf in elementSidePairs:
+                csvRow.append(elem)
+                csvRow.append(kf)
+                # eight pairs per card plus group
+                # 2*8 + 1 = 17
+                if len(csvRow) == 17:
+                    writer.writerow(self.csvPad(csvRow))
+                    csvRow = [group]
+            if len(csvRow) > 1:
+                writer.writerow(self.csvPad(csvRow))
+
             #write group Q
+
+            #write gorup R
 
         
         
