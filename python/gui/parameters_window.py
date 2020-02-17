@@ -113,8 +113,8 @@ class ParametersPage(QGroupBox):
         # open on the basic parameters page
         self.parametersPageStack.setCurrentIndex(1)
 
-        if (self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials()) == 0):
-            self.matsNavBtn.setDisabled(true)
+        # if (self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials()) == 0):
+        #     self.matsNavBtn.setDisabled(true)
 
     def importNavClick(self):
         #self.parametersPageStack.setCurrentIndex(0)
@@ -155,7 +155,7 @@ class ParametersPage(QGroupBox):
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
-        self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())
+        self.parametersPageMat.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
 
     # pad csv rows with blank entries
     # most limit themselves to 20 entries, maxCols 
@@ -278,7 +278,7 @@ class ParametersPage(QGroupBox):
                     return None
 
             elementsWithMixedBoundaryNodes = self.parametersPageElemIncid.getRowsWhere(elementsWithMixedBoundaryNodesPredicate)
-            
+
             elementSidePairs = list(map(elementWithMixedBoundarySide, elementsWithMixedBoundaryNodes))
             elementSidePairs = list(filter(None, elementSidePairs))
 
@@ -295,6 +295,8 @@ class ParametersPage(QGroupBox):
                 writer.writerow(self.csvPad(csvRow))
 
             #write group Q
+            # subgroup Q1: list the number of interpolation points for each material
+            
 
             #write gorup R
 

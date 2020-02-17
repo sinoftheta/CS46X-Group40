@@ -51,8 +51,8 @@ class ElementIncidences(QGroupBox):
         if hasattr(self, 'incidenceTable') and row < self.incidenceTable.rowCount():
             rowData['ElementNum'] = self.incidenceTable.cellWidget(row, 0).text()
             # as chapter 5, figure 1 shows
-            # incidenceOrder = [1, 5, 6, 2, 7, 8, 3, 9, 10, 4, 11, 12]
-            incidenceOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            incidenceOrder = [1, 5, 6, 2, 7, 8, 3, 9, 10, 4, 11, 12]
+            # incidenceOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
             rowData['IncidentNodes'] = filter(lambda elem: elem != "0", [self.incidenceTable.cellWidget(row, x).text() for x in incidenceOrder])
             rowData['IncidentNodes'] = list(filter(lambda elem: elem != "0", rowData['IncidentNodes']))
 
