@@ -229,20 +229,22 @@ class ParametersPage(QGroupBox):
             
             #write group N
             group = 'N-1'
-            mixedBoundaryNodes = self.parametersPageNodes.getRowsWhere(lambda row: row["Boundary"] == "Mixed Boundary Condition (Mass Transport)")
+            mixedBoundaryNodes = self.parametersPageNodeTypes.getMixedBoundaryNodes()
+
+            # mixedBoundaryNodes = self.parametersPageNodes.getRowsWhere(lambda row: row["Boundary"] == "Mixed Boundary Condition (Mass Transport)")
             csvRow = [group]
-            for node in mixedBoundaryNodes:
-                csvRow.append(node['NodeNum'])
+            for node, _ in mixedBoundaryNodes:
+                csvRow.append(node)
                 if len(csvRow) == 21:
                     writer.writerow(csvRow)
                     csvRow = [group]
             writer.writerow(self.csvPad(csvRow))
 
-            group = 'N-2'
+            # group = 'N-2'
             csvRow = [group]
-            for node in mixedBoundaryNodes:
-                csvRow.append(node['NodeNum'])
-                csvRow.append(node['Conce'])
+            for node, value in mixedBoundaryNodes:
+                csvRow.append(node)
+                csvRow.append(value)
 
                 # 5 pairs plus group = 2*5 + 1 = 11
                 if len(csvRow) == 11:

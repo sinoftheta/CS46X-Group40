@@ -140,6 +140,17 @@ class NodeTypes(QGroupBox):
             massTransCB.setStyleSheet("margin-left: 50%; margin-right: 50%;")
             self.dirichletTable.setCellWidget(row, 2, massTransCB)
 
+    # TODO: refactor to using modelview architecture. 
+    def getMixedBoundaryNodes(self):
+        if hasattr(self, 'mixedBoundaryTable'):
+            nodes = []
+            for i in range(self.mixedBoundaryTable.rowCount()):
+                first = self.mixedBoundaryTable.cellWidget(i, 0).text()
+                second = self.mixedBoundaryTable.cellWidget(i, 1).value()
+                nodes.append((first, second))
+            return nodes
+        return []
+
     def createNeumannTable(self):
         self.neumannTable = QTableWidget()
         self.neumannTable.setColumnCount(len(neumannNodeLabels))
