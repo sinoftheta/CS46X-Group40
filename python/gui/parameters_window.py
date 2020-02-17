@@ -299,7 +299,7 @@ class ParametersPage(QGroupBox):
             
             # assert that the materials page is up to date
             self.parametersPageMat.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
-            
+
             group = "Q-1"
             materials = self.parametersPageMat.getMaterials()
 
@@ -313,16 +313,15 @@ class ParametersPage(QGroupBox):
             if len(csvRow) > 1:
                 writer.writerow(self.csvPad(csvRow))
 
-            for mat in materials:
-                # subgroup Q-2 (pressure head)
-                groups = ["Q-2", "Q-3", "Q-4"]
-                datas = [mat.pressureHead, mat.moistureContent, mat.hydraulicConductivity]
 
+            groups = ["Q-2", "Q-3", "Q-4"]
+            for mat in materials:
+                matData = [mat.pressureHead, mat.moistureContent, mat.hydraulicConductivity]
                 for i in range(3):
                     csvRow = [groups[i]]
-                    for elem in datas[i]:
+                    for elem in matData[i]:
                         csvRow.append(elem)
-                        # this group contains at most 8 pressure heads plus group
+                        # these groups contains at most 8 data points plus the group
                         if len(csvRow) == 9:
                             writer.writerow(self.csvPad(csvRow))
                             csvRow = [groups[i]]
@@ -330,7 +329,19 @@ class ParametersPage(QGroupBox):
                     if len(csvRow) > 1:
                         writer.writerow(self.csvPad(csvRow))
                     
-            #write gorup R
+            #write group R
+            group = "R"
+            vals = self.parametersPageBasic.getVals()
+            if vals['CHNG'] > 0:
+                return
+            if int(vals['ITMAX']) < int(vals['ITCHNG']):
+                return 
 
+            csvRow = [group, vals['DELT']]
+            writer.writerow(self.csvPad(csvRow))
+
+            
+
+            
         
         
