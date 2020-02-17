@@ -10,3 +10,4 @@ void gs2Matgen2(gs2State* state, Array* srcr, Array* srcrt, int i);
 void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l);
 
 #endif /* __GS2_MATGEN_H__ */
+

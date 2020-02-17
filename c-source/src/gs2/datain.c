@@ -134,7 +134,6 @@ void gs2Datain(
     int i1, i2, itype;
 
     CSVFile csvFile = csvLoadFile(csvPath);
-    printf("csvfile: %s\n", csvFile.currentRow->entries[0]);
     gs2DataGroup dataGroup = NUM_DATA_GROUP;
 
     arrayDimension(&wxpsi, 20);
@@ -315,7 +314,7 @@ gs2DataGroup gs2GetGroup(CSVRow* csvRow, gs2DataGroup defaultTo) {
 void gs2ReadGroupA(CSVRow** csvRow, gs2State* state) {
     // title should be in the second cell in csvRow
     // state is needed for when we actually write to files
-    fprintf(stdout, "%s\n", (*csvRow)->entries[1]);
+    fprintf(gs2stdout, "%s\n", (*csvRow)->entries[1]);
 }
 
 void gs2ReadGroupB(
@@ -368,22 +367,22 @@ void gs2ReadGroupB(
         croakf("Too many nodal points: ne = %d, maxne = %d", state->ne, state->memoryRequirements.maxne);
     }
 
-    fprintf(stdout, "Number of: \n");
-    fprintf(stdout, "\tNodes: %d\n", state->nn);
-    fprintf(stdout, "\tElements: %d\n", state->ne);
-    fprintf(stdout, "\tConstant flow boundaries: %d\n", *ns);
-    fprintf(stdout, "\tConstant conc. boundaries: %d\n", *kns);
-    fprintf(stdout, "\tSource or Sink nodes: %d\n", *nf);
-    fprintf(stdout, "\tEstimated half-bandwidth for pressure: %d\n", state->nb);
-    fprintf(stdout, "\tEstimated half-bandwidth for concentration: %d\n", state->knb);
-    fprintf(stdout, "\tMaximum number of nodes per element %d:\n", state->inc);
+    fprintf(gs2stdout, "Number of: \n");
+    fprintf(gs2stdout, "\tNodes: %d\n", state->nn);
+    fprintf(gs2stdout, "\tElements: %d\n", state->ne);
+    fprintf(gs2stdout, "\tConstant flow boundaries: %d\n", *ns);
+    fprintf(gs2stdout, "\tConstant conc. boundaries: %d\n", *kns);
+    fprintf(gs2stdout, "\tSource or Sink nodes: %d\n", *nf);
+    fprintf(gs2stdout, "\tEstimated half-bandwidth for pressure: %d\n", state->nb);
+    fprintf(gs2stdout, "\tEstimated half-bandwidth for concentration: %d\n", state->knb);
+    fprintf(gs2stdout, "\tMaximum number of nodes per element %d:\n", state->inc);
 
-    fprintf(stdout, "\tboundary nodes with specified flux: %d\n", state->nsdn);
-    fprintf(stdout, "\tInitial value: %d\n", *mq4);
-    fprintf(stdout, "\tMinimum allowed pressure: %e\n", state->pl);
-    fprintf(stdout, "\tMaximum flux: %e\n", state->ei);    
-    fprintf(stdout, "\tboundary nodes with specified concentration flux: %d\n", *knsdn);
-    fprintf(stdout, "\tSeepage nodes: %d\n", state->nseep);
+    fprintf(gs2stdout, "\tboundary nodes with specified flux: %d\n", state->nsdn);
+    fprintf(gs2stdout, "\tInitial value: %d\n", *mq4);
+    fprintf(gs2stdout, "\tMinimum allowed pressure: %e\n", state->pl);
+    fprintf(gs2stdout, "\tMaximum flux: %e\n", state->ei);    
+    fprintf(gs2stdout, "\tboundary nodes with specified concentration flux: %d\n", *knsdn);
+    fprintf(gs2stdout, "\tSeepage nodes: %d\n", state->nseep);
 
     // third row: group, delt, chng, itmax, itchng, pchng, betap, type
     *csvRow = (*csvRow)->next;
@@ -415,37 +414,37 @@ void gs2ReadGroupB(
     DEFAULT(sscanf((*csvRow)->entries[6], "%d", &(state->iter1)), state->iter1, 0);
     DEFAULT(sscanf((*csvRow)->entries[7], "%d", &(state->igo)), state->igo, 0);
 
-    fprintf(stdout, "Time parameters:\n");
-    fprintf(stdout, "\tInitial time step in hours: %lf\n", state->delt);
-    fprintf(stdout, "\tMultipler for increasing time step: %lf\n", state->chng);
-    fprintf(stdout, "\tMaximum permitted number of time steps: %d\n", state->itmax);
-    fprintf(stdout, "\tNumber of time steps between changes in delt: %d\n", state->itchng);
-    fprintf(stdout, "\tPressure change criterion: %e\n", state->pchng);
-    fprintf(stdout, "\tFluid compressibility (betap): %e\n", state->betap);
-    fprintf(stdout, "\tMolecular diffusion constant: %e\n", state->difusn);
-    fprintf(stdout, "\tFactor for time derivative of porosity: %lf\n", state->dprdt);
-    fprintf(stdout, "\tNumber of iteration in flow: %d\n", state->iter1);
-    fprintf(stdout, "\tClosure criterion: %e\n", state->clos1);
-    fprintf(stdout, "\tNumber of concentration steps per pres. step: %d\n", state->igo);
+    fprintf(gs2stdout, "Time parameters:\n");
+    fprintf(gs2stdout, "\tInitial time step in hours: %lf\n", state->delt);
+    fprintf(gs2stdout, "\tMultipler for increasing time step: %lf\n", state->chng);
+    fprintf(gs2stdout, "\tMaximum permitted number of time steps: %d\n", state->itmax);
+    fprintf(gs2stdout, "\tNumber of time steps between changes in delt: %d\n", state->itchng);
+    fprintf(gs2stdout, "\tPressure change criterion: %e\n", state->pchng);
+    fprintf(gs2stdout, "\tFluid compressibility (betap): %e\n", state->betap);
+    fprintf(gs2stdout, "\tMolecular diffusion constant: %e\n", state->difusn);
+    fprintf(gs2stdout, "\tFactor for time derivative of porosity: %lf\n", state->dprdt);
+    fprintf(gs2stdout, "\tNumber of iteration in flow: %d\n", state->iter1);
+    fprintf(gs2stdout, "\tClosure criterion: %e\n", state->clos1);
+    fprintf(gs2stdout, "\tNumber of concentration steps per pres. step: %d\n", state->igo);
 
     switch (state->type) {
         case BACK:
             state->tdr = 1.0;
-            fprintf(stdout, "Implicit time derivative in use.\n");
+            fprintf(gs2stdout, "Implicit time derivative in use.\n");
             break;
         case CENT:
             state->tdr = 2.0;
-            fprintf(stdout, "Centered time derivative in use.\n");
+            fprintf(gs2stdout, "Centered time derivative in use.\n");
             break;
         default:
             break;
     };
 
     if (state->stat == 0.0)
-        fprintf(stdout, "Steady-state mass transport equation\n");
+        fprintf(gs2stdout, "Steady-state mass transport equation\n");
     
     if (state->statp == 0.0)
-        fprintf(stdout, "Steady-state flow quation\n");
+        fprintf(gs2stdout, "Steady-state flow quation\n");
 
 }
 
@@ -492,23 +491,23 @@ void gs2ReadGroupC(
     sscanf((*csvRow)->entries[5], "%lf", alam);
     sscanf((*csvRow)->entries[6], "%lf", arho);
 
-    fprintf(stdout, "Parameter Multipliers:\n");
-    fprintf(stdout, "\tafombx: %lf\n", *afmobx);
-    fprintf(stdout, "\tafomby: %lf\n", *afmoby);
-    fprintf(stdout, "\tapor: %lf\n", *apor);
-    fprintf(stdout, "\taelong: %lf\n", *aelong);
-    fprintf(stdout, "\taetrans: %lf\n", *aetrans);
+    fprintf(gs2stdout, "Parameter Multipliers:\n");
+    fprintf(gs2stdout, "\tafombx: %lf\n", *afmobx);
+    fprintf(gs2stdout, "\tafomby: %lf\n", *afmoby);
+    fprintf(gs2stdout, "\tapor: %lf\n", *apor);
+    fprintf(gs2stdout, "\taelong: %lf\n", *aelong);
+    fprintf(gs2stdout, "\taetrans: %lf\n", *aetrans);
 
-    fprintf(stdout, "\taphii: %lf\n", *aphii);
-    fprintf(stdout, "\taconci: %lf\n", *aconci);
-    fprintf(stdout, "\txfact: %lf\n", *xfact);
-    fprintf(stdout, "\tyfact: %lf\n", *yfact);
-    fprintf(stdout, "\tateta: %lf\n", *ateta);
+    fprintf(gs2stdout, "\taphii: %lf\n", *aphii);
+    fprintf(gs2stdout, "\taconci: %lf\n", *aconci);
+    fprintf(gs2stdout, "\txfact: %lf\n", *xfact);
+    fprintf(gs2stdout, "\tyfact: %lf\n", *yfact);
+    fprintf(gs2stdout, "\tateta: %lf\n", *ateta);
 
-    fprintf(stdout, "\taal: %lf\n", *aal);
-    fprintf(stdout, "\takd: %lf\n", *akd);
-    fprintf(stdout, "\talam: %lf\n", *alam);
-    fprintf(stdout, "\tarho: %lf\n", *arho);
+    fprintf(gs2stdout, "\taal: %lf\n", *aal);
+    fprintf(gs2stdout, "\takd: %lf\n", *akd);
+    fprintf(gs2stdout, "\talam: %lf\n", *alam);
+    fprintf(gs2stdout, "\tarho: %lf\n", *arho);
 
 }
 
@@ -529,16 +528,16 @@ void gs2ReadGroupD(CSVRow** csvRow, gs2State* state) {
     sscanf((*csvRow)->entries[9], "%d", &(state->kod11));
     sscanf((*csvRow)->entries[10], "%d", &(state->kod12));
 
-    fprintf(stdout, "Print options: \n");
-    fprintf(stdout, "\tkod1: %d\n", state->kod1);
-    fprintf(stdout, "\tkod3: %d\n", state->kod3);
-    fprintf(stdout, "\tkod4: %d\n", state->kod4);
-    fprintf(stdout, "\tkod7: %d\n", state->kod7);
-    fprintf(stdout, "\tkod8: %d\n", state->kod8);
-    fprintf(stdout, "\tkod9: %d\n", state->kod9);
-    fprintf(stdout, "\tkod10: %d\n", state->kod10);
-    fprintf(stdout, "\tkod11: %d\n", state->kod11);
-    fprintf(stdout, "\tkod12: %d\n", state->kod12);
+    fprintf(gs2stdout, "Print options: \n");
+    fprintf(gs2stdout, "\tkod1: %d\n", state->kod1);
+    fprintf(gs2stdout, "\tkod3: %d\n", state->kod3);
+    fprintf(gs2stdout, "\tkod4: %d\n", state->kod4);
+    fprintf(gs2stdout, "\tkod7: %d\n", state->kod7);
+    fprintf(gs2stdout, "\tkod8: %d\n", state->kod8);
+    fprintf(gs2stdout, "\tkod9: %d\n", state->kod9);
+    fprintf(gs2stdout, "\tkod10: %d\n", state->kod10);
+    fprintf(gs2stdout, "\tkod11: %d\n", state->kod11);
+    fprintf(gs2stdout, "\tkod12: %d\n", state->kod12);
 }
 
 void gs2ReadGroupE(CSVRow** csvRow, gs2State* state, double xfact, double yfact) {
@@ -557,7 +556,7 @@ void gs2ReadGroupE(CSVRow** csvRow, gs2State* state, double xfact, double yfact)
     *arrayAt(&(state->y), index) *= yfact;
 
     fprintf(
-        stdout, 
+        gs2stdout, 
         "Node at: %16.4lf, %16.4lf\n", 
         *arrayAt(&(state->x), index), 
         *arrayAt(&(state->y), index)
@@ -582,7 +581,7 @@ void gs2ReadSubGroupF1(CSVRow** csvRow, gs2State* state) {
     sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->fq), index[3]));
 
     for (int i = 0; i < 4; i++)
-        fprintf(stdout, "Node %d source and sink discharge: %e\n", index[i], *arrayAt(&(state->fq), index[i]));
+        fprintf(gs2stdout, "Node %d source and sink discharge: %e\n", index[i], *arrayAt(&(state->fq), index[i]));
 }
 
 void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
@@ -603,7 +602,7 @@ void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
     sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->cfq), index[3]));
 
     for (int i = 0; i < 4; i++)
-        fprintf(stdout, "Node %d source and sink concentration: %lf\n", index[i], *arrayAt(&(state->cfq), index[i]-1));
+        fprintf(gs2stdout, "Node %d source and sink concentration: %lf\n", index[i], *arrayAt(&(state->cfq), index[i]-1));
 }
 
 void gs2ReadSubGroupG1(CSVRow** csvRow, gs2State* state) {
@@ -616,8 +615,8 @@ void gs2ReadSubGroupG1(CSVRow** csvRow, gs2State* state) {
 void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
     
 
-    fprintf(stdout, "Initial Concentration\n");
-    fprintf(stdout, "Node\tValue\t\tNode\tValue\t\tNode\tValue\t\tNode\tValue\n");
+    fprintf(gs2stdout, "Initial Concentration\n");
+    fprintf(gs2stdout, "Node\tValue\t\tNode\tValue\t\tNode\tValue\t\tNode\tValue\n");
 
     do {
         if ((*csvRow)->entryCount < 9)
@@ -638,8 +637,8 @@ void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
         sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->conci), index[3]));
 
         for (int i = 0; i < 4; i++)
-            fprintf(stdout, "%d\t%e\t", index[i], *arrayAt(&(state->conci), index[i]));
-        fprintf(stdout, "\n");
+            fprintf(gs2stdout, "%d\t%e\t", index[i], *arrayAt(&(state->conci), index[i]));
+        fprintf(gs2stdout, "\n");
 
         if (state->stime > 0.0) {
             for (int i = 0; i < 4; i++) {
@@ -663,7 +662,7 @@ void gs2ReadSubGroupH2(CSVRow** csvRow, gs2State* state, double* hone) {
         croak("Sub Group H2, too few entries");
 
     sscanf((*csvRow)->entries[1], "%lf", hone);
-    fprintf(stdout, "Hone: %lf\n", *hone);
+    fprintf(gs2stdout, "Hone: %lf\n", *hone);
 
     if (*hone != 9999.0) {
         for (int i = 0; i < state->nn; i++) {
@@ -675,8 +674,8 @@ void gs2ReadSubGroupH2(CSVRow** csvRow, gs2State* state, double* hone) {
 // the hone != 9999 is handled elsewhere
 void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, double aphii) {
 
-    fprintf(stdout, "Initial Concentration\n");
-    fprintf(stdout, "Node\tValue\t\tNode\tValue\t\tNode\tValue\t\tNode\tValue\n");
+    fprintf(gs2stdout, "Initial Concentration\n");
+    fprintf(gs2stdout, "Node\tValue\t\tNode\tValue\t\tNode\tValue\t\tNode\tValue\n");
 
     if ((*csvRow)->entryCount < 9)
         croak("Sub Group H3 too few entries");
@@ -696,8 +695,8 @@ void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, do
         sscanf((*csvRow)->entries[8], "%lf", arrayAt(&(state->phii), index[3]));
 
         for (int i = 0; i < 4; i++)
-            fprintf(stdout, "%d\t%e\t", index[i], *arrayAt(&(state->phii), index[i]));
-        fprintf(stdout, "\n");
+            fprintf(gs2stdout, "%d\t%e\t", index[i], *arrayAt(&(state->phii), index[i]));
+        fprintf(gs2stdout, "\n");
 
         if (state->stime > 0.0) {
             for (int i = 0; i < 4; i++) {
@@ -736,8 +735,8 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
     // the main datain func will move csvRow
     *csvRow = (*csvRow)->prev;
 
-    fprintf(stdout, "Element Incidences:\n");
-    fprintf(stdout, "\tElement\t\tMaximum Nodal Difference\tIncidences\n");
+    fprintf(gs2stdout, "Element Incidences:\n");
+    fprintf(gs2stdout, "\tElement\t\tMaximum Nodal Difference\tIncidences\n");
 
     Matrix* stateInRef = &(state->in);
     double nd, mnd = 0.0;
@@ -756,7 +755,7 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
                 if (*matrixAt(stateInRef, j, l) == 0.0)
                     break;
                 
-                nd = abs(*matrixAt(stateInRef, i, l) - *matrixAt(stateInRef, j, l));
+                nd = abs( (int)*matrixAt(stateInRef, i, l) - (int)*matrixAt(stateInRef, j, l));
                 // printf("l = %d, i = %d, j = %d, nd = %lf\n", l, i, j, nd);
                 mnd = maxd(nd, mnd);
                 *maxdif = maxd(nd, *maxdif);
@@ -764,10 +763,10 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
             } // 202
         } // 205
 
-        fprintf(stdout, "\t%d\t\t%lf\t\t\t", l, mnd);
+        fprintf(gs2stdout, "\t%d\t\t%lf\t\t\t", l, mnd);
         for (int i = 1; i <= state->inc; i++) 
-            fprintf(stdout, "%d  ", (int)(*matrixAt(stateInRef, i, l)));
-        fprintf(stdout, "\n");
+            fprintf(gs2stdout, "%d  ", (int)(*matrixAt(stateInRef, i, l)));
+        fprintf(gs2stdout, "\n");
     }  // 210
 
     nd = (*maxdif) + 1;
@@ -798,8 +797,8 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
     state->kmb = 0;
     state->kmb2 = 0;
 
-    fprintf(stdout, "Half-bandwidth for pressure %d\n", state->nb);
-    fprintf(stdout, "Half-bandwidth for concentration %d\n", state->knb);
+    fprintf(gs2stdout, "Half-bandwidth for pressure %d\n", state->nb);
+    fprintf(gs2stdout, "Half-bandwidth for concentration %d\n", state->knb);
 }
 
 void gs2ReadSubGroupJ1(CSVRow** csvRow, gs2State* state, int* i1, int* i2, int* itype) {
@@ -886,24 +885,24 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
             ll = l;
         }
 
-        fprintf(stdout, "Dispersivity\n");
-        fprintf(stdout, "\tX-Mobility: %lf\n", *arrayAt(&(state->fmobx), ll));
-        fprintf(stdout, "\tY-Mobility: %lf\n", *arrayAt(&(state->fmoby), ll));
-        fprintf(stdout, "\tPorosity: %lf\n", *arrayAt(&(state->por), ll));
-        fprintf(stdout, "\tLongitudinal Transverse: %lf, %lf\n", *arrayAt(&(state->elong), ll), *arrayAt(&(state->etrans), ll));
-        fprintf(stdout, "\tMoisture: %lf\n", *arrayAt(&(state->tta), ll));
-        fprintf(stdout, "\tCompressibliity: %lf\n", *arrayAt(&(state->alpha), ll));
-        fprintf(stdout, "\tDistributivity: %lf\n", *arrayAt(&(state->kd), ll));
-        fprintf(stdout, "\tDecay Constant: %lf\n", *arrayAt(&(state->lambda), ll));
-        fprintf(stdout, "\tDensity: %lf\n", *arrayAt(&(state->rho), ll));
+        fprintf(gs2stdout, "Dispersivity\n");
+        fprintf(gs2stdout, "\tX-Mobility: %lf\n", *arrayAt(&(state->fmobx), ll));
+        fprintf(gs2stdout, "\tY-Mobility: %lf\n", *arrayAt(&(state->fmoby), ll));
+        fprintf(gs2stdout, "\tPorosity: %lf\n", *arrayAt(&(state->por), ll));
+        fprintf(gs2stdout, "\tLongitudinal Transverse: %lf, %lf\n", *arrayAt(&(state->elong), ll), *arrayAt(&(state->etrans), ll));
+        fprintf(gs2stdout, "\tMoisture: %lf\n", *arrayAt(&(state->tta), ll));
+        fprintf(gs2stdout, "\tCompressibliity: %lf\n", *arrayAt(&(state->alpha), ll));
+        fprintf(gs2stdout, "\tDistributivity: %lf\n", *arrayAt(&(state->kd), ll));
+        fprintf(gs2stdout, "\tDecay Constant: %lf\n", *arrayAt(&(state->lambda), ll));
+        fprintf(gs2stdout, "\tDensity: %lf\n", *arrayAt(&(state->rho), ll));
 
-        fprintf(stdout, "\tValid for Elements: \n\t");
+        fprintf(gs2stdout, "\tValid for Elements: \n\t");
         for (int i = 1; i <= k; i++) {
-            fprintf(stdout, "%d\t", (int)(*arrayAt(&(state->lr), i)));
+            fprintf(gs2stdout, "%d\t", (int)(*arrayAt(&(state->lr), i)));
             if ((i+1) % 5 == 0)
-                fprintf(stdout, "\n\t");
+                fprintf(gs2stdout, "\n\t");
         } 
-        fprintf(stdout, "\n");
+        fprintf(gs2stdout, "\n");
     }
 }
 
@@ -914,7 +913,7 @@ void gs2ReadGroupK(CSVRow** csvRow, gs2State* state, int ns) {
     if (ns == 0)
         return;
 
-    fprintf(stdout, "Dirichlet Boundary Nodes for Flow:\n");
+    fprintf(gs2stdout, "Dirichlet Boundary Nodes for Flow:\n");
 
     Array lrt;
     arrayDimension(&lrt, 20);
@@ -949,7 +948,7 @@ void gs2ReadGroupL(CSVRow** csvRow, gs2State* state, int kns) {
     if (kns == 0)
         return;
 
-    fprintf(stdout, "Dirichlet Boundary Nodes for Concentration:\n");
+    fprintf(gs2stdout, "Dirichlet Boundary Nodes for Concentration:\n");
 
     Array lrt;
     arrayDimension(&lrt, 20);
@@ -996,34 +995,34 @@ void gs2FinalizeGroupsK_L(CSVRow** csvRow, gs2State* state, int ns, int kns) {
     state->mm = state->nn - *arrayAt(lcPtr, state->nn);
     state->km = state->nn - *arrayAt(klcPtr, state->nn);
 
-    fprintf(stdout, "Number of equations for flow: %d\n", state->mm);
-    fprintf(stdout, "Number of equations for mass transport: %d\n", state->km);
+    fprintf(gs2stdout, "Number of equations for flow: %d\n", state->mm);
+    fprintf(gs2stdout, "Number of equations for mass transport: %d\n", state->km);
 
     if (state->mm != state->nn - ns) {
-        fprintf(stderr, "Wrong number of equations for flow\n");
+        fprintf(gs2stderr, "Wrong number of equations for flow\n");
         for (int i = 0; i < state->nn; i++) {
-            fprintf(stderr, "\t%d   %lf", i, *arrayAt(lcPtr, i));
+            fprintf(gs2stderr, "\t%d   %lf", i, *arrayAt(lcPtr, i));
             if ((i+1) % 5 == 0)
-                fprintf(stderr, "\n");
+                fprintf(gs2stderr, "\n");
         }
-       fprintf(stderr, "\n");
+       fprintf(gs2stderr, "\n");
        croak("Cannot proceed.");
     } 
 
     if (state->km != state->nn - kns) {
-        fprintf(stderr, "Wrong number of equations for mass transport\n");
+        fprintf(gs2stderr, "Wrong number of equations for mass transport\n");
         for (int i = 0; i < state->nn; i++) {
-            fprintf(stderr, "\t%d   %lf", i, *arrayAt(klcPtr, i));
+            fprintf(gs2stderr, "\t%d   %lf", i, *arrayAt(klcPtr, i));
             if ((i+1) % 5 == 0)
-                fprintf(stderr, "\n");
+                fprintf(gs2stderr, "\n");
         }
-       fprintf(stderr, "\n");   
+       fprintf(gs2stderr, "\n");   
        croak("Cannot proceed."); 
     }
 }
 
 void gs2ReadSubGroupM1(CSVRow** csvRow, gs2State* state, int mq4) {
-    fprintf(stdout, "Neumann boundary nodes for flow\n");
+    fprintf(gs2stdout, "Neumann boundary nodes for flow\n");
 
     if (state->nsdn == 0)
         return;
@@ -1055,7 +1054,7 @@ void gs2ReadSubGroupM1(CSVRow** csvRow, gs2State* state, int mq4) {
 }
 
 void gs2ReadSubGroupM2(CSVRow** csvRow, gs2State* state, int mq4) {
-    fprintf(stdout, "Neumann boundary nodes for flow\n");
+    fprintf(gs2stdout, "Neumann boundary nodes for flow\n");
 
     if (state->nsdn == 0)
         return;
@@ -1147,12 +1146,12 @@ void gs2ReadSubGroupM4(CSVRow** csvRow, gs2State* state, Array* nsf, Array* vn) 
 }
 
 void gs2FinalizeGroupM(gs2State* state, Array* nsf, Array* coef, Array* vn) {
-    fprintf(stdout, "Specified fraction of normal flux\n");
+    fprintf(gs2stdout, "Specified fraction of normal flux\n");
     for (int i = 1; i < state->nsdn; i++)
-        fprintf(stdout, "Node %d, Value %lf\n", (int)(*arrayAt(nsf, i)), *arrayAt(coef, i));
-    fprintf(stdout, "Dependent boundary length\n");
+        fprintf(gs2stdout, "Node %d, Value %lf\n", (int)(*arrayAt(nsf, i)), *arrayAt(coef, i));
+    fprintf(gs2stdout, "Dependent boundary length\n");
     for (int i = 1; i < state->nsdn; i++)
-        fprintf(stdout, "Node %d, Value %lf\n", (int)(*arrayAt(nsf, i)), *arrayAt(vn, i));
+        fprintf(gs2stdout, "Node %d, Value %lf\n", (int)(*arrayAt(nsf, i)), *arrayAt(vn, i));
 
     for (int k = 1; k < state->nsdn; k++) {
         int i = (int)(*arrayAt(nsf, k));
@@ -1163,7 +1162,7 @@ void gs2FinalizeGroupM(gs2State* state, Array* nsf, Array* coef, Array* vn) {
 }
 
 void gs2ReadSubGroupN1(CSVRow** csvRow, gs2State* state, int knsdn) {
-    fprintf(stdout, "Neumann boundary nodes for concentration\n");
+    fprintf(gs2stdout, "Neumann boundary nodes for concentration\n");
 
     if (knsdn == 0)
         return;
@@ -1198,7 +1197,7 @@ void gs2ReadSubGroupN1(CSVRow** csvRow, gs2State* state, int knsdn) {
 
 void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, int knsdn) {
     
-    fprintf(stdout, "Specified concentration flux\n");
+    fprintf(gs2stdout, "Specified concentration flux\n");
     // card: group, nsk(i), cn(i), nsk(j), cn(j), nsk(k), cn(k), nsk(l), cn(l), nsk(m), cn(m)
     for (int i = 1; i <= knsdn; i += 5) {
         
@@ -1214,35 +1213,35 @@ void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, 
             sscanf((*csvRow)->entries[1], "%lf", arrayAt(nsk, i));
             sscanf((*csvRow)->entries[2], "%lf", arrayAt(cn, i));
 
-            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i)), *arrayAt(cn, i));
+            fprintf(gs2stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i)), *arrayAt(cn, i));
         }
         
         if (i + 1 <= maxm4) {
             sscanf((*csvRow)->entries[3], "%lf", arrayAt(nsk, i + 1));
             sscanf((*csvRow)->entries[4], "%lf", arrayAt(cn, i + 1));
 
-            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 1)), *arrayAt(cn, i + 1));
+            fprintf(gs2stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 1)), *arrayAt(cn, i + 1));
         }
 
         if (i + 2 <= maxm4) {
             sscanf((*csvRow)->entries[5], "%lf", arrayAt(nsk, i + 2));
             sscanf((*csvRow)->entries[6], "%lf", arrayAt(cn, i + 2));
 
-            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 2)), *arrayAt(cn, i + 2));
+            fprintf(gs2stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 2)), *arrayAt(cn, i + 2));
         }
 
         if (i + 3 <= maxm4) {
             sscanf((*csvRow)->entries[7], "%lf", arrayAt(nsk, i + 3));
             sscanf((*csvRow)->entries[8], "%lf", arrayAt(cn, i + 3));
 
-            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 3)), *arrayAt(cn, i + 3));
+            fprintf(gs2stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 3)), *arrayAt(cn, i + 3));
         }
 
         if (i + 4 <= maxm4) {
             sscanf((*csvRow)->entries[9], "%lf", arrayAt(nsk, i + 4));
             sscanf((*csvRow)->entries[10], "%lf", arrayAt(cn, i + 4));
 
-            fprintf(stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 4)), *arrayAt(cn, i + 4));
+            fprintf(gs2stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i + 4)), *arrayAt(cn, i + 4));
         }
 
         *csvRow = (*csvRow)->next;
@@ -1264,7 +1263,7 @@ void gs2ReadGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
         if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_O_2) 
             croak("Group O-1 is not followed by Group O-2!");
 
-        fprintf(stdout, "Nodes on seepage face %d\n", k);
+        fprintf(gs2stdout, "Nodes on seepage face %d\n", k);
 
         int mspk = (int)(*arrayAt(msp, k));
         int mq2 = mspk - mp2;
@@ -1272,18 +1271,18 @@ void gs2ReadGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
         if (mq2 != 0) {
 
             do {
-                fprintf(stdout, "Dirichlet Nodes\n");
+                fprintf(gs2stdout, "Dirichlet Nodes\n");
                 for (int i = 1; i < (*csvRow)->entryCount; i++) {
                     int value = 0;
                     sscanf((*csvRow)->entries[i], "%d", &value);
                     *matrixAt(nsp, i, k) = (double)value;
 
-                    fprintf(stdout, "\t%d  ", value);
+                    fprintf(gs2stdout, "\t%d  ", value);
 
                     if (i % 7 == 0)
-                        fprintf(stdout, "\n");
+                        fprintf(gs2stdout, "\n");
                 }
-                fprintf(stdout, "\n");
+                fprintf(gs2stdout, "\n");
 
                 *csvRow = (*csvRow)->next;
             } while (gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_O_2);
@@ -1295,7 +1294,7 @@ void gs2ReadGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
                 *arrayAt(&(state->lr), *matrixAt(nsp, j, k)) = 2.0;
 
             if (mq2 != 0) {
-                fprintf(stdout, "Neumann Nodes\n");
+                fprintf(gs2stdout, "Neumann Nodes\n");
                 int jj = mp2 + 1;
                 do {
                     for (int i = 1; i < (*csvRow)->entryCount; i++) {
@@ -1303,12 +1302,12 @@ void gs2ReadGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
                         sscanf((*csvRow)->entries[i], "%d", &value);
                         *matrixAt(nsp, jj + i - 1, k) = (double)value;
 
-                        fprintf(stdout, "\t%d  ", value);
+                        fprintf(gs2stdout, "\t%d  ", value);
 
                         if (i % 7 == 0)
-                            fprintf(stdout, "\n");
+                            fprintf(gs2stdout, "\n");
                     }
-                    fprintf(stdout, "\n");
+                    fprintf(gs2stdout, "\n");
                     *csvRow = (*csvRow)->next;
                 } while(gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_O_3);
 
@@ -1350,7 +1349,7 @@ void gs2ReadGroupQ(
     do {
         k++;
 
-        fprintf(stdout, "Variation of material properties with pressure (%d)\n", k);
+        fprintf(gs2stdout, "Variation of material properties with pressure (%d)\n", k);
 
         int ispk = (int)(*arrayAt(&(state->ispl), k));
         int ispm = ispk - 1;
@@ -1359,27 +1358,27 @@ void gs2ReadGroupQ(
         gs2ReadSubGroupQ3(csvRow, state, k, ispk);
         gs2ReadSubGroupQ4(csvRow, state, k, ispk);
 
-        fprintf(stdout, "Pressure Head:\n\t");
+        fprintf(gs2stdout, "Pressure Head:\n\t");
         for (int i = 1; i <= ispk; i++) {
-            fprintf(stdout, "%lf  ", *matrixAt(&(state->xpsi), i, k));
+            fprintf(gs2stdout, "%lf  ", *matrixAt(&(state->xpsi), i, k));
             if (i % 8 == 0)
-                fprintf(stdout, "\n\t");
+                fprintf(gs2stdout, "\n\t");
         }
-        fprintf(stdout, "\n\nMositure Content:\n\t");
+        fprintf(gs2stdout, "\n\nMositure Content:\n\t");
 
         for (int i = 1; i <= ispk; i++) {
-            fprintf(stdout, "%lf  ", *matrixAt(&(state->xm), i, k));
+            fprintf(gs2stdout, "%lf  ", *matrixAt(&(state->xm), i, k));
             if (i % 8 == 0)
-                fprintf(stdout, "\n\t");
+                fprintf(gs2stdout, "\n\t");
         }
-        fprintf(stdout, "\n\nHydrualic Conductivity:\n\t");
+        fprintf(gs2stdout, "\n\nHydrualic Conductivity:\n\t");
 
         for (int i = 1; i <= ispk; i++) {
-            fprintf(stdout, "%lf  ", *matrixAt(&(state->xk), i, k));
+            fprintf(gs2stdout, "%lf  ", *matrixAt(&(state->xk), i, k));
             if (i % 8 == 0)
-                fprintf(stdout, "\n\t");
+                fprintf(gs2stdout, "\n\t");
         }
-        fprintf(stdout, "\n");
+        fprintf(gs2stdout, "\n");
 
         double xpsiAtK = *matrixAt(&(state->xpsi), ispk, k);
         *arrayAt(&(state->psio), k) = -pow(10, xpsiAtK);
