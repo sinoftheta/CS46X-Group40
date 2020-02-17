@@ -27,6 +27,9 @@ class Materials(QGroupBox):
 
         self.setLayout(self.layout)
 
+    def getMaterials(self):
+        return self.materialModels
+
     def pushMaterialGroup(self):
         group = str(len(self.materialModels) + 1)
         materialModel = MaterialModel(group)

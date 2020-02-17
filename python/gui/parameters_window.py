@@ -295,9 +295,41 @@ class ParametersPage(QGroupBox):
                 writer.writerow(self.csvPad(csvRow))
 
             #write group Q
-            # subgroup Q1: list the number of interpolation points for each material
+            # subgroup Q-1: list the number of interpolation points for each material
             
+            # assert that the materials page is up to date
+            self.parametersPageMat.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
+            
+            group = "Q-1"
+            materials = self.parametersPageMat.getMaterials()
 
+            csvRow = [group]
+            for mat in materials:
+                csvRow.append(mat.getInterpolationPointCount())
+
+                if len(csvRow) == 21:
+                    writer.writerow(csvRow)
+                    csvRow = [group]
+            if len(csvRow) > 1:
+                writer.writerow(self.csvPad(csvRow))
+
+            for mat in materials:
+                # subgroup Q-2 (pressure head)
+                groups = ["Q-2", "Q-3", "Q-4"]
+                datas = [mat.pressureHead, mat.moistureContent, mat.hydraulicConductivity]
+
+                for i in range(3):
+                    csvRow = [groups[i]]
+                    for elem in datas[i]:
+                        csvRow.append(elem)
+                        # this group contains at most 8 pressure heads plus group
+                        if len(csvRow) == 9:
+                            writer.writerow(self.csvPad(csvRow))
+                            csvRow = [groups[i]]
+                            
+                    if len(csvRow) > 1:
+                        writer.writerow(self.csvPad(csvRow))
+                    
             #write gorup R
 
         
