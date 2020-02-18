@@ -438,7 +438,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                 }
                             }
 
-                            // write (6, 1940)
+                            fprintf(state->gs2stdout, "\n\n           MODIFIED BOUNDARY CONDITIONS ON SEEPAGE FACES\n           ---------------------------------------------\n");
+                            fprintf(state->gs2stdout, "           NODE   TYPE OF B.C.        HEAD IN                       FLUX IN                    SEEPAGE FACE\n");
 
                             for (k = 1; k <= state->nseep; k++) {
                                 nt = *arrayAt(msp, k);
@@ -448,9 +449,9 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                     j = i - *arrayAt(lc, i);
 
                                     if (*arrayAt(lr, i) == 2) {
-                                        // write (6, 1950) I, LR(I), U(J), K
+                                        fprintf(state->gs2stdout, "           %4d%15d%15.5E%62D\n", i, *arrayAt(lr, i), *arrayAt(u, j), k);
                                     } else if (*arrayAt(lr, i) == -2) {
-                                        // write (6, 1960) I, LR(I), FQ(I), K
+                                        fprintf(state->gs2stdout, "           %4d%15d                              %15.5E               %17d\n", i, *arrayAt(lr, i), *arrayAt(fq, i), k);
                                     }
                                 }
                             }
@@ -474,9 +475,16 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         }
 
                         if (state->kod12 != 0) {
-                            // write (6, 1820) NIT, ISK
-                            // write (6, 1080)
-                            // write (6, 1090) (LP(I), U(I), I = 1, MM)
+                            fprintf(state->gs2stdout, "\n\n\n\n           SOLUTION OF FLOW EQUATION AT ITERATION%5d     (ISK = %5d)\n           -------------------------------------------\n", nit, isk);
+                            fprintf(state->gs2stdout, "\n           NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE\n");
+                            
+                            for (i = 1; i <= state->mm; i++) {
+                                if (i % 6 == 1) {
+                                    fprintf(state->gs2stdout, "\n           ");
+                                }
+                                fprintf(state->gs2stdout, "%4d  %10.3E   ", *arrayAt(lp, i), *arrayAt(u, i));
+                            }
+                            fprintf(state->gs2stdout, "\n");
                         }
 
                         if ((isk == 0 && ktcal > 0) || nit >= state->iter1) {
@@ -551,14 +559,15 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 }
 
                 if (state->kod7 - 1 > 0) {
-                    // write (6, 1720)
+                    fprintf(state->gs2stdout, "\n\n1 GLOBAL COEFFICIENT MATRIX FOR CONCENTRATION\n  INPUT TO SOLVER\n\n\n");
                     gs2Sos(s, state->kmb2, state->km, state->knb - state->kmb + 1);
-                    // write (6, 1730)
+                    fprintf(state->gs2stdout, "0          P COEFFICIENT MATRIX\n           --------------------\n\n\n");
                     gs2Sos(p, state->km, state->kmb, 1);
                 }
 
                 gs2Array(s, w, state->km, state->knb, state->kmb, state->kmb2, (state->memoryRequirements).maxbw2, 
                          (state->memoryRequirements).maxs, (state->memoryRequirements).mx, &jx);
+
                 // write (4) (W(I), I = 1, JX)
 
             } else {
