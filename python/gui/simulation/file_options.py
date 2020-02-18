@@ -3,6 +3,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 
+from os import path
+
 class FileOptions(QGroupBox):
     def __init__(self, config):
         super(FileOptions, self).__init__('I/O Config')
@@ -18,7 +20,7 @@ class FileOptions(QGroupBox):
         layout.addWidget(dataInput, 0, 0)
 
         # TODO: call export here, or keep track of the most recent exported file
-        dataInputPath = QLineEdit(self.config['paths']['exampleCsv'])
+        dataInputPath = QLineEdit(path.abspath(self.config['paths']['exampleCsv']))
         layout.addWidget(dataInputPath, 0, 1)
 
         dataInputPathEdit = QPushButton("Edit")
@@ -29,7 +31,7 @@ class FileOptions(QGroupBox):
         mainOutput.setAlignment(Qt.AlignLeft)
         layout.addWidget(mainOutput, 1, 0)
 
-        mainOutputPath = QLineEdit(self.config['io']['default-out'])
+        mainOutputPath = QLineEdit(path.abspath(self.config['io']['default-out']))
         layout.addWidget(mainOutputPath, 1, 1)
 
         mainOutputPathEdit = QPushButton("Edit")
@@ -40,7 +42,7 @@ class FileOptions(QGroupBox):
         errorOutput.setAlignment(Qt.AlignLeft)
         layout.addWidget(errorOutput, 2, 0)
      
-        errorOutputPath = QLineEdit(self.config['io']['default-err'])
+        errorOutputPath = QLineEdit(path.abspath(self.config['io']['default-err']))
         layout.addWidget(errorOutputPath, 2, 1)
 
         errorOutputPathEdit = QPushButton("Edit")
