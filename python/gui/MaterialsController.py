@@ -39,10 +39,14 @@ class MaterialsController(QGroupBox):
         materialModel = MaterialModel(group)
         self.materialModels.append(materialModel)
         self.materialGroup.addItem(group)
+
+        self.notifyMaterialAdded(materialModel)
         
     def popMaterialGroup(self):
-        self.materialModels.pop()
+        lastMaterial = self.materialModels.pop()
         self.materialGroup.removeItem(self.materialGroup.count() - 1)
+
+        self.notifyMaterialRemoved(lastMaterial)
 
     def materialGroupChanged(self, newGroupIndex):
         if self.currentMaterialGroup != None:
@@ -77,11 +81,11 @@ class MaterialsController(QGroupBox):
 
     def notifyMaterialAdded(self, materialModel):
         for listener in self.materialChangeListeners:
-            listener.notifyMaterialAdded(materialModel)
+            listener.onMaterialAdded(materialModel)
 
     def notifyMaterialRemoved(self, materialModel):
         for listener in self.materialChangeListeners:
-            listener.notifyMaterialRemoved(materialModel)
+            listener.onMaterialRemoved(materialModel)
 
 
 class MaterialsChangeListener:

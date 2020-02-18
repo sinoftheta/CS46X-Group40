@@ -10,6 +10,7 @@ from .nodeTypes import NodeTypes
 from .elements import Elements
 from .elementIncidences import ElementIncidences
 from .MaterialsController import MaterialsController
+from .MaterialsController import MaterialsChangeListener
 
 parameters = [
         'Import',
@@ -113,6 +114,8 @@ class ParametersPage(QGroupBox):
         # open on the basic parameters page
         self.parametersPageStack.setCurrentIndex(1)
 
+
+
     def importNavClick(self):
         #self.parametersPageStack.setCurrentIndex(0)
         filename = QFileDialog.getOpenFileName(self, 'Open file',
@@ -152,7 +155,14 @@ class ParametersPage(QGroupBox):
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
+
+        # TODO: When apporpriate make the material controller inheirent from some
+        # basic parameters listener class, so that the material controller knows when 
+        # the material count changes.
+        # that would let us get rid of this next line of code.
         self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
+
+
 
     # pad csv rows with blank entries
     def csvPad(self, cols):
@@ -160,6 +170,8 @@ class ParametersPage(QGroupBox):
         while len(cols) < maxCols:
             cols.append('')
         return cols
+
+
     def exportNavClick(self):
 
         #check that node table has been opened, should probably grey out export button
