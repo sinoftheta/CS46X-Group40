@@ -9,7 +9,7 @@ from .nodes import Nodes
 from .nodeTypes import NodeTypes
 from .elements import Elements
 from .elementIncidences import ElementIncidences
-from .materials import Materials
+from .MaterialsController import MaterialsController
 
 parameters = [
         'Import',
@@ -48,7 +48,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
         self.parametersPageElemIncid = ElementIncidences()
-        self.parametersPageMat = Materials()
+        self.materialsController = MaterialsController()
 
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
@@ -58,7 +58,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
         self.parametersPageStack.addWidget(self.parametersPageElem)
         self.parametersPageStack.addWidget(self.parametersPageElemIncid)
-        self.parametersPageStack.addWidget(self.parametersPageMat)
+        self.parametersPageStack.addWidget(self.materialsController)
 
         #   Add navigation buttons (widgets) to
         #       button container 'self.parametersPageStack'
@@ -113,9 +113,6 @@ class ParametersPage(QGroupBox):
         # open on the basic parameters page
         self.parametersPageStack.setCurrentIndex(1)
 
-        if (self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials()) == 0):
-            self.matsNavBtn.setDisabled(true)
-
     def importNavClick(self):
         #self.parametersPageStack.setCurrentIndex(0)
         filename = QFileDialog.getOpenFileName(self, 'Open file',
@@ -155,7 +152,7 @@ class ParametersPage(QGroupBox):
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
-        self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())
+        self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
 
     # pad csv rows with blank entries
     def csvPad(self, cols):
