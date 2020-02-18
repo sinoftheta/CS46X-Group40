@@ -71,7 +71,7 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l) {
         for (im = 1; im <= m; im++) {
             printf("%5d", im);
             for (jm = k1; jm <= k2; jm++) {
-                printf("%15.6f", *matrixAt(se, im, jm));
+                printf("%15.6E", *matrixAt(se, im, jm));
             }
             printf("\n");
         }
@@ -88,7 +88,7 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l) {
         for (im = 1; im <= m; im++) {
             printf("%5d", im);
             for (jm = k1; jm <= k2; jm++) {
-                printf("%15.6f", *matrixAt(pe, im, jm));
+                printf("%15.6E", *matrixAt(pe, im, jm));
             }
             printf("\n");
         }

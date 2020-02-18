@@ -61,7 +61,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
     matrixAssertNotNull(nsp, "Matrix 'nsp' NULL in gs2Ts!");
     
     int ktcal = 0;
-    int advanc, i, j, k, nit, jtest, ui, kkk, icheck, nt, jj, isk, stop, kb1, iex, ier, jx;
+    int advanc, i, j, k, l, nit, jtest, ui, kkk, icheck, nt, jj, isk, stop, kb1, iex, ier, jx;
     double deltgo, delt1, a3, pn, un, smin;
 
     do {
@@ -101,7 +101,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         state->delt *= 3600;
                     }
 
-                    // write (6, 534) delt
+                    fprintf(state->gs2stdout, "\n           TIME STEP MODIFICATION: DELT = %15.5E\n", state->delt);
 
                 }
 
@@ -111,20 +111,33 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                 if (state->statp == 0) {
                     if (*arrayAt(&(state->ispl), 1) == 0) {
-                        // write (6, 533)
+
+                        fprintf(state->gs2stdout, "\n           PRESSURE WAS NOT RE-EVALUATED\n");
                         advanc = no;
+
                     } else if (state->stat >= 0) {
-                        // write (6, 536) delp
+
+                        fprintf(state->gs2stdout, "\n           PRESSURE WAS NOT RE-EVALUTED: DELP = %15.8E\n", state->delp);
                         advanc = no;
+
                     }
                 }
             }
 
             if (advanc) {
                 if ((state->it + 1) % state->kod9 == 0) {
-                    // write (6, 1900)
-                    // write (6, 1080)
-                    // write (6, 1090) (LP(I), EST(I), I = 1, MM)
+
+                    fprintf(state->gs2stdout, "\n\n           ESTIMATED HEAD\n           --------------\n");
+                    fprintf(state->gs2stdout, "\n           NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE\n");
+                    
+                    for (i = 1; i <= state->mm; i++) {
+                        if (i % 6 == 1) {
+                            fprintf(state->gs2stdout, "\n           ");
+                        }
+                        fprintf(state->gs2stdout, "%4d  %10.3E   ", *arrayAt(lp, i), *arrayAt(est, i));
+                    }
+                    fprintf(state->gs2stdout, "\n");
+
                 }
 
                 // Select approximation for time
@@ -170,8 +183,16 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     gs2Lrhs(s, p, fm, old, u, lc, state->nn, state->nb, state->mb, a3, 0.0, 1);
 
                     if (state->kod8 >= 1) {
-                        // write (6, 1325)
-                        // write (6, 1398) (FM(I), I = 1, MM)
+
+                        fprintf(state->gs2stdout, "\n           TIME-DEPENDENT PART OF RHS VECTOR\n           ---------------------------------\n");
+
+                        for (i = 1; i <= state->mm; i++) {
+                            if (i % 10 == 1) {
+                                fprintf(state->gs2stdout, "\n     ");
+                            }
+                            fprintf(state->gs2stdout, "%12.4E", *arrayAt(fm, i));
+                        }
+                        fprintf(state->gs2stdout, "\n");
                     }
 
                     if (jtest <= 1) {
@@ -188,15 +209,21 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         }
 
                         if (state->kod8 - 1 > 0) {
-                            // write (6, 1710)
+                            fprintf(state->gs2stdout, "\n\n1 GLOBAL COEFFICIENT MATRIX FOR FLOW\n  INPUT TO SOLVER\n\n\n");
                             gs2Sos(s, state->mb, state->mm, 1);
-                            // write (6, 1730)
+                            fprintf(state->gs2stdout, "0          P COEFFICIENT MATRIX\n           --------------------\n\n\n");
                             gs2Sos(p, state->mm, state->mb, 1);
                         }
 
                         if (state->kod8 - 1 >= 0) {
-                            // write (6, 1725)
-                            // write (6, 1398) (FX(I), I = 1, MM)
+                            fprintf(state->gs2stdout, "\n           VECTOR OF BOUNDARY CONDITIONS\n           -----------------------------\n");
+                            for (i = 1; i <= state->mm; i++) {
+                                if (i % 10 == 1) {
+                                    fprintf(state->gs2stdout, "\n     ");
+                                }
+                                fprintf(state->gs2stdout, "%12.4E", *arrayAt(fx, i));
+                            }
+                            fprintf(state->gs2stdout, "\n");
                         }
 
                         kkk = 1;
@@ -206,12 +233,21 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         jtest = 1;
 
                         if (ktcal == 0) {
-                            // write (6, 1620) mb, mb2
+                            fprintf(state->gs2stdout, "\n\n\n\n           FINAL HALF-BANDWIDTH FOR FLOW%5d%5d\n", state->mb, state->mb2);
                         }
 
                         if ((state->it + 1) % state->kod9 == 0) {
-                            // write (6, 1880)
-                            // write (6, 1890) (IE(1, L), L = 1, NE)
+                            fprintf(state->gs2stdout, "\n\n           UNSATURATED ELEMENTS\n\n");
+
+                            fprintf(state->gs2stdout, "           ");
+                            for (l = 1; l <= state->ne; l++) {
+                                if (l % 20 == 1 && l != 1) {
+                                    fprintf(state->gs2stdout, "\n           ");
+                                }
+                                fprintf(state->gs2stdout, "%5d", *matrixAt(ie, 1, l));
+                            }
+                            fprintf(state->gs2stdout, "\n");
+
                         }
                     }
 
@@ -232,8 +268,15 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     }
 
                     if (state->kod8 >= 1) {
-                        // write (6, 1320)
-                        // write (6, 1398) (FM(I), I = 1, MM)
+                        fprintf(state->gs2stdout, "\n           RHS VECTOR (INPUT TO SOLVER)\n           ----------------------------\n");
+
+                        for (i = 1; i <= state->mm; i++) {
+                            if (i % 10 == 1) {
+                                fprintf(state->gs2stdout, "\n     ");
+                            }
+                            fprintf(state->gs2stdout, "%12.4E", *arrayAt(fm, i));
+                        }
+                        fprintf(state->gs2stdout, "\n");
                     }
 
                     // Solve for pressure
@@ -242,7 +285,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         gs2Dband(p, state->mm, state->mb, &iex);
 
                         if (iex != 0) {
-                            // write (6, 1810) iex
+                            fprintf(state->gs2stdout, "\n IEX = %5d      STOP\n\n", iex);
                             state->istop++;
                             return;
                         } 
@@ -264,7 +307,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         if (state->nsdn != 0 && state->coefi == 1) {
                             
                             if ((state->it + 1) % state->kod9 == 0) {
-                                // write (6, 1870)
+                                fprintf(state->gs2stdout, "\n\n           CURRENT BOUNDARY CONDITIONS AT NEUMANN NODES\n           --------------------------------------------\n");
+                                fprintf(state->gs2stdout, "           NODE   TYPE OF B.C.        HEAD IN       HEAD OUT        FLUX IN       FLUX OUT       FRACTION\n");
                             }
 
                             for (k = 1; k <= state->nsdn; k++) {
@@ -276,7 +320,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                 if (*arrayAt(lr, i) == 4) {
 
                                     if ((state->it + 1) % state->kod9 == 0) {
-                                        // write (6, 1875) I, LR(I), U(J), FM(J)
+                                        fprintf(state->gs2stdout, "           %4d%15d%15.5E                              %15.5E\n", i, *arrayAt(lr, i), *arrayAt(u, j), *arrayAt(fm, j));
                                     }
 
                                     if (!((state->ei < 0 && *arrayAt(fm, j) >= state->ei * *arrayAt(vn, k)) ||
@@ -291,7 +335,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                     pn = state->tdr * *arrayAt(u, j) + (1.0 - state->tdr) * *arrayAt(old, j);
 
                                     if ((state->it + 1) % state->kod9 == 0) {
-                                        // write (6, 1876) I, LR(I), PN, FQ(I), COEF(K)
+                                        fprintf(state->gs2stdout, "           %4d%15d               %15.5E%15.5E               %15.2F\n", i, *arrayAt(lr, i), pn, *arrayAt(fq, i), *arrayAt(coef, k));
                                     }
 
                                     if (state->ei <= 0) {
@@ -336,16 +380,17 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                             }
 
                             if ((state->it + 1) % state->kod9 == 0) {
-                                // write (6, 1877)
+                                fprintf(state->gs2stdout, "\n\n           MODIFIED BOUNDARY CONDITIONS AT NEUMANN NODES\n           ---------------------------------------------\n");
+                                fprintf(state->gs2stdout, "           NODE   TYPE OF B.C.        HEAD IN                       FLUX IN                      FRACTION");
 
                                 for (k = 1; k <= state->nsdn; k++) {
                                     i = *arrayAt(nsf, k);
                                     j = i - *arrayAt(lc, i);
 
                                     if (*arrayAt(lr, i) == 4) {
-                                        // write (6, 1878) I, LR(I), U(J),
+                                        fprintf(state->gs2stdout, "           %4d%15d%15.5E\n", i, *arrayAt(lr, i), *arrayAt(u, j));
                                     } else if (*arrayAt(lr, i) == -4) {
-                                        // write (6, 1879) I, LR(I), FQ(I), COEF(K)
+                                        fprintf(state->gs2stdout, "           %4d%15d                              %15.5E               %15.2F\n")
                                     }
                                 }
                             }
@@ -353,7 +398,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                         // Modify conditions on seepage faces
                         if ((state->nsdn == 0 || state->coefi != 1) || state->nseep != 0) {
-                            // write (6, 1910)
+                            fprintf(state->gs2stdout, "\n\n           CURRENT BOUNDARY CONDITIONS ON SEEPAGE FACES\n           --------------------------------------------\n");
+                            fprintf(state->gs2stdout, "           NODE   TYPE OF B.C.        HEAD IN       HEAD OUT        FLUX IN       FLUX OUT     SEEPAGE FACE\n");
 
                             for (k = 1; k <= state->nseep; k++) {
                                 icheck = 0;
@@ -369,7 +415,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                         *arrayAt(fm, j) -= *arrayAt(rt, j);
                                         pn = state->tdr * *arrayAt(u, j) + (1.0 - state->tdr) * *arrayAt(old, j);
 
-                                        // write (6, 1920) I, LR(I), PN, FQ(I), K
+                                        fprintf(state->gs2stdout, "           %4d%15d               %15.5E%15.5E%32d\n", i, *arrayAt(lr, i), pn, *arrayAt(fq, i), k);
 
                                         if (pn < 0.0) {
                                             icheck = 1;
@@ -381,7 +427,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                         }
                                     } else if (*arrayAt(lr, i) == 2) {
 
-                                        // write (6, 1930) I, LR(I), U(J), FM(J), K
+                                        fprintf(state->gs2stdout, "           %4d%15d%15.5E                              %15.5E%17d", i, *arrayAt(lr, i), *arrayAt(u, j), *arrayAt(fm, j), k);
 
                                         if (icheck > 0 || *arrayAt(fm, j) >= 0.0) {
                                             *arrayAt(lr, i) = -2;
