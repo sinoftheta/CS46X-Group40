@@ -7,3 +7,5 @@ python/build
 **/__pycache__/
 c-source/build/**
 dist/
+python/gui/__pycache__/
+python/parameters.csv
