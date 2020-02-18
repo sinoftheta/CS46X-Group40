@@ -4,7 +4,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from .parameters_window import ParametersPage
-from .simulation.simulation_page import SimulationPage
+
+from .SimulationController import SimulationController
 
 class MainWindow(QMainWindow):
     def __init__(self, config, *args, **kwargs):
@@ -38,7 +39,7 @@ class MainWindow(QMainWindow):
         self.meshPage = QGroupBox('Mesh')
         self.homePageStack.addWidget(self.meshPage)
         #   Simulation
-        self.simulationPage = SimulationPage(self.config)
+        self.simulationPage = SimulationController(self.config)
         self.homePageStack.addWidget(self.simulationPage)
 
         self.meshPageLayout = QVBoxLayout()

@@ -4,22 +4,14 @@ from gs2 import types
 from ctypes import *
 
 class Runner:
-    def __init__(self, config):
+    def __init__(self, simulationModel, config):
         gs2_lib_path = path.abspath(path.join(config['paths']['bundle'], config['paths']['gs2Lib']))
-        self.example_path = path.abspath(path.join(config['paths']['bundle'], config['paths']['data-in']))
 
-        self.stdout = ""
-        self.stdin = ""
-        self.stderr = ""
+        self.datain_path = simulationModel.dataInputFile
 
-        if config['io']['default-in']:
-            self.stdin = path.abspath(path.join(config['paths']['bundle'], config['io']['default-in']))
-
-        if config['io']['default-out']:
-            self.stdout = path.abspath(path.join(config['paths']['bundle'], config['io']['default-out']))
-
-        if config['io']['default-err']:
-            self.stderr = path.abspath(path.join(config['paths']['bundle'], config['io']['default-err']))
+        self.stdout = simulationModel.stdout
+        self.stdin = simulationModel.stdin
+        self.stderr = simulationModel.stdout
 
         self.gs2 = CDLL(gs2_lib_path)
 
@@ -87,7 +79,7 @@ class Runner:
 
 
         maxdif = c_double(0.0)
-        inputPath = create_string_buffer(self.example_path.encode('utf-8'))
+        inputPath = create_string_buffer(self.datain_path.encode('utf-8'))
 
         self.gs2.gs2Datain.argtypes = [
             POINTER(types.State),
