@@ -21,10 +21,10 @@ else
     # assume mac
     if [[ -e "/usr/local/lib/libgsl.dylib" ]]; then
         gslLibPath="/usr/local/lib/libgsl.25.dylib"
-        gslLibName="libgsl.dylib"
+        gslLibName="libgsl.25.dylib"
 
         cblasLibPath="/usr/local/lib/libgslcblas.0.dylib"
-        cblasLibName="libgslcblas.dylib"    
+        cblasLibName="libgslcblas.0.dylib"    
     else
         echo "Could not find libgsl.dylib"
         exit 
