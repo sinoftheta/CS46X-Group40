@@ -18,8 +18,6 @@ class FileWriter:
             # write groups
             self._writeGroupQ(writer, self.materialModels)
 
-        pass
-
     def _csvPad(self, cols):
         # 20 data points plus group
         maxCols = 21
@@ -40,7 +38,7 @@ class FileWriter:
                 csv.writerow(csvRow)
                 csvRow = [group]
             
-        # use a line that is just the group
+        # make sure the last row actually has meaningful data
         if len(csvRow) > 1:
             csv.writerow(self._csvPad(csvRow))
 
