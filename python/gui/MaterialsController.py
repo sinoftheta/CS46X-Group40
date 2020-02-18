@@ -27,6 +27,7 @@ class MaterialsController(QGroupBox):
         self.materialGroup.currentIndexChanged.connect(self.materialGroupChanged)
         self.layout.addWidget(self.materialGroup)
 
+        # this is the current material view
         self.currentMaterialGroup = None
 
         self.setLayout(self.layout)
