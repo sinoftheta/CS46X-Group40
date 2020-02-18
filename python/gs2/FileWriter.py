@@ -1,12 +1,11 @@
 import csv
 
-class FileWriter():
-
+class FileWriter:
     def __init__(self, materialModels):
         self.materialModels = materialModels
 
 
-    def writeFile(self, filepath):
+    def write(self, filepath):
 
         with open(filepath, 'w') as csvfile:
             writer = csv.writer(
@@ -55,9 +54,9 @@ class FileWriter():
                     csvRow.append(elem)
                     # these groups contains at most 8 data points plus the group
                     if len(csvRow) == 9:
-                        csv.writerow(self.csvPad(csvRow))
+                        csv.writerow(self._csvPad(csvRow))
                         csvRow = [groups[i]]
                         
                 if len(csvRow) > 1:
-                    csv.writerow(self.csvPad(csvRow))
+                    csv.writerow(self._csvPad(csvRow))
 
