@@ -65,13 +65,12 @@ class MainWindow(QMainWindow):
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.parametersButton)
 
-        self.meshButton = QPushButton('Mesh')
-        self.meshButton.pressed.connect(lambda index=1:
-                            self.homePageStack.setCurrentIndex(index))
-        self.homePageButtons.addWidget(self.meshButton)
-
         self.simulationButton = QPushButton('Simulation')
         self.simulationButton.pressed.connect(lambda index=2:
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.simulationButton)
 
+        self.meshButton = QPushButton('Mesh')
+        self.meshButton.pressed.connect(lambda index=1:
+                            self.homePageStack.setCurrentIndex(index))
+        self.homePageButtons.addWidget(self.meshButton)
