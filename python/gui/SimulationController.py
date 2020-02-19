@@ -57,5 +57,7 @@ class SimulationController(QGroupBox):
 
         simulationRunner.run()
     
+    def getSimulationModel(self):
+        return self.simulationModel
 
 

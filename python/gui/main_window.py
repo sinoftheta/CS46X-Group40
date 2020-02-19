@@ -3,11 +3,16 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+import gs2
+
+from os import path
+
 from .parameters_window import ParametersPage
+from .parameters_window import ExportListener
 
 from .SimulationController import SimulationController
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, ExportListener):
     def __init__(self, config, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
@@ -34,6 +39,7 @@ class MainWindow(QMainWindow):
         #   Then add to array of pages 'self.homePageStack'
         #   Parameters
         self.parametersPage = ParametersPage(self.config)
+        self.parametersPage.addExportListener(self)
         self.homePageStack.addWidget(self.parametersPage)
         #   Mesh
         self.meshPage = QGroupBox('Mesh')
@@ -74,3 +80,13 @@ class MainWindow(QMainWindow):
         self.meshButton.pressed.connect(lambda index=1:
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.meshButton)
+
+
+    def onExport(self):
+        fileWriter = gs2.FileWriter(
+            self.parametersPage.materialsController.getMaterials(),
+            self.simulationPage.getSimulationModel()
+        )
+
+        filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
+        fileWriter.write(filePath)
