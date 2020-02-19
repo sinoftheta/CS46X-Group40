@@ -570,6 +570,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                 // write (4) (W(I), I = 1, JX)
 
+
             } else {
 
                 // read (4) (W(I), I = 1, JX)
@@ -581,15 +582,20 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 gs2Lrhs(s, p, cfm, cold, crt, klc, state->nn, state->knb, state->kmb, a3, 0.0, 1);
                 
                 if (state->kod7 >= 1) {
-                    // write (6, 1325)
-                    // write (6, 1398) (CFM(I), I = 1, KM)
-                }
+                    fprintf(state->gs2stdout, "\n           TIME-DEPENDENT PART OF RHS VECTOR\n           ---------------------------------\n");
+                    for (i = 1; i <= state->km; i++) {
+                        if (i % 10 == 1) {
+                            fprintf(state->gs2stdout, "\n     ");
+                        }
+                        fprintf(state->gs2stdout, "%12.4E", *arrayAt(cfm, i));
+                    }
+                    fprintf(state->gs2stdout, "\n");
             }
 
             if (jtest < 0) {
                 jtest = 1;
                 if (ktcal == 0) {
-                    // write (6, 1630) KMB, KMB2
+                    fprintf(state->gs2stdout, "\n\n\n\n           FINAL HALF-BANDWIDTH OF P FOR MASS TRANSPORT%5d\n           FINAL BANDWIDTH OF S FOR MASS TRANSPORT%5d\n", state->kmb, state->kmb2);
                 }
             }
 
@@ -601,15 +607,21 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
             }
 
             if (state->kod7 >= 1) {
-                // write (6, 1320)
-                // write (6, 1398) (CFM(I), I = 1, KM)
+                fprintf(state->gs2stdout, "\n           RHS VECTOR (INPUT TO SOLVER)\n           ----------------------------\n");
+                for (i = 1; i <= state->km; i++) {
+                    if (i % 10 == 1) {
+                        fprintf(state->gs2stdout, "\n     ");
+                    }
+                    fprintf(state->gs2stdout, "%12.4E", *arrayAt(cfm, i));
+                }
+                fprintf(state->gs2stdout, "\n");
             }
 
             // Solve concentration equation
             gs2Gelb(cfm, w, state->km, 1, state->kmb - 1, state->kmb - 1, 1.e-20, &ier);
 
             if (ier != 0) {
-                // write (6, 1800) IER
+                fprintf(state->gs2stdout, "\n IER = %5d      STOP\n\n", ier);
                 state->istop++;
                 return;
             }
@@ -636,25 +648,31 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
         // Write computed values
         if (state->it % state->kod9 == 0 || state->it % state->kod10 == 0) {
-            // write (6, 1051) RDATE, RTIME
-            // write (6, 1360) IT, DELT1, STIME, SMIN, SSEC
+            fprintf(state->gs2stdout, " RUN IDENTIFICATION: %.10s %.10s\n", rdate, rtime);
+            fprintf(state->gs2stdout, "0\n\n\n\n\n\n           TIME STEP NUMBER%20d\n           TIME STEP (HOURS)%19.3E\n           ELAPSED TIME     %19.3E HOURS\n");
+            fprintf(state->gs2stdout, "                            %19.3E MINUTES\n");
+            fprintf(state->gs2stdout, "                            %19.3E SECONDS\n");
         }
 
         if (state->it % state->kod9 == 0) {
-            // write (6, 1380)
+            fprintf(state->gs2stdout, "\n\n           HEAD\n           ----\n");
             // write (6, 1080)
             // write (6, 1090) (I, PHI(I), I = 1, NN)
         }
 
         if (state->stat >= 0) {
             if (state->it % state->kod10 == 0) {
-                // write (6, 1390)
+                fprintf(state->gs2stdout, "\n\n           CONCENTRATION\n           -------------\n");
                 // write (6, 1080)
                 // write (6, 1090) (I, CONC(I), I = 1, NN)
             }
 
-            // write (6, 1400)
-            // write (6, 1410)
+            fprintf(state->gs2stdout, "\n           ");
+            for (i = 0; i < 114; i++) {
+                fprintf(state->gs2stdout, "*");
+            }
+            fprintf(state->gs2stdout, "\n");
+            fprintf(state->gs2stdout, "1\n");
         }
 
         if (state->kod11 != 0) {
