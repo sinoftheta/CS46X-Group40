@@ -60,6 +60,9 @@ class SimulationModel:
     def getOutputModifier(self, kod):
         return self.outputModifiers[kod]
 
+    def setSimulationTitle(self, title):
+        self.simulationTitle = title
+
 
 
 
