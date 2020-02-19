@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         #   Create 'QWidget' object for each screen
         #   Then add to array of pages 'self.homePageStack'
         #   Parameters
-        self.parametersPage = ParametersPage()
+        self.parametersPage = ParametersPage(self.config)
         self.homePageStack.addWidget(self.parametersPage)
         #   Mesh
         self.meshPage = QGroupBox('Mesh')

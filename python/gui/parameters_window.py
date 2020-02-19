@@ -1,7 +1,11 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
 import csv
+import gs2
+
+from os import path
 
 from .parameters_basic import BasicParameters
 from .multipliers import Multipliers
@@ -9,7 +13,8 @@ from .nodes import Nodes
 from .nodeTypes import NodeTypes
 from .elements import Elements
 from .elementIncidences import ElementIncidences
-from .materials import Materials
+from .MaterialsController import MaterialsController
+from .MaterialsController import MaterialsChangeListener
 
 parameters = [
         'Import',
@@ -22,9 +27,12 @@ parameters = [
         'Materials' ]
 
 class ParametersPage(QGroupBox):
-    def __init__(self):
+    def __init__(self, config):
         # Call QGroupBox constructor
         super(ParametersPage, self).__init__('Parameters')
+
+        # reference to config file
+        self.config = config
 
         # Create layout class and apply to Parameters section
         self.parametersPageLayout = QHBoxLayout()
@@ -48,7 +56,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
         self.parametersPageElemIncid = ElementIncidences()
-        self.parametersPageMat = Materials()
+        self.materialsController = MaterialsController()
 
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
@@ -58,7 +66,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
         self.parametersPageStack.addWidget(self.parametersPageElem)
         self.parametersPageStack.addWidget(self.parametersPageElemIncid)
-        self.parametersPageStack.addWidget(self.parametersPageMat)
+        self.parametersPageStack.addWidget(self.materialsController)
 
         #   Add navigation buttons (widgets) to
         #       button container 'self.parametersPageStack'
@@ -113,8 +121,7 @@ class ParametersPage(QGroupBox):
         # open on the basic parameters page
         self.parametersPageStack.setCurrentIndex(1)
 
-        if (self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials()) == 0):
-            self.matsNavBtn.setDisabled(true)
+
 
     def importNavClick(self):
         #self.parametersPageStack.setCurrentIndex(0)
@@ -155,7 +162,14 @@ class ParametersPage(QGroupBox):
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
-        self.parametersPageMat.MaterialsLayout(self.parametersPageBasic.getNumMaterials())
+
+        # TODO: When apporpriate make the material controller inheirent from some
+        # basic parameters listener class, so that the material controller knows when 
+        # the material count changes.
+        # that would let us get rid of this next line of code.
+        self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
+
+
 
     # pad csv rows with blank entries
     def csvPad(self, cols):
@@ -163,73 +177,14 @@ class ParametersPage(QGroupBox):
         while len(cols) < maxCols:
             cols.append('')
         return cols
+
+
     def exportNavClick(self):
+        fileWriter = gs2.FileWriter(
+            self.materialsController.getMaterials()
+        )
 
-        #check that node table has been opened, should probably grey out export button
-        if(not hasattr(self.parametersPageNodes, 'nodeTable')):
-            print('You have not set node properties yet')
-            return
-        print('exporting')
-        with open('parameters.csv', 'w', newline='') as csvfile:
-            writer = csv.writer(
-                csvfile, 
-                delimiter=',',
-                quotechar='|', #unused, I think
-                quoting=csv.QUOTE_MINIMAL) #also unused
-            
-            # TODO: values that are hard-coded must be derived 
-            
-            #write group A, problem title
-            group = 'A'
-
-            #write group B, basic parameters
-            group = 'B'
-            vals = self.parametersPageBasic.getVals()
-            numNodes = vals['NN']
-
-            writer.writerow(self.csvPad([group, vals['NN'], vals['NE'], 'NS', 'KNS', vals['NB'], vals['KNB'], 'NF', vals['INC'], vals['NK'], 'NSEEP'])) # page 3
-            writer.writerow(self.csvPad([group, 'NSDN', 'MQ4', 'KNSDN', vals['PL'], 'COEFI', vals['EI'], 'NVS'])) # page 4
-            writer.writerow(self.csvPad([group, vals['DELT'], vals['CHNG'], vals['ITMAX'], vals['ITCHNG'], vals['PCHNG'], vals['BETAP'], 'TYPE'])) # page 5, TODO: implement TYPE
-            writer.writerow(self.csvPad([group, vals['DIFUSN'], 'DPRDT', vals['STAT'], vals['STATP'], vals['CLOS1'], vals['ITER1'], vals['IGO']])) # page 6
-            
-
-            #write group C, multipliers
-            group = 'C'
-            vals = self.parametersPageMult.getVals()
-            writer.writerow(self.csvPad([group, vals['AFMOBX'], vals['AFMOBY'], vals['APOR'], vals['AELONG'], vals['AETRANS'], vals['APHII'], vals['ACONCI'], vals['XFACT']])) # page 8 
-            writer.writerow(self.csvPad([group, vals['YFACT'], vals['ATETA'], vals['AAL'], vals['AKD'], vals['ALAM'], vals['ARHO']])) # page 8 
-            #write group D, output control
-            
-            #write group E, node coordinates
-            group = 'E'
-            for i in range(numNodes):
-                row = self.parametersPageNodes.getRow(i)
-                writer.writerow(self.csvPad([group, row['NodeNum'], row['XCoord'], row['YCoord']])) # page 10
-                
-            
-            #write group F
-            
-            #write group G
-            
-            #write group H
-            
-            #write group I
-            
-            #write group J
-            
-            #write group K
-            
-            #write group L
-            
-            #write group M
-            
-            #write group N
-            
-            #write group O
-            
-            #write group P
-            
-            #write group Q
-
+        filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
+        fileWriter.write(filePath)
         
         
