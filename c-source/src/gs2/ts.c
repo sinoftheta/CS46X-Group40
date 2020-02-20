@@ -449,7 +449,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                     if (*arrayAt(lr, i) == 4) {
                                         fprintf(gs2stdout, "           %4d%15d%15.5E\n", i, *arrayAt(lr, i), *arrayAt(u, j));
                                     } else if (*arrayAt(lr, i) == -4) {
-                                        fprintf(gs2stdout, "           %4d%15d                              %15.5E               %15.2F\n")
+                                        fprintf(gs2stdout, "           %4d%15d                              %15.5E               %15.2F\n", i, *arrayAt(lr, i), *arrayAt(fq, i), *arrayAt(coef, k));
                                     }
                                 }
                             }
