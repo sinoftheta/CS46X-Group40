@@ -156,12 +156,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     state->delt *= state->chng;
                     
                     if (state->delt <= 0.0) {
-                        charsRead = getFileName(gs2stdin, filename, MAXSIZE);
-                        if (charsRead < 0) {
-                            croak("ts.c: Unable to get filename");
-                        }
-                        sscanf(filename, "%lf", &(state->delt));
-
+                        fscanf(gs2stdin, "%lf", &(state->delt));
                         state->delt *= 3600;
                     }
 
