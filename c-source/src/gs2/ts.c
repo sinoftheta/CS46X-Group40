@@ -225,10 +225,12 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     } else {
 
                         // Add time-dependent parts
+                        rewind(state->tape11);
                         gs2ReadCsvMatrix(state->tape11, p, 1, state->mm, 1, state->mb);
 
                         if (nit <= 1) {
                             if (state->it % state->itchng == 0) {
+                                rewind(state->tape13);
                                 gs2ReadCsvMatrix(state->tape13, s, 1, state->mb, 1, state->mm);
                             } else {
                                 jtest++;
@@ -354,6 +356,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     // Determine boundary flux
                     if ((state->nsdn > 0 && state->coefi == 1) || state->nseep != 0) {
                         
+                        rewind(state->tape13);
                         gs2ReadCsvMatrix(state->tape13, p, 1, state->mm, 1, state->nb);
 
                         gs2Lrhs(s, p, fm, old, u, lc, state->nn, state->nb, state->mb, 1.0 - state->tdr, state->tdr, 1);
@@ -579,8 +582,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 
             // Select approximation for time derivative
             a3 = state->tdr / state->delt;
-
-            // rewind 4
+            rewind(state->tape4);
 
             if (advanc) {
 
@@ -605,6 +607,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 if (state->stat != 0) {
                     if (jtest >= 0) {
                         kb1 = state->knb - state->kmb + 1;
+                        rewind(state->tape2);
                         gs2ReadCsvMatrix(state->tape2, s, kb1, state->kmb2, 1, state->km);
                     }
 
