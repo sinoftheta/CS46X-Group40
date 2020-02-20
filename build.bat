@@ -48,6 +48,7 @@ copy "%csourceDir%\build\libgs2.so" "%distDir%\lib\libgs2.so"
 copy "%csourceDir%\res\example1.csv" "%distDir%\res\example.csv"
 
 copy "%dllsDir%\libgsl-25.dll" "%distDir%\libgsl-25.dll"
+copy "%dllsDir%\libgslcblas-0.dll"  "%distDir%\libgslcblas-0.dll"
 
 
 :: clean up build artifacts

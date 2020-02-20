@@ -69,7 +69,7 @@ WIP.
 
 ## Installing GSL
 
-Main website [here](https://www.gnu.org/software/gsl/). On the downloads page look for version 2.5.
+Main website [here](https://www.gnu.org/software/gsl/). On the downloads page look for version 2.6.
 
 ### Linux/Mac
 
