@@ -304,7 +304,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                 if (l % 20 == 1 && l != 1) {
                                     fprintf(gs2stdout, "\n           ");
                                 }
-                                fprintf(gs2stdout, "%5d", *matrixAt(ie, 1, l));
+                                fprintf(gs2stdout, "%5g", *matrixAt(ie, 1, l));
                             }
                             fprintf(gs2stdout, "\n");
 
