@@ -33,6 +33,7 @@ void gs2ReadCsvMatrix(FILE* fp, Matrix* m, int i1, int i2, int j1, int j2) {
         }
         row = row->next;
     }
+    csvFreeFile(&csvFile);
 }
 
 void gs2ReadCsvArray(FILE* fp, Array* r, int i1, int i2) {
@@ -59,6 +60,7 @@ void gs2ReadCsvArray(FILE* fp, Array* r, int i1, int i2) {
     for (i = i1; i <= i2; i++) {
         sscanf(row->entries[i - i1 + 1], "%lf", arrayAt(r, i));
     }
+    csvFreeFile(&csvFile);
 }
 
 void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt, Array* phi, Array* phii, Array* old,
