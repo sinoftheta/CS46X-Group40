@@ -637,9 +637,9 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
             for (i = 1; i <= state->nn; i++) {
                 if (*arrayAt(klr, i) <= 0) {
                     j = i - *arrayAt(klc, i);
-                    *arrayAt(&(state->conc), i) = state->tdr * *arrayAt(cfm, j) + (1.0 - state->tdr) * *arrayAt(cold, j);
+                    *arrayAt(conc, i) = state->tdr * *arrayAt(cfm, j) + (1.0 - state->tdr) * *arrayAt(cold, j);
                 } else {
-                    *arrayAt(&(state->conc), i) = *arrayAt(&(state->conci), i);
+                    *arrayAt(conc, i) = *arrayAt(conci, i);
                 }
             }
 
@@ -649,22 +649,34 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
         // Write computed values
         if (state->it % state->kod9 == 0 || state->it % state->kod10 == 0) {
             fprintf(state->gs2stdout, " RUN IDENTIFICATION: %.10s %.10s\n", rdate, rtime);
-            fprintf(state->gs2stdout, "0\n\n\n\n\n\n           TIME STEP NUMBER%20d\n           TIME STEP (HOURS)%19.3E\n           ELAPSED TIME     %19.3E HOURS\n");
-            fprintf(state->gs2stdout, "                            %19.3E MINUTES\n");
-            fprintf(state->gs2stdout, "                            %19.3E SECONDS\n");
+            fprintf(state->gs2stdout, "0\n\n\n\n\n\n           TIME STEP NUMBER%20d\n           TIME STEP (HOURS)%19.3E\n           ELAPSED TIME     %19.3E HOURS\n", state->it, delt1, state->stime);
+            fprintf(state->gs2stdout, "                            %19.3E MINUTES\n", smin);
+            fprintf(state->gs2stdout, "                            %19.3E SECONDS\n", state->ssec);
         }
 
         if (state->it % state->kod9 == 0) {
             fprintf(state->gs2stdout, "\n\n           HEAD\n           ----\n");
-            // write (6, 1080)
-            // write (6, 1090) (I, PHI(I), I = 1, NN)
+            fprintf(state->gs2stdout, "\n           NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE\n");
+            for (i = 1; i <= state->nn; i++) {
+                if (i % 6 == 1) {
+                    fprintf(state->gs2stdout, "\n           ");
+                }
+                fprintf(state->gs2stdout, "%4d  %10.3E   ", i, *arrayAt(phi, i));
+            }
+            fprintf(state->gs2stdout, "\n");
         }
 
         if (state->stat >= 0) {
             if (state->it % state->kod10 == 0) {
                 fprintf(state->gs2stdout, "\n\n           CONCENTRATION\n           -------------\n");
-                // write (6, 1080)
-                // write (6, 1090) (I, CONC(I), I = 1, NN)
+                fprintf(state->gs2stdout, "\n           NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE\n");
+                for (i = 1; i <= state->nn; i++) {
+                    if (i % 6 == 1) {
+                        fprintf(state->gs2stdout, "\n           ");
+                    }
+                    fprintf(state->gs2stdout, "%4d  %10.3E   ", i, *arrayAt(conc, i));
+                }
+                fprintf(state->gs2stdout, "\n");
             }
 
             fprintf(state->gs2stdout, "\n           ");
@@ -683,7 +695,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
     } while (state->it < state->itmax);
 
-    // write (6, 1430) IT
+    fprintf(state->gs2stdout, "\n\n\n\n           **********EXECUTION TERMINATED ON TIME STEPS AT STEP%10d**********\n", state->it);
 
     if (state->kod11 != 0) {
         if (state->it % state->kod11 != 0) {
