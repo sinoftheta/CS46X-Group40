@@ -196,7 +196,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         if (i % 6 == 1) {
                             fprintf(gs2stdout, "\n           ");
                         }
-                        fprintf(gs2stdout, "%4d  %10.3E   ", *arrayAt(lp, i), *arrayAt(est, i));
+                        fprintf(gs2stdout, "%4g  %10.3E   ", *arrayAt(lp, i), *arrayAt(est, i));
                     }
                     fprintf(gs2stdout, "\n");
 
@@ -379,7 +379,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                 if (*arrayAt(lr, i) == 4) {
 
                                     if ((state->it + 1) % state->kod9 == 0) {
-                                        fprintf(gs2stdout, "           %4d%15d%15.5E                              %15.5E\n", i, *arrayAt(lr, i), *arrayAt(u, j), *arrayAt(fm, j));
+                                        fprintf(gs2stdout, "           %4d%15g%15.5E                              %15.5E\n", i, *arrayAt(lr, i), *arrayAt(u, j), *arrayAt(fm, j));
                                     }
 
                                     if (!((state->ei < 0 && *arrayAt(fm, j) >= state->ei * *arrayAt(vn, k)) ||
@@ -394,7 +394,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                     pn = state->tdr * *arrayAt(u, j) + (1.0 - state->tdr) * *arrayAt(old, j);
 
                                     if ((state->it + 1) % state->kod9 == 0) {
-                                        fprintf(gs2stdout, "           %4d%15d               %15.5E%15.5E               %15.2F\n", i, *arrayAt(lr, i), pn, *arrayAt(fq, i), *arrayAt(coef, k));
+                                        fprintf(gs2stdout, "           %4d%15g               %15.5E%15.5E               %15.2F\n", i, *arrayAt(lr, i), pn, *arrayAt(fq, i), *arrayAt(coef, k));
                                     }
 
                                     if (state->ei <= 0) {
@@ -447,9 +447,9 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                     j = i - *arrayAt(lc, i);
 
                                     if (*arrayAt(lr, i) == 4) {
-                                        fprintf(gs2stdout, "           %4d%15d%15.5E\n", i, *arrayAt(lr, i), *arrayAt(u, j));
+                                        fprintf(gs2stdout, "           %4d%15g%15.5E\n", i, *arrayAt(lr, i), *arrayAt(u, j));
                                     } else if (*arrayAt(lr, i) == -4) {
-                                        fprintf(gs2stdout, "           %4d%15d                              %15.5E               %15.2F\n", i, *arrayAt(lr, i), *arrayAt(fq, i), *arrayAt(coef, k));
+                                        fprintf(gs2stdout, "           %4d%15g                              %15.5E               %15.2F\n", i, *arrayAt(lr, i), *arrayAt(fq, i), *arrayAt(coef, k));
                                     }
                                 }
                             }
@@ -474,7 +474,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                         *arrayAt(fm, j) -= *arrayAt(rt, j);
                                         pn = state->tdr * *arrayAt(u, j) + (1.0 - state->tdr) * *arrayAt(old, j);
 
-                                        fprintf(gs2stdout, "           %4d%15d               %15.5E%15.5E%32d\n", i, *arrayAt(lr, i), pn, *arrayAt(fq, i), k);
+                                        fprintf(gs2stdout, "           %4d%15g               %15.5E%15.5E%32d\n", i, *arrayAt(lr, i), pn, *arrayAt(fq, i), k);
 
                                         if (pn < 0.0) {
                                             icheck = 1;
@@ -486,7 +486,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                         }
                                     } else if (*arrayAt(lr, i) == 2) {
 
-                                        fprintf(gs2stdout, "           %4d%15d%15.5E                              %15.5E%17d", i, *arrayAt(lr, i), *arrayAt(u, j), *arrayAt(fm, j), k);
+                                        fprintf(gs2stdout, "           %4d%15g%15.5E                              %15.5E%17d", i, *arrayAt(lr, i), *arrayAt(u, j), *arrayAt(fm, j), k);
 
                                         if (icheck > 0 || *arrayAt(fm, j) >= 0.0) {
                                             *arrayAt(lr, i) = -2;
@@ -508,9 +508,9 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                     j = i - *arrayAt(lc, i);
 
                                     if (*arrayAt(lr, i) == 2) {
-                                        fprintf(gs2stdout, "           %4d%15d%15.5E%62d\n", i, *arrayAt(lr, i), *arrayAt(u, j), k);
+                                        fprintf(gs2stdout, "           %4d%15g%15.5E%62d\n", i, *arrayAt(lr, i), *arrayAt(u, j), k);
                                     } else if (*arrayAt(lr, i) == -2) {
-                                        fprintf(gs2stdout, "           %4d%15d                              %15.5E               %17d\n", i, *arrayAt(lr, i), *arrayAt(fq, i), k);
+                                        fprintf(gs2stdout, "           %4d%15g                              %15.5E               %17d\n", i, *arrayAt(lr, i), *arrayAt(fq, i), k);
                                     }
                                 }
                             }
@@ -541,7 +541,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                 if (i % 6 == 1) {
                                     fprintf(gs2stdout, "\n           ");
                                 }
-                                fprintf(gs2stdout, "%4d  %10.3E   ", *arrayAt(lp, i), *arrayAt(u, i));
+                                fprintf(gs2stdout, "%4g  %10.3E   ", *arrayAt(lp, i), *arrayAt(u, i));
                             }
                             fprintf(gs2stdout, "\n");
                         }
