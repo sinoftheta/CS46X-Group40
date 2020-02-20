@@ -119,9 +119,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
     matrixAssertNotNull(nsp, "Matrix 'nsp' NULL in gs2Ts!");
     
     int ktcal = 0;
-    int advanc, i, j, k, l, nit, jtest, ui, kkk, icheck, nt, jj, isk, stop, kb1, iex, ier, jx, charsRead;
+    int advanc, i, j, k, l, nit, jtest, ui, kkk, icheck, nt, jj, isk, stop, kb1, iex, ier, jx;
     double deltgo, delt1, a3, pn, un, smin;
-    char filename[MAXSIZE];
 
     do {
         advanc = no;
