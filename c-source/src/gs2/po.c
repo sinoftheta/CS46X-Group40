@@ -17,7 +17,7 @@ void gs2Po(gs2State* state, Array* conc, Array* phi, int nn, int it, double stim
     
     for (i = 1; i <= nn; i++) {
         if (i % 4 == 1 && i != 1) {
-            fprintf(state->tape7, "\n");
+            fprintf(state->tape8, "\n");
         }
         fprintf(state->tape8, "%5d,%15.8G", i, *arrayAt(conc, i));
     }
