@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define _BSD_SOURCE
+
 
 int __alloc_line(char** oLine, int* oCurrLength, int newLength) {
     void* n = realloc(*oLine, newLength);
