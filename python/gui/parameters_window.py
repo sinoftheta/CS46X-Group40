@@ -34,6 +34,9 @@ class ParametersPage(QGroupBox):
         # reference to config file
         self.config = config
 
+        # objects that care when the export button is clicked
+        self.exportListeners = []
+
         # Create layout class and apply to Parameters section
         self.parametersPageLayout = QHBoxLayout()
         self.setLayout(self.parametersPageLayout)
@@ -77,7 +80,7 @@ class ParametersPage(QGroupBox):
 
         self.exportNavBtn = QPushButton("Export")
         self.exportNavBtn.setGeometry(0, 0, 150, 100)
-        self.exportNavBtn.clicked.connect(self.exportNavClick)
+        self.exportNavBtn.clicked.connect(self.notifyExport)
         self.parametersPageNav.addWidget(self.exportNavBtn)
 
         self.basicPNavBtn = QPushButton("Basic Parameters")
@@ -169,22 +172,31 @@ class ParametersPage(QGroupBox):
         # that would let us get rid of this next line of code.
         self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
 
+    def notifyExport(self):
+        for listener in self.exportListeners:
+            listener.onExport()
+    
+    def addExportListener(self, listener):
+        if listener not in self.exportListeners:
+            self.exportListeners.append(listener)
+        
+    def removeExportListener(self, listener):
+        self.exportListeners.remove(listener)
 
+    # Handling  file exporting is being moved.
+    # this is being done as this class should not know about the simulation page 
+    # so in the export button will notify those who care that the button has been pressed.
+    # def exportNavClick(self):
+    #     fileWriter = gs2.FileWriter(
+    #         self.materialsController.getMaterials(),
+    #         self.
+    #     )
 
-    # pad csv rows with blank entries
-    def csvPad(self, cols):
-        maxCols = 20
-        while len(cols) < maxCols:
-            cols.append('')
-        return cols
-
-
-    def exportNavClick(self):
-        fileWriter = gs2.FileWriter(
-            self.materialsController.getMaterials()
-        )
-
-        filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
-        fileWriter.write(filePath)
+    #     filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
+    #     fileWriter.write(filePath)
         
         
+
+class ExportListener:
+    def onExport():
+        pass
