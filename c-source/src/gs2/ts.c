@@ -653,6 +653,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         fprintf(gs2stdout, "%12.4E", *arrayAt(cfm, i));
                     }
                     fprintf(gs2stdout, "\n");
+                }
             }
 
             if (jtest < 0) {
