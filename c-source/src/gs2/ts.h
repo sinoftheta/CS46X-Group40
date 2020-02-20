@@ -6,6 +6,7 @@
 #include "../capstone/MathUtil.h"
 #include "../capstone/CSVFile.h"
 #include "../capstone/FileUtil.h"
+#include "../capstone/Debug.h"
 #include "gs2.h"
 #include "upd.h"
 #include "cogen.h"
