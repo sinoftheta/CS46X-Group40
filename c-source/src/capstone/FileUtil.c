@@ -2,9 +2,9 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
 
-#define _BSD_SOURCE
+#define _XOPEN_SOURCE 500
+#include <unistd.h>
 
 
 int __alloc_line(char** oLine, int* oCurrLength, int newLength) {
