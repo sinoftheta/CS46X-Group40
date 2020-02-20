@@ -508,7 +508,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                     j = i - *arrayAt(lc, i);
 
                                     if (*arrayAt(lr, i) == 2) {
-                                        fprintf(gs2stdout, "           %4d%15d%15.5E%62D\n", i, *arrayAt(lr, i), *arrayAt(u, j), k);
+                                        fprintf(gs2stdout, "           %4d%15d%15.5E%62d\n", i, *arrayAt(lr, i), *arrayAt(u, j), k);
                                     } else if (*arrayAt(lr, i) == -2) {
                                         fprintf(gs2stdout, "           %4d%15d                              %15.5E               %17d\n", i, *arrayAt(lr, i), *arrayAt(fq, i), k);
                                     }
