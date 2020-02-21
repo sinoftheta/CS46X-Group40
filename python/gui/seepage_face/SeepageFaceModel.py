@@ -20,8 +20,24 @@ class SeepageFaceModel:
     def getNumberOfDiricheltNodes(self):
         return len(self.diricheltNodes)
 
+    def setNumberOfDiricheltNodes(self, count):
+        diff = count - self.getNumberOfDiricheltNodes()
+
+        if diff < 0:
+            self.diricheltNodes = self.diricheltNodes[:diff]
+        else:
+            self.diricheltNodes.extend([0 for x in range(diff)])
+
     def getNumberOfNuemannNodes(self):
         return len(self.nuemannNodes)
+
+    def setNumberOfNuemannNodes(self, count):
+        diff = count - self.getNumberOfNuemannNodes()
+
+        if diff < 0:
+            self.nuemannNodes = self.nuemannNodes[:diff]
+        else:
+            self.nuemannNodes.extend([0 for x in range(diff)])
 
 
     

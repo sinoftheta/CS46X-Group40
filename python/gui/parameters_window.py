@@ -187,7 +187,8 @@ class ParametersPage(QGroupBox):
 
         # TODO: When appropriate have the seepageFaceController listen for a change
         # in the number of seepage faces.
-        
+        self.seepageFaceController.modifySeepageFaceCount(self.parametersPageBasic.getNumSeepageFaces())
+
     def notifyExport(self):
         for listener in self.exportListeners:
             listener.onExport()

@@ -41,6 +41,15 @@ class BasicParameters(QGroupBox):
         self.layout.addWidget(NKLabel, 4, 0)
         self.layout.addWidget(self.NK, 5, 0)
 
+        # I recognise that this class will be changed,
+        # for the moment this is here for testing
+        nseepLabel = QLabel("Number of Seepage Faces")
+        nseepLabel.setAlignment(Qt.AlignLeft)
+        self.nseepLineEdit = QLineEdit()
+        self.nseepLineEdit.setAlignment(Qt.AlignRight)
+        self.layout.addWidget(nseepLabel, 4, 1)
+        self.layout.addWidget(self.nseepLineEdit, 5, 1)
+
         self.layout.setRowMinimumHeight(6, 30)
 
         NBLabel = QLabel("Half-Bandwidth (Flow)")
@@ -209,6 +218,10 @@ class BasicParameters(QGroupBox):
 
     def getNumMaterials(self):
         return self.NK.value()
+
+    # again part of testing
+    def getNumSeepageFaces(self):
+        return int(self.nseepLineEdit.text() or 0)
 
     def getVals(self):
         values = {}
