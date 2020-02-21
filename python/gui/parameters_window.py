@@ -16,6 +16,8 @@ from .elementIncidences import ElementIncidences
 from .MaterialsController import MaterialsController
 from .MaterialsController import MaterialsChangeListener
 
+from .SeepageFaceController import SeepageFaceController
+
 parameters = [
         'Import',
         'Basic Parameters',
@@ -57,6 +59,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageElem = Elements()
         self.parametersPageElemIncid = ElementIncidences()
         self.materialsController = MaterialsController()
+        self.seepageFaceController = SeepageFaceController()
 
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
@@ -67,6 +70,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageElem)
         self.parametersPageStack.addWidget(self.parametersPageElemIncid)
         self.parametersPageStack.addWidget(self.materialsController)
+        self.parametersPageStack.addWidget(self.seepageFaceController)
 
         #   Add navigation buttons (widgets) to
         #       button container 'self.parametersPageStack'
@@ -114,6 +118,11 @@ class ParametersPage(QGroupBox):
         self.matsNavBtn.setGeometry(0, 0, 150, 100)
         self.matsNavBtn.pressed.connect(self.materialsClick)
         self.parametersPageNav.addWidget(self.matsNavBtn)
+
+        seepageFaceNavBtn = QPushButton("Seepage Faces")
+        seepageFaceNavBtn.setGeometry(0, 0, 150, 150)
+        seepageFaceNavBtn.pressed.connect(self.seepageFaceClick)
+        self.parametersPageNav.addWidget(seepageFaceNavBtn)
 
         self.parametersPageNav.setContentsMargins(0, 0, 0, 0)
         self.parametersPageNav.setSpacing(20)
@@ -170,6 +179,11 @@ class ParametersPage(QGroupBox):
         self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
 
 
+    def seepageFaceClick(self):
+        self.parametersPageStack.setCurrentIndex(8)
+
+        # TODO: When appropriate have the seepageFaceController listen for a change
+        # in the number of seepage faces.
 
     # pad csv rows with blank entries
     def csvPad(self, cols):

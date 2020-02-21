@@ -49,7 +49,7 @@ class MaterialsController(QGroupBox):
 
         self.notifyMaterialRemoved(lastMaterial)
 
-    def materialGroupChanged(self, newGroupIndex):
+    def materialGroupChanged(self):
         if self.currentMaterialGroup != None:
             self.layout.removeWidget(self.currentMaterialGroup)
             self.currentMaterialGroup.deleteLater()
@@ -87,7 +87,6 @@ class MaterialsController(QGroupBox):
     def notifyMaterialRemoved(self, materialModel):
         for listener in self.materialChangeListeners:
             listener.onMaterialRemoved(materialModel)
-
 
 class MaterialsChangeListener:
     def onMaterialAdded(self, materialModel):

@@ -1,6 +1,6 @@
 
 
-class SeepageFace:
+class SeepageFaceModel:
     def __init__(self, seepageFaceID = 0):
         self.seepageFaceID = seepageFaceID
 
