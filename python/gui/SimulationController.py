@@ -2,20 +2,18 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-import ctypes
-from gs2 import types
+from .simulation import SimulationModel
+from .simulation import SimulationView
 from gs2.runner import Runner
 
-import sys
-import pathlib
-
-from .file_options import FileOptions
-
-class SimulationPage(QGroupBox):
+class SimulationController(QGroupBox):
     def __init__(self, config):
-        super(SimulationPage, self).__init__('Simulation')
+        super(SimulationController, self).__init__('Simulation')
 
         self.config = config
+
+        self.simulationModel = SimulationModel(config)
+        self.simulationView = SimulationView(self.simulationModel)
 
         pageLayout = QHBoxLayout()
         pageLayout.setAlignment(Qt.AlignLeft)
@@ -27,16 +25,13 @@ class SimulationPage(QGroupBox):
         sideNav.setSizeConstraint(QLayout.SetFixedSize)
         pageLayout.addLayout(sideNav)
 
-        #editFileOptions
-        fileOptions = FileOptions(self.config)
-        sideNav.addWidget(fileOptions)
+        sideNav.addWidget(self.simulationView)
 
         runSimulationBttn = QPushButton('Run Simulation')
         runSimulationBttn.setGeometry(0, 0, 150, 100)
         runSimulationBttn.pressed.connect(self.onClickRun)
         sideNav.addWidget(runSimulationBttn)
 
-    
         self.simOutput = QTextEdit()
         self.simOutput.setReadOnly(True)
         pageLayout.addWidget(self.simOutput)
@@ -51,13 +46,18 @@ class SimulationPage(QGroupBox):
         self.fileWatcher.fileChanged.connect(fileWatchCallback)
 
     def onClickRun(self):
-        simulationRunner = Runner(self.config)
+        simulationRunner = Runner(self.simulationModel, self.config)
         simulationRunner.openFiles()
 
         stdout = simulationRunner.stdout
 
-        if stdout not in self.fileWatcher.files():
+        if stdout in self.fileWatcher.files():
             self.fileWatcher.removePaths(self.fileWatcher.files())
-            self.fileWatcher.addPath(stdout)
+        self.fileWatcher.addPath(stdout)
 
         simulationRunner.run()
+    
+    def getSimulationModel(self):
+        return self.simulationModel
+
+

@@ -1,8 +1,11 @@
 import csv
 
+from gui.simulation.SimulationModel import GS2KOD
+
 class FileWriter:
-    def __init__(self, materialModels):
+    def __init__(self, materialModels, simulationModel):
         self.materialModels = materialModels
+        self.simulationModel = simulationModel
 
 
     def write(self, filepath):
@@ -16,6 +19,8 @@ class FileWriter:
             ) 
 
             # write groups
+            self._writeGroupA(writer, self.simulationModel)
+            self._writeGroupD(writer, self.simulationModel)
             self._writeGroupQ(writer, self.materialModels)
 
     def _csvPad(self, cols):
@@ -58,3 +63,21 @@ class FileWriter:
                 if len(csvRow) > 1:
                     csv.writerow(self._csvPad(csvRow))
 
+
+    def _writeGroupA(self, csv, simulation):
+        group = "A"
+        csvRow = [group, simulation.simulationTitle]
+        csv.writerow(self._csvPad(csvRow))
+
+
+    def _writeGroupD(self, csv, simulation):
+        group = "D"
+        csvRow = [group]
+
+        # order in simulation KOD array is the same as
+        # whats expected by GS2
+
+        for kod in GS2KOD:
+            csvRow.append(simulation.getOutputModifier(kod))
+
+        csv.writerow(self._csvPad(csvRow))

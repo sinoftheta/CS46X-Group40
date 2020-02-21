@@ -3,10 +3,16 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from .parameters_window import ParametersPage
-from .simulation.simulation_page import SimulationPage
+import gs2
 
-class MainWindow(QMainWindow):
+from os import path
+
+from .parameters_window import ParametersPage
+from .parameters_window import ExportListener
+
+from .SimulationController import SimulationController
+
+class MainWindow(QMainWindow, ExportListener):
     def __init__(self, config, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
@@ -33,12 +39,13 @@ class MainWindow(QMainWindow):
         #   Then add to array of pages 'self.homePageStack'
         #   Parameters
         self.parametersPage = ParametersPage(self.config)
+        self.parametersPage.addExportListener(self)
         self.homePageStack.addWidget(self.parametersPage)
         #   Mesh
         self.meshPage = QGroupBox('Mesh')
         self.homePageStack.addWidget(self.meshPage)
         #   Simulation
-        self.simulationPage = SimulationPage(self.config)
+        self.simulationPage = SimulationController(self.config)
         self.homePageStack.addWidget(self.simulationPage)
 
         self.meshPageLayout = QVBoxLayout()
@@ -64,13 +71,22 @@ class MainWindow(QMainWindow):
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.parametersButton)
 
-        self.meshButton = QPushButton('Mesh')
-        self.meshButton.pressed.connect(lambda index=1:
-                            self.homePageStack.setCurrentIndex(index))
-        self.homePageButtons.addWidget(self.meshButton)
-
         self.simulationButton = QPushButton('Simulation')
         self.simulationButton.pressed.connect(lambda index=2:
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.simulationButton)
 
+        self.meshButton = QPushButton('Mesh')
+        self.meshButton.pressed.connect(lambda index=1:
+                            self.homePageStack.setCurrentIndex(index))
+        self.homePageButtons.addWidget(self.meshButton)
+
+
+    def onExport(self):
+        fileWriter = gs2.FileWriter(
+            self.parametersPage.materialsController.getMaterials(),
+            self.simulationPage.getSimulationModel()
+        )
+
+        filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
+        fileWriter.write(filePath)
