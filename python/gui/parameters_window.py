@@ -140,7 +140,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(2)
 
     def nodesClick(self):
-        numNodes = self.parametersPageBasic.parametersModel.NN
+        numNodes = self.parametersPageBasic.parametersModel.NN.getData()
         self.parametersPageNodes.buildTable(numNodes)
         self.parametersPageStack.setCurrentIndex(3)
         #Test accessor
@@ -152,8 +152,8 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(4)
 
     def elementsClick(self):
-        numElements = self.parametersPageBasic.parametersModel.NE
-        numMaterials = self.parametersPageBasic.parametersModel.NK
+        numElements = self.parametersPageBasic.parametersModel.NE.getData()
+        numMaterials = self.parametersPageBasic.parametersModel.NK.getData()
         self.parametersPageElem.buildTable(numElements, numMaterials)
         self.parametersPageStack.setCurrentIndex(5)
 
@@ -170,7 +170,7 @@ class ParametersPage(QGroupBox):
         # basic parameters listener class, so that the material controller knows when
         # the material count changes.
         # that would let us get rid of this next line of code.
-        self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.parametersModel.NK)
+        self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.parametersModel.NK.getData())
 
     def notifyExport(self):
         for listener in self.exportListeners:

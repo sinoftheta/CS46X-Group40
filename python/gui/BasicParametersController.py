@@ -14,9 +14,9 @@ class BasicParametersController(QGroupBox):
 
         self.parameterChangeListeners = []
 
-        self.parametersModel.NN.connectObserver(lambda newData: notifyNodeCountChange(newData))
-        self.parametersModel.NE.connectObserver(lambda newData: notifyElementCountChange(newData))
-        self.parametersModel.NK.connectObserver(lambda newData: notifyMaterialCountChange(newData))
+        self.parametersModel.NN.connectObserver(lambda newData: self.notifyNodeCountChange(newData))
+        self.parametersModel.NE.connectObserver(lambda newData: self.notifyElementCountChange(newData))
+        self.parametersModel.NK.connectObserver(lambda newData: self.notifyMaterialCountChange(newData))
 
     """
         Listener Methods
