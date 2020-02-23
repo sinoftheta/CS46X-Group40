@@ -19,39 +19,46 @@ class SeepageFaceView(QGroupBox):
         layout.setSpacing(20)
 
         nodesInputLayout = QHBoxLayout()
-        nodesInputLayout.setAlignment(Qt.AlignCenter)
+        nodesInputLayout.setAlignment(Qt.AlignTop)
 
         # column for dirichelt nodes
         self.diricheltNodesLayout = QVBoxLayout()
-        self.diricheltNodesLayout.setContentsMargins(0, 0, 20, 2)
-        self.diricheltNodesLayout.setAlignment(Qt.AlignCenter)
+        #self.diricheltNodesLayout.setContentsMargins(0, 0, 20, 2)
+        self.diricheltNodesLayout.setSpacing(0)
+        self.diricheltNodesLayout.setAlignment(Qt.AlignTop)
         
         self.diricheltNodesHeader = QLabel('Dirichelt Node Count')
         self.diricheltNodesHeader.setFont(QFont('Arial', 13))
-        self.diricheltNodesHeader.setAlignment(Qt.AlignLeft)
+        #self.diricheltNodesHeader.setAlignment(Qt.AlignLeft)
         self.diricheltNodesLayout.addWidget(self.diricheltNodesHeader)
 
         self.diricheltNodesCount = QSpinBox()
-        self.diricheltNodesCount.setAlignment(Qt.AlignRight)
+        self.diricheltNodesCount.setAlignment(Qt.AlignCenter)
+        self.diricheltNodesCount.setFixedWidth(85)
         self.diricheltNodesCount.setRange(0, 100)
+        self.diricheltNodesCount.setValue(self.seepageFaceModel.getNumberOfDiricheltNodes())
         self.diricheltNodesCount.valueChanged.connect(self.updateNodeCount(SeepageFaceNodeType.DIRICHELT))
         self.diricheltNodesLayout.addWidget(self.diricheltNodesCount)
             
         # column for neumann nodes
         self.nuemannNodesLayout = QVBoxLayout()
-        self.nuemannNodesLayout.setContentsMargins(0, 0, 20, 2)
-        self.nuemannNodesLayout.setAlignment(Qt.AlignCenter)
+        #self.nuemannNodesLayout.setContentsMargins(0, 0, 20, 2)
+        self.nuemannNodesLayout.setSpacing(0)
+        self.nuemannNodesLayout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         
         self.nuemannNodesHeader = QLabel('Nuemann Node Count')
         self.nuemannNodesHeader.setFont(QFont('Arial', 13))
-        self.nuemannNodesHeader.setAlignment(Qt.AlignLeft)
+        #self.nuemannNodesHeader.setAlignment(Qt.AlignLeft)
         self.nuemannNodesLayout.addWidget(self.nuemannNodesHeader)
 
         self.nuemannNodesCount = QSpinBox()
-        self.nuemannNodesCount.setAlignment(Qt.AlignRight)
+        self.nuemannNodesCount.setAlignment(Qt.AlignCenter)
         self.nuemannNodesCount.setRange(0, 100)
+        self.nuemannNodesCount.setFixedWidth(85)
+        self.nuemannNodesCount.setValue(self.seepageFaceModel.getNumberOfNuemannNodes())
         self.nuemannNodesCount.valueChanged.connect(self.updateNodeCount(SeepageFaceNodeType.NUEMANN))
         self.nuemannNodesLayout.addWidget(self.nuemannNodesCount)
+
 
         nodesInputLayout.addLayout(self.diricheltNodesLayout)
         nodesInputLayout.addLayout(self.nuemannNodesLayout)
@@ -63,7 +70,8 @@ class SeepageFaceView(QGroupBox):
 
 
     def _clearLayout(self, layout):
-        for i in reversed(range(layout.count)):
+        #print(layout.count())
+        for i in reversed(range(layout.count())):
             # keep the label and spinner
             if i == 1:
                 break
@@ -83,19 +91,22 @@ class SeepageFaceView(QGroupBox):
 
         if viewModelEnum == SeepageFaceNodeType.NUEMANN:
             viewModelData = self.seepageFaceModel.nuemannNodes
-        elif viewModelData == SeepageFaceNodeType.DIRICHELT:
-            viewModelData = self.seepageFaceModel.diricheltNodesCount
+        elif viewModelEnum == SeepageFaceNodeType.DIRICHELT:
+            viewModelData = self.seepageFaceModel.diricheltNodes
 
-        # count widget
-        layout.itemAt(1).setValue(len(viewModelData))
-
-        # for i in range(2, len(viewModelData)):
-        #     nodeEdit = QLineEdit()
+        for i in range(len(viewModelData)):
+            nodeEdit = QLineEdit()
+            nodeEdit.setValidator(QIntValidator(0, 100))
+            nodeEdit.setText(str(viewModelData[i]))
+            nodeEdit.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+            nodeEdit.textEdited.connect(self.updateNodeValue(viewModelEnum, i))
+            nodeEdit.setFixedWidth(85)
+            layout.addWidget(nodeEdit)
 
         
     def updateView(self):
         self._destroyView()
-
+        
         self._addModelData(self.nuemannNodesLayout, SeepageFaceNodeType.NUEMANN)
         self._addModelData(self.diricheltNodesLayout, SeepageFaceNodeType.DIRICHELT)
 
@@ -111,5 +122,10 @@ class SeepageFaceView(QGroupBox):
 
         return inner
 
-    def updateNode(self):
-        pass
+    def updateNodeValue(self, nodeType, index):
+        def inner(text):
+            if nodeType == SeepageFaceNodeType.DIRICHELT:
+                self.seepageFaceModel.setDiricheltNode(index, int(text))
+            elif nodeType == SeepageFaceNodeType.NUEMANN:
+                self.seepageFaceModel.setNuemannNode(index, int(text))
+        return inner

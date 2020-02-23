@@ -21,6 +21,8 @@ class SeepageFaceController(QGroupBox):
 
         self.seepageFaces = []
 
+        self.seepageFaceChangeListeners = []
+
         self.seepageFaceLabel = QLabel('Seepage Face ID')
         self.seepageFaceLabel.setAlignment(Qt.AlignLeft)
         self.layout.addWidget(self.seepageFaceLabel)
@@ -38,9 +40,12 @@ class SeepageFaceController(QGroupBox):
     def getSeepageFaces(self):
         return self.seepageFaces
 
+
     def popSeepageFace(self):
         lastSeepageFace = self.seepageFaces.pop()
-        self.seepageFaceGroup.removeItem(self.seepageFacesGroup.count() - 1)
+        self.seepageFaceGroup.removeItem(self.seepageFaceGroup.count() - 1)
+
+        self.notifySeepageFaceRemoved(lastSeepageFace)
 
 
     def pushSeepageFace(self):
@@ -49,6 +54,9 @@ class SeepageFaceController(QGroupBox):
 
         self.seepageFaces.append(seepageFaceModel)
         self.seepageFaceGroup.addItem(group)
+
+        self.notifySeepageFaceAdded(seepageFaceModel)
+
 
     def modifySeepageFaceCount(self, count):
         if count > len(self.seepageFaces):
@@ -70,4 +78,29 @@ class SeepageFaceController(QGroupBox):
         self.currentSeepageFace = SeepageFaceView(model)
         self.layout.addWidget(self.currentSeepageFace)
 
-    
+
+    # listener methods
+    def addSeepageFaceChangedListener(self, listener):
+        if listener not in self.seepageFaceChangeListeners:
+            self.seepageFaceChangeListeners.append(listener)
+
+
+    def removeSeepageFaceChangedListener(self, listener):
+        self.seepageFaceChangeListeners.remove(listener)
+
+
+    def notifySeepageFaceAdded(self, seepageFace):
+        for listener in self.seepageFaceChangeListeners:
+            listener.onSeepageFaceAdded(seepageFace)
+
+
+    def notifySeepageFaceRemoved(self, seepageFace):
+        for listener in self.seepageFaceChangeListeners:
+            listener.onSeepageFaceRemoved(seepageFace)
+
+class SeepageFaceChangedListener:
+    def onSeepageFaceAdded(self, seepageFace):
+        pass
+
+    def onSeepageFaceRemoved(self, seepageFace):
+        pass 

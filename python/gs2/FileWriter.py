@@ -3,9 +3,10 @@ import csv
 from gui.simulation.SimulationModel import GS2KOD
 
 class FileWriter:
-    def __init__(self, materialModels, simulationModel):
+    def __init__(self, materialModels, simulationModel, seepageFaceModels):
         self.materialModels = materialModels
         self.simulationModel = simulationModel
+        self.seepageFaceModels = seepageFaceModels
 
 
     def write(self, filepath):
@@ -21,6 +22,7 @@ class FileWriter:
             # write groups
             self._writeGroupA(writer, self.simulationModel)
             self._writeGroupD(writer, self.simulationModel)
+            self._writeGroupO(writer, self.seepageFaceModels)
             self._writeGroupQ(writer, self.materialModels)
 
     def _csvPad(self, cols):
@@ -81,3 +83,8 @@ class FileWriter:
             csvRow.append(simulation.getOutputModifier(kod))
 
         csv.writerow(self._csvPad(csvRow))
+
+    def _writeGroupO(self, seepageFaces):
+        group = "O-1"
+        csvRow = [group]
+        

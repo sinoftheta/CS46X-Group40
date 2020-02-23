@@ -17,6 +17,14 @@ class SeepageFaceModel:
         self.nuemannNodes = []
 
 
+    def setDiricheltNode(self, index, value):
+        if index < self.getNumberOfDiricheltNodes():
+            self.diricheltNodes[index] = value
+
+    def setNuemannNode(self, index, value):
+        if index < self.getNumberOfNuemannNodes():
+            self.nuemannNodes[index] = value
+
     def getNumberOfDiricheltNodes(self):
         return len(self.diricheltNodes)
 
