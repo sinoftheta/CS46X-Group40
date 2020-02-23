@@ -7,7 +7,7 @@ import gs2
 
 from os import path
 
-from .parameters_basic import BasicParameters
+from .BasicParametersController import BasicParametersController
 from .multipliers import Multipliers
 from .nodes import Nodes
 from .nodeTypes import NodeTypes
@@ -53,7 +53,7 @@ class ParametersPage(QGroupBox):
 
         # Creates Classes for each sub-section of the Parameters section
         self.parametersPageHome = QWidget()
-        self.parametersPageBasic = BasicParameters()
+        self.parametersPageBasic = BasicParametersController()
         self.parametersPageMult = Multipliers()
         self.parametersPageNodes = Nodes()
         self.parametersPageNodeTypes = NodeTypes()
@@ -140,7 +140,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(2)
 
     def nodesClick(self):
-        numNodes = self.parametersPageBasic.getNumNodes()
+        numNodes = self.parametersPageBasic.parametersModel.NN
         self.parametersPageNodes.buildTable(numNodes)
         self.parametersPageStack.setCurrentIndex(3)
         #Test accessor
@@ -152,39 +152,39 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(4)
 
     def elementsClick(self):
-        numElements = self.parametersPageBasic.getNumElements()
-        numMaterials = self.parametersPageBasic.getNumMaterials()
+        numElements = self.parametersPageBasic.parametersModel.NE
+        numMaterials = self.parametersPageBasic.parametersModel.NK
         self.parametersPageElem.buildTable(numElements, numMaterials)
         self.parametersPageStack.setCurrentIndex(5)
 
     def elementIncClick(self):
-        numElements = self.parametersPageBasic.getNumElements()
-        maxNodes = self.parametersPageBasic.getMaxNodesPerElem()
+        numElements = self.parametersPageBasic.parametersModel.NE
+        # maxNodes = self.parametersPageBasic.getMaxNodesPerElem()
         self.parametersPageStack.setCurrentIndex(6)
-        self.parametersPageElemIncid.buildTable(numElements, maxNodes)
+        self.parametersPageElemIncid.buildTable(numElements, 12)
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
 
         # TODO: When apporpriate make the material controller inheirent from some
-        # basic parameters listener class, so that the material controller knows when 
+        # basic parameters listener class, so that the material controller knows when
         # the material count changes.
         # that would let us get rid of this next line of code.
-        self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.NK.value())
+        self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.parametersModel.NK)
 
     def notifyExport(self):
         for listener in self.exportListeners:
             listener.onExport()
-    
+
     def addExportListener(self, listener):
         if listener not in self.exportListeners:
             self.exportListeners.append(listener)
-        
+
     def removeExportListener(self, listener):
         self.exportListeners.remove(listener)
 
     # Handling  file exporting is being moved.
-    # this is being done as this class should not know about the simulation page 
+    # this is being done as this class should not know about the simulation page
     # so in the export button will notify those who care that the button has been pressed.
     # def exportNavClick(self):
     #     fileWriter = gs2.FileWriter(
@@ -194,8 +194,8 @@ class ParametersPage(QGroupBox):
 
     #     filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
     #     fileWriter.write(filePath)
-        
-        
+
+
 
 class ExportListener:
     def onExport():
