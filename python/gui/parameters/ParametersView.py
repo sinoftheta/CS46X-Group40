@@ -263,18 +263,18 @@ class ParametersView(QGridLayout):
         )
 
     def numNodesChange(self):
-        setattr(self.viewModel, 'NN', self.NN.value())
+        self.viewModel.NN.setData(self.NN.value())
 
     def numElementsChange(self):
-        setattr(self.viewModel, 'NE', self.NE.value())
+        self.viewModel.NE.setData(self.NE.value())
 
     def numMaterialsChange(self):
-        setattr(self.viewModel, 'NK', self.NK.value())
+        self.viewModel.NK.setData(self.NK.value())
 
     def updateView(self):
-        self.NN.setValue(self.viewModel.NN)
-        self.NE.setValue(self.viewModel.NE)
-        self.NK.setValue(self.viewModel.NK)
+        self.NN.setValue(self.viewModel.NN.getData())
+        self.NE.setValue(self.viewModel.NE.getData())
+        self.NK.setValue(self.viewModel.NK.getData())
         self.NB.setValue(self.viewModel.NB)
         self.KNB.setValue(self.viewModel.KNB)
         self.PL.setValue(self.viewModel.PL)

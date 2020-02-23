@@ -1,9 +1,8 @@
-
 class ParametersModel:
     def __init__(self):
-        self.NN = 0
-        self.NE = 0
-        self.NK = 0
+        self.NN = LiveData(0)
+        self.NE = LiveData(0)
+        self.NK = LiveData(0)
         self.NB = 0
         self.KNB = 0
         self.PL = 0.000
@@ -19,7 +18,28 @@ class ParametersModel:
         self.ITCHNG = 0
         self.IGO = 0
 
-        # Can enumerate these options instead of storing strings
         self.TYPE = "Implicit"
         self.STAT = "Steady-state"
         self.STATP = "Steady-state"
+
+
+class LiveData:
+    def __init__(self, initData):
+        self._data = initData
+
+        self._observers = []
+
+    def setData(self, newData):
+        self._data = newData
+        self.notifyChange(self._data)
+
+    def getData(self):
+        return self._data
+
+    def connectObserver(self, observer):
+        if observer not in self._observers:
+            self._observers.append(observer)
+
+    def notifyChange(self, newData):
+        for observer in self._observers:
+            observer(newData)
