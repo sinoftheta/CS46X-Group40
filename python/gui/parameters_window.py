@@ -67,6 +67,7 @@ class ParametersPage(QGroupBox):
 
         # set up controller listeners
         self.parametersPageBasic.addBasicParameterListener(self.seepageFaceController)
+        self.parametersPageBasic.addBasicParameterListener(self.materialsController)
 
 
         # Adds each class to stack layout
@@ -180,13 +181,6 @@ class ParametersPage(QGroupBox):
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
-
-        # TODO: When apporpriate make the material controller inheirent from some
-        # basic parameters listener class, so that the material controller knows when
-        # the material count changes.
-        # that would let us get rid of this next line of code.
-        self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.parametersModel.NK.getData())
-
 
     def seepageFaceClick(self):
         self.parametersPageStack.setCurrentIndex(8)

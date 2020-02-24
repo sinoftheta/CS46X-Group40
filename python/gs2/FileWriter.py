@@ -90,7 +90,6 @@ class FileWriter:
         KNS = ''
         NF = ''
         INC = ''
-        NSEEP = ''
         NSDN = ''
         MQ4 = ''
         KNSDN = ''

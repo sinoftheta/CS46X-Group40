@@ -11,18 +11,6 @@ from gui.main_window import MainWindow
 
 from gui.MaterialsController import MaterialsChangeListener
 
-
-# in practice, do something like:
-# class MaterialDependentController(QGroupBox, MaterialChangeListener):
-# so that the MaterialDependentController knows when a material is added/removed
-class ExampleListener(MaterialsChangeListener):
-    def onMaterialAdded(self, material):
-        print("Material " + str(material.materialGroup) + " Added!")
-
-    def onMaterialRemoved(self, material):
-        print("Material " + str(material.materialGroup) + " Removed!")
-
-
 def getConfig():
     bundle_dir = path.abspath(path.dirname(__file__))
 
@@ -42,9 +30,6 @@ def getConfig():
 def main():
     app = QApplication(sys.argv)
     mainWindow = MainWindow(getConfig())
-
-    # TODO: remove before beta
-    mainWindow.parametersPage.materialsController.addMaterialChangeListener(ExampleListener())
 
     mainWindow.show()
     app.exec_()

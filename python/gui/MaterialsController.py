@@ -6,7 +6,9 @@ from PyQt5.QtGui import *
 from .material.MaterialModel import MaterialModel 
 from .material.MaterialView import MaterialView
 
-class MaterialsController(QGroupBox):
+from .BasicParametersController import BasicParameterChangeListener
+
+class MaterialsController(QGroupBox, BasicParameterChangeListener):
     def __init__(self):
         super(MaterialsController, self).__init__('Materials')
         self.layout = QVBoxLayout()
@@ -61,7 +63,7 @@ class MaterialsController(QGroupBox):
         self.currentMaterialGroup = MaterialView(model)
         self.layout.addWidget(self.currentMaterialGroup)
 
-    def modifyMaterialGroupCount(self, count):
+    def onMaterialCountChange(self, count):
         if count > len(self.materialModels):
             while count > len(self.materialModels):
                 self.pushMaterialGroup()
