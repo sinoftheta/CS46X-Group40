@@ -22,7 +22,7 @@ class SimulationView(QGroupBox):
         ioLayout = QGridLayout()
         ioLayout.setAlignment(Qt.AlignCenter | Qt.AlignTop)
         ioLayout.setHorizontalSpacing(15)
-        
+
         # UI component for title
         simulationTitle = QLabel('Simulation Title')
         simulationTitle.setAlignment(Qt.AlignLeft)
@@ -99,18 +99,19 @@ class SimulationView(QGroupBox):
                 kodLayoutIndexLeft += 1
 
             else:
-                kodLineEdit = QLineEdit()
-                kodLineEdit.setFixedWidth(50)
-                kodLineEdit.setText(str(self.simulationModel.getOutputModifier(kod)))
-                kodLineEdit.setValidator(QIntValidator(1, 100))
-                kodLineEdit.editingFinished.connect(lambda: self.simulationModel.setOutputModifier(kod, int(kodLineEdit.text())))
+                kodSB = QSpinBox(buttonSymbols = QSpinBox.NoButtons)
+                kodSB.setFixedWidth(50)
+                kodSB.setValue(self.simulationModel.getOutputModifier(kod))
+                # Prevents inputs from outside of this range (QValidator does not)
+                kodSB.setRange(1, 100)
+                kodSB.valueChanged.connect(lambda: self.simulationModel.setOutputModifier(kod, kodSB.value()))
 
 
                 kodLayout.addWidget(kodLabel, kodLayoutIndexRight, 2)
-                kodLayout.addWidget(kodLineEdit, kodLayoutIndexRight, 3)
+                kodLayout.addWidget(kodSB, kodLayoutIndexRight, 3)
 
                 kodLayoutIndexRight += 1
-        
+
         layout.addLayout(ioLayout)
         layout.addLayout(kodLayout)
 
@@ -134,4 +135,4 @@ class SimulationView(QGroupBox):
                 elif simulationEnum == SimulationEnum.SIM_ERR:
                     self.simulationModel.stderr = filename
                     self.errorOutputPath.setText(filename)
-        return inner 
+        return inner

@@ -11,6 +11,7 @@ from .parameters_window import ParametersPage
 from .parameters_window import ExportListener
 
 from .SimulationController import SimulationController
+from .BasicParametersController import BasicParametersController
 
 class MainWindow(QMainWindow, ExportListener):
     def __init__(self, config, *args, **kwargs):
@@ -87,6 +88,7 @@ class MainWindow(QMainWindow, ExportListener):
             self.parametersPage.materialsController.getMaterials(),
             self.simulationPage.getSimulationModel(),
             self.parametersPage.seepageFaceController.getSeepageFaces()
+            self.parametersPage.parametersPageBasic.getBasicParametersModel()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
