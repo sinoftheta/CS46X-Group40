@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 
 from .seepage_face.SeepageFaceModel import SeepageFaceModel
 from .seepage_face.SeepageFaceView import SeepageFaceView
-
+from .BasicParametersController import BasicParameterChangeListener
 
 
 # I foresee the nodes page having a class NodeTableListener 
@@ -12,7 +12,7 @@ from .seepage_face.SeepageFaceView import SeepageFaceView
 # this class should inheirt from NodeTableListener
 # and override onNodeAdded(node)
 #
-class SeepageFaceController(QGroupBox):
+class SeepageFaceController(QGroupBox, BasicParameterChangeListener):
     def __init__(self):
         super(SeepageFaceController, self).__init__('Seepage Faces')
 
@@ -58,7 +58,7 @@ class SeepageFaceController(QGroupBox):
         self.notifySeepageFaceAdded(seepageFaceModel)
 
 
-    def modifySeepageFaceCount(self, count):
+    def onSeepageFaceCountChange(self, count):
         if count > len(self.seepageFaces):
             while count > len(self.seepageFaces):
                 self.pushSeepageFace()
@@ -77,7 +77,6 @@ class SeepageFaceController(QGroupBox):
         model = self.seepageFaces[seepageFaceIndex]
         self.currentSeepageFace = SeepageFaceView(model)
         self.layout.addWidget(self.currentSeepageFace)
-
 
     # listener methods
     def addSeepageFaceChangedListener(self, listener):

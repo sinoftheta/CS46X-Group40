@@ -65,6 +65,10 @@ class ParametersPage(QGroupBox):
         self.materialsController = MaterialsController()
         self.seepageFaceController = SeepageFaceController()
 
+        # set up controller listeners
+        self.parametersPageBasic.addBasicParameterListener(self.seepageFaceController)
+
+
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
         self.parametersPageStack.addWidget(self.parametersPageBasic)
@@ -75,6 +79,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageElemIncid)
         self.parametersPageStack.addWidget(self.materialsController)
         self.parametersPageStack.addWidget(self.seepageFaceController)
+
 
         #   Add navigation buttons (widgets) to
         #       button container 'self.parametersPageStack'
@@ -185,10 +190,8 @@ class ParametersPage(QGroupBox):
 
     def seepageFaceClick(self):
         self.parametersPageStack.setCurrentIndex(8)
-
         # TODO: When appropriate have the seepageFaceController listen for a change
         # in the number of seepage faces.
-        self.seepageFaceController.modifySeepageFaceCount(self.parametersPageBasic.getNumSeepageFaces())
 
     def notifyExport(self):
         for listener in self.exportListeners:
@@ -216,10 +219,5 @@ class ParametersPage(QGroupBox):
 
 
 class ExportListener:
-<<<<<<< HEAD
     def onExport(self):
         pass
-=======
-    def onExport():
-        pass
->>>>>>> master

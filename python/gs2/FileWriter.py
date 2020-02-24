@@ -109,7 +109,7 @@ class FileWriter:
                 NF,
                 INC,
                 basicParameters.NK.getData(),
-                NSEEP
+                basicParameters.NSEEP.getData()
         ]
 
         csvRow2 = [

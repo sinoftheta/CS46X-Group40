@@ -5,6 +5,7 @@ class ParametersModel:
         self.NN = LiveData(0)
         self.NE = LiveData(0)
         self.NK = LiveData(0)
+        self.NSEEP = LiveData(0)
         self.NB = 0
         self.KNB = 0
         self.PL = 0.000
