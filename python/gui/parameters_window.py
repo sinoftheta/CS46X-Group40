@@ -215,5 +215,5 @@ class ParametersPage(QGroupBox):
         
 
 class ExportListener:
-    def onExport():
+    def onExport(self):
         pass

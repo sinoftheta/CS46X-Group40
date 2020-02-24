@@ -11,7 +11,7 @@ class FileWriter:
 
     def write(self, filepath):
 
-        with open(filepath, 'w') as csvfile:
+        with open(filepath, 'w', newline='') as csvfile:
             writer = csv.writer(
                 csvfile, 
                 delimiter=',',
@@ -84,7 +84,34 @@ class FileWriter:
 
         csv.writerow(self._csvPad(csvRow))
 
-    def _writeGroupO(self, seepageFaces):
-        group = "O-1"
-        csvRow = [group]
+    def _writeGroupO(self, csv, seepageFaces):
+        for seepageFace in seepageFaces:
+            group = "O-1"
+            totalNodes = seepageFace.getNumberOfDiricheltNodes() + seepageFace.getNumberOfNuemannNodes()
+            csvRow = [group,  totalNodes, seepageFace.getNumberOfDiricheltNodes()]
+
+            csv.writerow(self._csvPad(csvRow))
+
+            groups = ["O-2", "O-3"]
+            nodeLists = [seepageFace.diricheltNodes, seepageFace.nuemannNodes]
+            
+            for x in range(len(groups)):
+                csvRow = [groups[x]]
+                for node in nodeLists[x]:
+                    csvRow.append(node)
+
+                    # group + 20 nodes
+                    if len(csvRow) == 21:
+                        csv.writerow(csvRow)
+                        csvRow = [groups[x]]
+
+                if len(csvRow) > 1:
+                    csv.writerow(self._csvPad(csvRow))
+            
+
+
+            
+
+
+
         

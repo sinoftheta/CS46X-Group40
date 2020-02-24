@@ -85,7 +85,8 @@ class MainWindow(QMainWindow, ExportListener):
     def onExport(self):
         fileWriter = gs2.FileWriter(
             self.parametersPage.materialsController.getMaterials(),
-            self.simulationPage.getSimulationModel()
+            self.simulationPage.getSimulationModel(),
+            self.parametersPage.seepageFaceController.getSeepageFaces()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
