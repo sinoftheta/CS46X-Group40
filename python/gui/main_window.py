@@ -11,6 +11,7 @@ from .parameters_window import ParametersPage
 from .parameters_window import ExportListener
 
 from .SimulationController import SimulationController
+from .BasicParametersController import BasicParametersController
 
 class MainWindow(QMainWindow, ExportListener):
     def __init__(self, config, *args, **kwargs):
@@ -85,7 +86,8 @@ class MainWindow(QMainWindow, ExportListener):
     def onExport(self):
         fileWriter = gs2.FileWriter(
             self.parametersPage.materialsController.getMaterials(),
-            self.simulationPage.getSimulationModel()
+            self.simulationPage.getSimulationModel(),
+            self.parametersPage.parametersPageBasic.getBasicParametersModel()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])

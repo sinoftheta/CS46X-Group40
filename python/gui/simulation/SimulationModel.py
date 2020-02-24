@@ -62,8 +62,3 @@ class SimulationModel:
 
     def setSimulationTitle(self, title):
         self.simulationTitle = title
-
-
-
-
-
