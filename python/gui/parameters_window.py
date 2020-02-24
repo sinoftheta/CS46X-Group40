@@ -8,6 +8,7 @@ import gs2
 from os import path
 
 from .BasicParametersController import BasicParametersController
+from .BasicParametersController import BasicParameterChangeListener
 from .multipliers import Multipliers
 from .nodes import Nodes
 from .nodeTypes import NodeTypes
