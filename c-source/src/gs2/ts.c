@@ -97,8 +97,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     state->delt *= state->chng;
                     
                     if (state->delt <= 0.0) {
-                        fscanf(gs2stdin, "%lf", &(state->delt));
-                        state->delt *= 3600;
+                        state->delt = state->initialDelt;
                     }
 
                     fprintf(gs2stdout, "\n           TIME STEP MODIFICATION: DELT = %15.5E\n", state->delt);

@@ -91,6 +91,8 @@ typedef struct gs2State {
            pchng, vmax, stime, ssec, h1, h2,
            pl, coefi, ei;
 
+    double initialDelt;
+
     int ne, np, nk, nseep, inc, me, igo, 
         kod1, kod2, kod3, kod4, kod7, 
         kod8, kod9, kod10, kod11, kod12,

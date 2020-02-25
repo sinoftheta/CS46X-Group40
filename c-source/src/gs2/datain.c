@@ -266,6 +266,7 @@ void gs2Datain(
     state->it = 0;
     state->delp = pow(1, 10);
     state->delt = state->delt * 3600;
+    state->initialDelt = state->delt;
     state->ssec = state->stime * 3600;
 
     int ic = 0;
