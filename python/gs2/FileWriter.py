@@ -3,14 +3,15 @@ import csv
 from gui.simulation.SimulationModel import GS2KOD
 
 class FileWriter:
-    def __init__(self, materialModels, simulationModel, basicParametersModel):
+    def __init__(self, materialModels, simulationModel, seepageFaceModels, basicParametersModel):
         self.materialModels = materialModels
         self.simulationModel = simulationModel
+        self.seepageFaceModels = seepageFaceModels
         self.basicParametersModel = basicParametersModel
 
     def write(self, filepath):
 
-        with open(filepath, 'w') as csvfile:
+        with open(filepath, 'w', newline='') as csvfile:
             writer = csv.writer(
                 csvfile,
                 delimiter=',',
@@ -22,6 +23,7 @@ class FileWriter:
             self._writeGroupA(writer, self.simulationModel)
             self._writeGroupB(writer, self.basicParametersModel)
             self._writeGroupD(writer, self.simulationModel)
+            self._writeGroupO(writer, self.seepageFaceModels)
             self._writeGroupQ(writer, self.materialModels)
 
     def _csvPad(self, cols):
@@ -88,7 +90,6 @@ class FileWriter:
         KNS = ''
         NF = ''
         INC = ''
-        NSEEP = ''
         NSDN = ''
         MQ4 = ''
         KNSDN = ''
@@ -107,7 +108,7 @@ class FileWriter:
                 NF,
                 INC,
                 basicParameters.NK.getData(),
-                NSEEP
+                basicParameters.NSEEP.getData()
         ]
 
         csvRow2 = [
@@ -159,3 +160,35 @@ class FileWriter:
             csvRow.append(simulation.getOutputModifier(kod))
 
         csv.writerow(self._csvPad(csvRow))
+
+    def _writeGroupO(self, csv, seepageFaces):
+        for seepageFace in seepageFaces:
+            group = "O-1"
+            totalNodes = seepageFace.getNumberOfDiricheltNodes() + seepageFace.getNumberOfNuemannNodes()
+            csvRow = [group,  totalNodes, seepageFace.getNumberOfDiricheltNodes()]
+
+            csv.writerow(self._csvPad(csvRow))
+
+            groups = ["O-2", "O-3"]
+            nodeLists = [seepageFace.diricheltNodes, seepageFace.nuemannNodes]
+            
+            for x in range(len(groups)):
+                csvRow = [groups[x]]
+                for node in nodeLists[x]:
+                    csvRow.append(node)
+
+                    # group + 20 nodes
+                    if len(csvRow) == 21:
+                        csv.writerow(csvRow)
+                        csvRow = [groups[x]]
+
+                if len(csvRow) > 1:
+                    csv.writerow(self._csvPad(csvRow))
+            
+
+
+            
+
+
+
+        

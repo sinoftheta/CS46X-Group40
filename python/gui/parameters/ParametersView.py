@@ -44,17 +44,26 @@ class ParametersView(QGridLayout):
         self.NE = QSpinBox(buttonSymbols = QSpinBox.NoButtons)
         self.NE.setAlignment(Qt.AlignRight)
         self.NE.setRange(0, 25)
-        self.addWidget(elementsLabel, 2, 0)
-        self.addWidget(self.NE, 3, 0)
+        self.addWidget(elementsLabel, 0, 1)
+        self.addWidget(self.NE, 1, 1)
         self.NE.valueChanged.connect(self.numElementsChange)
 
         NKLabel = QLabel("Number of Material Groups")
         NKLabel.setAlignment(Qt.AlignLeft)
         self.NK = QSpinBox(buttonSymbols = QSpinBox.NoButtons)
         self.NK.setAlignment(Qt.AlignRight)
-        self.addWidget(NKLabel, 4, 0)
-        self.addWidget(self.NK, 5, 0)
+        self.addWidget(NKLabel, 2, 0)
+        self.addWidget(self.NK, 3, 0)
         self.NK.valueChanged.connect(self.numMaterialsChange)
+
+        NSEEPLabel = QLabel("Number of Seepage Faces")
+        NSEEPLabel.setAlignment(Qt.AlignLeft)
+        self.NSEEP = QSpinBox(buttonSymbols = QSpinBox.NoButtons)
+        self.NSEEP.setAlignment(Qt.AlignRight)
+        self.NSEEP.setRange(0, 100)
+        self.addWidget(NSEEPLabel, 2, 1)
+        self.addWidget(self.NSEEP, 3, 1)
+        self.NSEEP.valueChanged.connect(self.numSeepageFaceChange)
 
         self.setRowMinimumHeight(6, 30)
 
@@ -270,6 +279,9 @@ class ParametersView(QGridLayout):
 
     def numMaterialsChange(self):
         self.viewModel.NK.setData(self.NK.value())
+
+    def numSeepageFaceChange(self):
+        self.viewModel.NSEEP.setData(self.NSEEP.value())
 
     def updateView(self):
         self.NN.setValue(self.viewModel.NN.getData())

@@ -17,6 +17,7 @@ class BasicParametersController(QGroupBox):
         self.parametersModel.NN.connectObserver(lambda newData: self.notifyNodeCountChange(newData))
         self.parametersModel.NE.connectObserver(lambda newData: self.notifyElementCountChange(newData))
         self.parametersModel.NK.connectObserver(lambda newData: self.notifyMaterialCountChange(newData))
+        self.parametersModel.NSEEP.connectObserver(lambda newData: self.notifySeepageFaceCountChange(newData))
 
     def getBasicParametersModel(self):
         return self.parametersModel
@@ -33,15 +34,19 @@ class BasicParametersController(QGroupBox):
 
     def notifyNodeCountChange(self, nodeCount):
         for listener in self.parameterChangeListeners:
-            listener.onNodeCountChange(self, nodeCount)
+            listener.onNodeCountChange(nodeCount)
 
     def notifyElementCountChange(self, elementCount):
         for listener in self.parameterChangeListeners:
-            listener.onElementCountChange(self, elementCount)
+            listener.onElementCountChange(elementCount)
 
     def notifyMaterialCountChange(self, materialCount):
         for listener in self.parameterChangeListeners:
-            listener.onMaterialCountChange(self, materialCount)
+            listener.onMaterialCountChange(materialCount)
+
+    def notifySeepageFaceCountChange(self, seepageFaceCount):
+        for listener in self.parameterChangeListeners:
+            listener.onSeepageFaceCountChange(seepageFaceCount)
 
 class BasicParameterChangeListener:
     def onNodeCountChange(self, newCount):
@@ -51,4 +56,7 @@ class BasicParameterChangeListener:
         pass
 
     def onMaterialCountChange(self, newCount):
+        pass
+
+    def onSeepageFaceCountChange(self, newCount):
         pass

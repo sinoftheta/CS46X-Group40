@@ -127,10 +127,6 @@ class MaterialView(QGroupBox):
     def updateView(self):
         self._destroyView()
 
-        self.pressureHeadLayout.addWidget(self.pressureHeadLabel)
-        self.moistureContentLayout.addWidget(self.moistureContentLabel)
-        self.hydraulicConductivityLayout.addWidget(self.hydraulicConductivityLabel)
-
         self._addModelData(self.pressureHeadLayout, MaterialEnum.PRESSURE_HEAD)
         self._addModelData(self.moistureContentLayout, MaterialEnum.MOISTURE_CONTENT)
         self._addModelData(self.hydraulicConductivityLayout, MaterialEnum.HYDRAULIC_CONDUCTIVITY)

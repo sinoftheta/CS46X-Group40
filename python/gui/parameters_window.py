@@ -17,6 +17,8 @@ from .elementIncidences import ElementIncidences
 from .MaterialsController import MaterialsController
 from .MaterialsController import MaterialsChangeListener
 
+from .SeepageFaceController import SeepageFaceController
+
 parameters = [
         'Import',
         'Basic Parameters',
@@ -61,6 +63,12 @@ class ParametersPage(QGroupBox):
         self.parametersPageElem = Elements()
         self.parametersPageElemIncid = ElementIncidences()
         self.materialsController = MaterialsController()
+        self.seepageFaceController = SeepageFaceController()
+
+        # set up controller listeners
+        self.parametersPageBasic.addBasicParameterListener(self.seepageFaceController)
+        self.parametersPageBasic.addBasicParameterListener(self.materialsController)
+
 
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
@@ -71,6 +79,8 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageElem)
         self.parametersPageStack.addWidget(self.parametersPageElemIncid)
         self.parametersPageStack.addWidget(self.materialsController)
+        self.parametersPageStack.addWidget(self.seepageFaceController)
+
 
         #   Add navigation buttons (widgets) to
         #       button container 'self.parametersPageStack'
@@ -119,6 +129,11 @@ class ParametersPage(QGroupBox):
         self.matsNavBtn.pressed.connect(self.materialsClick)
         self.parametersPageNav.addWidget(self.matsNavBtn)
 
+        seepageFaceNavBtn = QPushButton("Seepage Faces")
+        seepageFaceNavBtn.setGeometry(0, 0, 150, 150)
+        seepageFaceNavBtn.pressed.connect(self.seepageFaceClick)
+        self.parametersPageNav.addWidget(seepageFaceNavBtn)
+
         self.parametersPageNav.setContentsMargins(0, 0, 0, 0)
         self.parametersPageNav.setSpacing(20)
 
@@ -159,7 +174,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(5)
 
     def elementIncClick(self):
-        numElements = self.parametersPageBasic.parametersModel.NE
+        numElements = self.parametersPageBasic.parametersModel.NE.getData()
         # maxNodes = self.parametersPageBasic.getMaxNodesPerElem()
         self.parametersPageStack.setCurrentIndex(6)
         self.parametersPageElemIncid.buildTable(numElements, 12)
@@ -167,11 +182,10 @@ class ParametersPage(QGroupBox):
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
 
-        # TODO: When apporpriate make the material controller inheirent from some
-        # basic parameters listener class, so that the material controller knows when
-        # the material count changes.
-        # that would let us get rid of this next line of code.
-        self.materialsController.modifyMaterialGroupCount(self.parametersPageBasic.parametersModel.NK.getData())
+    def seepageFaceClick(self):
+        self.parametersPageStack.setCurrentIndex(8)
+        # TODO: When appropriate have the seepageFaceController listen for a change
+        # in the number of seepage faces.
 
     def notifyExport(self):
         for listener in self.exportListeners:
@@ -199,5 +213,5 @@ class ParametersPage(QGroupBox):
 
 
 class ExportListener:
-    def onExport():
+    def onExport(self):
         pass

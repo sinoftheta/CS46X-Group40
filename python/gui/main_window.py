@@ -87,6 +87,7 @@ class MainWindow(QMainWindow, ExportListener):
         fileWriter = gs2.FileWriter(
             self.parametersPage.materialsController.getMaterials(),
             self.simulationPage.getSimulationModel(),
+            self.parametersPage.seepageFaceController.getSeepageFaces(),
             self.parametersPage.parametersPageBasic.getBasicParametersModel()
         )
 
