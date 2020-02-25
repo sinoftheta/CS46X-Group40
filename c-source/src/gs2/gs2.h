@@ -117,9 +117,8 @@ typedef struct gs2State {
     Array ispl;
 
     // Common Three
-    int nn, mm, km, it, nsdn, nb, knb, knb2, istop;
-    double mb, mb2, 
-           kmb, kmb2;
+    int nn, mm, km, it, nsdn, nb, knb, knb2, istop,
+        mb, mb2, kmb, kmb2;
 
    // Common Four
    // Dimensions of variables in common block four should be
