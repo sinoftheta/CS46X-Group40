@@ -50,7 +50,7 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
 
                 if ( jc >= 1){
                   *matrixAt(b, ir, jc) += *matrixAt(eb, iter, iter2);
-                  if (jc > jb) *jb = jc;
+                  if (jc > *jb) *jb = jc;
                 }
 
                 int nc = (ih + jc - 1); // 30
@@ -64,7 +64,7 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
 
                 if (nc >= 1){
                   *matrixAt(a, nc, ir) += *matrixAt(ea, iter, iter2);
-                  if ( nc > jb2) *jb2 = nc;
+                  if ( nc > *jb2) *jb2 = nc;
                 }
               }
             } // end if (k0d[jdj] != 1)
