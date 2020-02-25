@@ -239,7 +239,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         jtest = 1;
 
                         if (ktcal == 0) {
-                            fprintf(gs2stdout, "\n\n\n\n           FINAL HALF-BANDWIDTH FOR FLOW%5g%5g\n", state->mb, state->mb2);
+                            fprintf(gs2stdout, "\n\n\n\n           FINAL HALF-BANDWIDTH FOR FLOW%5d%5d\n", state->mb, state->mb2);
                         }
 
                         if ((state->it + 1) % state->kod9 == 0) {
@@ -608,7 +608,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
             if (jtest < 0) {
                 jtest = 1;
                 if (ktcal == 0) {
-                    fprintf(gs2stdout, "\n\n\n\n           FINAL HALF-BANDWIDTH OF P FOR MASS TRANSPORT%5g\n           FINAL BANDWIDTH OF S FOR MASS TRANSPORT%5g\n", state->kmb, state->kmb2);
+                    fprintf(gs2stdout, "\n\n\n\n           FINAL HALF-BANDWIDTH OF P FOR MASS TRANSPORT%5d\n           FINAL BANDWIDTH OF S FOR MASS TRANSPORT%5d\n", state->kmb, state->kmb2);
                 }
             }
 
