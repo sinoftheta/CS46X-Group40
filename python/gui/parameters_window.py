@@ -174,7 +174,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(5)
 
     def elementIncClick(self):
-        numElements = self.parametersPageBasic.parametersModel.NE
+        numElements = self.parametersPageBasic.parametersModel.NE.getData()
         # maxNodes = self.parametersPageBasic.getMaxNodesPerElem()
         self.parametersPageStack.setCurrentIndex(6)
         self.parametersPageElemIncid.buildTable(numElements, 12)
