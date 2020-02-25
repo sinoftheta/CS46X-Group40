@@ -8,13 +8,14 @@ import gs2
 from os import path
 
 from .parameters_basic import BasicParameters
-from .multipliers import Multipliers
+
 from .nodes import Nodes
 from .nodeTypes import NodeTypes
 from .elements import Elements
 from .elementIncidences import ElementIncidences
 from .MaterialsController import MaterialsController
 from .MaterialsController import MaterialsChangeListener
+from .MultipliersController import MultipliersController
 
 parameters = [
         'Import',
@@ -51,7 +52,7 @@ class ParametersPage(QGroupBox):
         # Creates Classes for each sub-section of the Parameters section
         self.parametersPageHome = QWidget()
         self.parametersPageBasic = BasicParameters()
-        self.parametersPageMult = Multipliers()
+        self.parametersPageMult = MultipliersController()
         self.parametersPageNodes = Nodes()
         self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()

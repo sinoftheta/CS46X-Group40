@@ -2,17 +2,23 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+from .multipliers.MultipliersModel import MultipliersModel
+#from .multipliers.MultipliersView import MultipliersView
+#make a view for each member in model?
 
-class Multipliers(QGroupBox):
+class MultipliersController(QGroupBox):
     def __init__(self):
-        super(Multipliers, self).__init__('Multipliers')
+        super(MultipliersController, self).__init__('Multipliers')
         self.layout = QGridLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.layout.setHorizontalSpacing(30)
         self.setLayout(self.layout)
+
+        self.model = MultipliersModel()
         self.setInputs()
 
     def setInputs(self):
+        
         XFACTLabel = QLabel("X-Coordinate")
         XFACTLabel.setAlignment(Qt.AlignLeft)
         self.XFACT = QDoubleSpinBox()
@@ -20,8 +26,10 @@ class Multipliers(QGroupBox):
         self.XFACT.setSingleStep(0.0001)
         self.XFACT.setRange(-9999.999, 9999.999)
         self.XFACT.setAlignment(Qt.AlignRight)
+        
         self.layout.addWidget(XFACTLabel, 1, 0)
         self.layout.addWidget(self.XFACT, 2, 0)
+        self.XFACT.textChanged.connect(lambda val: self.model.setVal( 'XFACT', val))
 
         YFACTLabel = QLabel("Y-Coordinate")
         YFACTLabel.setAlignment(Qt.AlignLeft)
@@ -32,6 +40,7 @@ class Multipliers(QGroupBox):
         self.YFACT.setAlignment(Qt.AlignRight)
         self.layout.addWidget(YFACTLabel, 1, 1)
         self.layout.addWidget(self.YFACT, 2, 1)
+        self.YFACT.textChanged.connect(lambda val: self.model.setVal( 'YFACT', val))
 
         APHIILabel = QLabel("Initial Pressure Head")
         APHIILabel.setAlignment(Qt.AlignLeft)
@@ -42,6 +51,7 @@ class Multipliers(QGroupBox):
         self.APHII.setAlignment(Qt.AlignRight)
         self.layout.addWidget(APHIILabel, 1, 2)
         self.layout.addWidget(self.APHII, 2, 2)
+        self.APHII.textChanged.connect(lambda val: self.model.setVal( 'APHII', val))
 
         ACONCILabel = QLabel("Initial Concentration")
         ACONCILabel.setAlignment(Qt.AlignLeft)
@@ -52,6 +62,7 @@ class Multipliers(QGroupBox):
         self.ACONCI.setAlignment(Qt.AlignRight)
         self.layout.addWidget(ACONCILabel, 1, 3)
         self.layout.addWidget(self.ACONCI, 2, 3)
+        self.ACONCI.textChanged.connect(lambda val: self.model.setVal( 'ACONCI', val))
 
         ATETALabel = QLabel("Saturated Moisture Content")
         ATETALabel.setAlignment(Qt.AlignLeft)
@@ -62,6 +73,7 @@ class Multipliers(QGroupBox):
         self.ATETA.setAlignment(Qt.AlignRight)
         self.layout.addWidget(ATETALabel, 3, 0)
         self.layout.addWidget(self.ATETA, 4, 0)
+        self.ATETA.textChanged.connect(lambda val: self.model.setVal( 'ATETA', val))
 
         AALLabel = QLabel("Medium Compressibility")
         AALLabel.setAlignment(Qt.AlignLeft)
@@ -72,6 +84,7 @@ class Multipliers(QGroupBox):
         self.AAL.setAlignment(Qt.AlignRight)
         self.layout.addWidget(AALLabel, 3, 1)
         self.layout.addWidget(self.AAL, 4, 1)
+        self.AAL.textChanged.connect(lambda val: self.model.setVal( 'AAL', val))
 
         AKDLabel = QLabel("Distribution Coefficient")
         AKDLabel.setAlignment(Qt.AlignLeft)
@@ -82,6 +95,7 @@ class Multipliers(QGroupBox):
         self.AKD.setAlignment(Qt.AlignRight)
         self.layout.addWidget(AKDLabel, 3, 2)
         self.layout.addWidget(self.AKD, 4, 2)
+        self.AKD.textChanged.connect(lambda val: self.model.setVal( 'AKD', val))
 
         ALAMLabel = QLabel("Radioactive Decay Constant")
         ALAMLabel.setAlignment(Qt.AlignLeft)
@@ -92,6 +106,7 @@ class Multipliers(QGroupBox):
         self.ALAM.setAlignment(Qt.AlignRight)
         self.layout.addWidget(ALAMLabel, 3, 3)
         self.layout.addWidget(self.ALAM, 4, 3)
+        self.ALAM.textChanged.connect(lambda val: self.model.setVal( 'ALAM', val))
 
         APORLabel = QLabel("Porosity")
         APORLabel.setAlignment(Qt.AlignLeft)
@@ -102,6 +117,7 @@ class Multipliers(QGroupBox):
         self.APOR.setAlignment(Qt.AlignRight)
         self.layout.addWidget(APORLabel, 5, 0)
         self.layout.addWidget(self.APOR, 6, 0)
+        self.APOR.textChanged.connect(lambda val: self.model.setVal( 'APOR', val))
 
         ARHOLabel = QLabel("Density")
         ARHOLabel.setAlignment(Qt.AlignLeft)
@@ -112,6 +128,7 @@ class Multipliers(QGroupBox):
         self.ARHO.setAlignment(Qt.AlignRight)
         self.layout.addWidget(ARHOLabel, 5, 1)
         self.layout.addWidget(self.ARHO, 6, 1)
+        self.ARHO.textChanged.connect(lambda val: self.model.setVal( 'ARHO', val))
 
         AFMOBLabel = QLabel("Saturated Hydraulic Conductivity")
         AFMOBLabel.setFont(QFont('Helvetica', 14))
@@ -136,6 +153,8 @@ class Multipliers(QGroupBox):
         self.AFMOBY.setAlignment(Qt.AlignRight)
         self.layout.addWidget(self.AFMOBX, 10, 0)
         self.layout.addWidget(self.AFMOBY, 10, 1)
+        self.AFMOBY.textChanged.connect(lambda val: self.model.setVal( 'AFMOBY', val))
+        self.AFMOBX.textChanged.connect(lambda val: self.model.setVal( 'AFMOBX', val))
 
         AELabel = QLabel("Dispersivity")
         AELabel.setFont(QFont('Helvetica', 14))
@@ -159,17 +178,7 @@ class Multipliers(QGroupBox):
         self.AELONG.setAlignment(Qt.AlignRight)
         self.layout.addWidget(self.AETRANS, 10, 2)
         self.layout.addWidget(self.AELONG, 10, 3)
-
-    def getVals(self):
-        values = {}
-        for var in vars(self):
-            if var == 'layout':
-                continue
-            # return as unordered array
-            #values.append(
-            #    getattr(self, var).value()
-            #)
-
-            # return as key value pairs
-            values[var] = getattr(self, var).value()
-        return values
+        self.AETRANS.textChanged.connect(lambda val: self.model.setVal( 'AETRANS', val))
+        self.AELONG.textChanged.connect(lambda val: self.model.setVal( 'AELONG', val))
+    def test(self, string):
+        print(string)
