@@ -45,8 +45,10 @@ typedef struct gs2State {
     // tape6 = output
     FILE* output;
     
-    FILE *tape7, *tape8, *tape2,
-          *tape4, *tape11, *tape13;
+    FILE *tape7, *tape8;
+
+    Matrix tape2, tape11, tape13;
+    Array tape4;
 
     // Common BLK1
     // should be dimensioned (MAXBW2, MAXS)

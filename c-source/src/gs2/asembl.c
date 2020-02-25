@@ -8,8 +8,8 @@
 
 void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
               Array* u, Array* re, Array* F, Array* k0d, Array* lq,
-              Array* jd, int m, int l, int ib, int ib2, int jb,
-              int jb2, int* ISTOP){
+              Array* jd, int m, int l, int ib, int ib2, int* jb,
+              int* jb2, int* ISTOP){
       matrixAssertNotNull(a, "Matrix 'a' NULL in gs2Asembl!");
       matrixAssertNotNull(b, "Matrix 'b' NULL in gs2Asembl!");
       matrixAssertNotNull(ea, "Matrix 'ea' NULL in gs2Asembl!");
@@ -50,7 +50,7 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
 
                 if ( jc >= 1){
                   *matrixAt(b, ir, jc) += *matrixAt(eb, iter, iter2);
-                  if (jc > jb) jb = jc;
+                  if (jc > jb) *jb = jc;
                 }
 
                 int nc = (ih + jc - 1); // 30
@@ -64,7 +64,7 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
 
                 if (nc >= 1){
                   *matrixAt(a, nc, ir) += *matrixAt(ea, iter, iter2);
-                  if ( nc > jb2) jb2 = nc;
+                  if ( nc > jb2) *jb2 = nc;
                 }
               }
             } // end if (k0d[jdj] != 1)

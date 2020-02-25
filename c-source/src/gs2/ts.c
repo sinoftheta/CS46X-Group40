@@ -4,64 +4,6 @@
 
 #define yes 1
 #define no 0
-#define MAXSIZE 4095
-
-void gs2ReadCsvMatrix(FILE* fp, Matrix* m, int i1, int i2, int j1, int j2) {
-    int i, j;
-    int charsRead;
-    char filename[MAXSIZE];
-    CSVFile csvFile;
-    CSVRow* row;
-
-    charsRead = getFileName(fp, filename, MAXSIZE);
-    if (charsRead < 0) {
-        croak("ts.c: gs2ReadCsvMatrix: Unable to get filename");
-    }
-
-    csvFile = csvLoadFile(filename);
-    row = csvFile.currentRow;
-
-    for (i = i1; i <= i2; i++) {
-        if (row == CSV_NULL_ROW_PTR) {
-            croakf("ts.c: gs2ReadCsvMatrix: File %s, not enough rows %d vs %d", filename, i - i1, i2 - i1 + 1);
-        }
-        if (row->entryCount < j2 - j1 + 1) {
-            croakf("ts.c: gs2ReadCsvMatrix: File %s row %d, too few entries %d vs %d", filename, i - i1 + 1, row->entryCount, j2 - j1 + 1);
-        }
-        for (j = j1; j <= j2; j++) {
-            sscanf(row->entries[j - j1 + 1], "%lf", matrixAt(m, i, j));
-        }
-        row = row->next;
-    }
-    csvFreeFile(&csvFile);
-}
-
-void gs2ReadCsvArray(FILE* fp, Array* r, int i1, int i2) {
-    int i;
-    int charsRead;
-    char filename[MAXSIZE];
-    CSVFile csvFile;
-    CSVRow* row;
-
-    charsRead = getFileName(fp, filename, MAXSIZE);
-    if (charsRead < 0) {
-        croak("ts.c: gs2ReadCsvArray: Unable to get filename");
-    }
-
-    csvFile = csvLoadFile(filename);
-    row = csvFile.currentRow;
-
-    if (row == CSV_NULL_ROW_PTR) {
-        croakf("ts.c: gs2ReadCsvArray: File %s is empty", filename);
-    }
-    if (row->entryCount < i2 - i1 + 1) {
-        croakf("ts.c: gs2ReadCsvArray: File %s, too few entries %d vs %d", filename, row->entryCount, i2 - i1 + 1);
-    }
-    for (i = i1; i <= i2; i++) {
-        sscanf(row->entries[i - i1 + 1], "%lf", arrayAt(r, i));
-    }
-    csvFreeFile(&csvFile);
-}
 
 void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt, Array* phi, Array* phii, Array* old,
            Array* cfm, Array* crt, Array* conc, Array* conci, Array* cold, Array* fx, Array* cn, Array* vn,
@@ -225,13 +167,19 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     } else {
 
                         // Add time-dependent parts
-                        rewind(state->tape11);
-                        gs2ReadCsvMatrix(state->tape11, p, 1, state->mm, 1, state->mb);
+                        for (i = 1; i <= state->mm; i++) {
+                            for (j = 1; j <= state->mb; j++) {
+                                *matrixAt(p, i, j) = *matrixAt(&(state->tape11), i, j);
+                            }
+                        }
 
                         if (nit <= 1) {
                             if (state->it % state->itchng == 0) {
-                                rewind(state->tape13);
-                                gs2ReadCsvMatrix(state->tape13, s, 1, state->mb, 1, state->mm);
+                                for (i = 1; i <= state->mb; i++) {
+                                    for (j = 1; j <= state->mm; j++) {
+                                        *matrixAt(s, i, j) = *matrixAt(&(state->tape13), i, j);
+                                    }
+                                }
                             } else {
                                 jtest++;
                             }
@@ -356,8 +304,11 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     // Determine boundary flux
                     if ((state->nsdn > 0 && state->coefi == 1) || state->nseep != 0) {
                         
-                        rewind(state->tape13);
-                        gs2ReadCsvMatrix(state->tape13, p, 1, state->mm, 1, state->nb);
+                        for (i = 1; i <= state->mm; i++) {
+                            for (j = 1; j <= state->nb; j++) {
+                                *matrixAt(p, i, j) = *matrixAt(&(state->tape13), i, j);
+                            }
+                        }
 
                         gs2Lrhs(s, p, fm, old, u, lc, state->nn, state->nb, state->mb, 1.0 - state->tdr, state->tdr, 1);
 
@@ -582,7 +533,6 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 
             // Select approximation for time derivative
             a3 = state->tdr / state->delt;
-            rewind(state->tape4);
 
             if (advanc) {
 
@@ -607,8 +557,11 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 if (state->stat != 0) {
                     if (jtest >= 0) {
                         kb1 = state->knb - state->kmb + 1;
-                        rewind(state->tape2);
-                        gs2ReadCsvMatrix(state->tape2, s, kb1, state->kmb2, 1, state->km);
+                        for (i = kb1; i <= state->kmb2; i++) {
+                            for (j = 1; j <= state->km; j++) {
+                                *matrixAt(s, i, j) = *matrixAt(&(state->tape2), i - kb1 + 1, j);
+                            }
+                        }
                     }
 
                     gs2Lrhs(s, p, cfm, cold, crt, klc, state->nn, state->knb, state->kmb, a3, 0.0, 2);
@@ -625,17 +578,14 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                          (state->memoryRequirements).maxs, (state->memoryRequirements).mx, &jx);
 
                 for (i = 1; i <= jx; i++) {
-                    fprintf(state->tape4, "%f", *arrayAt(w, i));
-                    if (i != jx) {
-                        fprintf(state->tape4, ",");
-                    }
+                    *arrayAt(&(state->tape4), i) = *arrayAt(w, i);
                 }
-                fprintf(state->tape4, "\n");
-
 
             } else {
 
-                gs2ReadCsvArray(state->tape4, w, 1, jx);
+                for (i = 1; i <= jx; i++) {
+                    *arrayAt(w, i) = *arrayAt(&(state->tape4), i);
+                }
             
             }
 

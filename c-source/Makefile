@@ -1,6 +1,6 @@
 CC=gcc
 # -lgsl -lgslcblas
-CFLAGS := -pedantic -Wall -Werror -g -std=c99 -D_XOPEN_SOURCE=700
+CFLAGS := -pedantic -Wall -Werror -g -std=c99
 CLIBS := -lgsl -lgslcblas -lm
 
 SRCDIR := src

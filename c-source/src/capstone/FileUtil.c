@@ -2,7 +2,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 
 int __alloc_line(char** oLine, int* oCurrLength, int newLength) {
@@ -15,24 +14,6 @@ int __alloc_line(char** oLine, int* oCurrLength, int newLength) {
     *oCurrLength = newLength;
 
     return 0;
-}
-
-int getFileName(FILE* fp, char* filename, int size) {
-    if (fp == NULL)
-        return -1;
-
-    int fno, r;
-    char proclnk[size];
-
-    fno = fileno(fp);
-    sprintf(proclnk, "/proc/self/fd/%d", fno);
-    r = readlink(proclnk, filename, size);
-
-    if (r < 0)
-        return -1;
-
-    filename[r] = '\0';
-    return r;
 }
 
 int readline(char** oLine, int* oLength, FILE* stream) {
