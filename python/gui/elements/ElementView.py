@@ -3,9 +3,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 class ElementView(QGroupBox):
-    def __init__(self, elementModel, maxMaterialGroup):
+    def __init__(self, elementModel, materialGroupIdMax, nodeIdMax):
         super(ElementView, self).__init__('Element ' + str(elementModel.elementNumber))
         self.viewModel = elementModel
+        self.nodeIdMax = nodeIdMax
 
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
@@ -17,7 +18,7 @@ class ElementView(QGroupBox):
         materialGroupLabel.setFont(QFont('Arial', 16))
         materialGroupLabel.setAlignment(Qt.AlignLeft)
         self.layout.addWidget(materialGroupLabel)
-        self.materialCB = MaterialsComboBox(maxMaterialGroup)
+        self.materialCB = MaterialsComboBox(materialGroupIdMax)
         self.materialCB.currentIndexChanged.connect(self.updateModelMaterialGroup)
         self.materialCB.setCurrentIndex(self.viewModel.materialGroup - 1)
 
@@ -49,7 +50,7 @@ class ElementView(QGroupBox):
 
             incidenceInput = QSpinBox(buttonSymbols = QSpinBox.NoButtons)
             incidenceInput.setAlignment(Qt.AlignRight)
-            incidenceInput.setRange(0, self.viewModel.nodeCount)
+            incidenceInput.setRange(0, self.nodeIdMax)
             incidenceInput.setFixedWidth(60)
             incidenceInput.setValue(self.viewModel.incidences[node])
             incidenceInput.valueChanged.connect(self.updateModelIncidence(node))

@@ -18,7 +18,8 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
 
         # TODO: adjust this mechanism for material groups ?
         # Max material group number
-        self.materialMax = 0
+        self.materialGroupIdMax = 0
+        self.nodeIdMax = 0
 
         self.elementLayout = QVBoxLayout()
         self.elementLayout.setAlignment(Qt.AlignTop)
@@ -66,7 +67,7 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
 
         elementIndex = int(element.text()) - 1
         model = self.elementModels[elementIndex]
-        self.currentElement = ElementView(model, self.materialMax)
+        self.currentElement = ElementView(model, self.materialGroupIdMax, self.nodeIdMax)
 
         # TODO: connect observer for currently displayed
         #       element's material group change ?
@@ -91,7 +92,7 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
 
     # TODO: adjust this to use MaterialsChangeListener onMaterialRemoved instead ?
     def onMaterialCountChange(self, count):
-        self.materialMax = count
+        self.materialGroupIdMax = count
         # clear currently selected element
         #   and remove currently displayed element
         if (self.currentElement != None):
@@ -107,5 +108,4 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
                 element.materialGroup = 1
 
     def onNodeCountChange(self, count):
-        for element in self.elementModels:
-            element.nodeCount = count
+        self.nodeIdMax = count
