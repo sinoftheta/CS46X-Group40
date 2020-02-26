@@ -3,11 +3,17 @@ import csv
 from gui.simulation.SimulationModel import GS2KOD
 
 class FileWriter:
-    def __init__(self, materialModels, simulationModel, seepageFaceModels, basicParametersModel):
+    def __init__(self,
+            materialModels,
+            simulationModel,
+            seepageFaceModels,
+            basicParametersModel,
+            elementsModels):
         self.materialModels = materialModels
         self.simulationModel = simulationModel
         self.seepageFaceModels = seepageFaceModels
         self.basicParametersModel = basicParametersModel
+        self.elementsModels = elementsModels
 
     def write(self, filepath):
 
@@ -23,6 +29,7 @@ class FileWriter:
             self._writeGroupA(writer, self.simulationModel)
             self._writeGroupB(writer, self.basicParametersModel)
             self._writeGroupD(writer, self.simulationModel)
+            self._writeGroupI(writer, self.elementsModels)
             self._writeGroupO(writer, self.seepageFaceModels)
             self._writeGroupQ(writer, self.materialModels)
 
@@ -161,6 +168,16 @@ class FileWriter:
 
         csv.writerow(self._csvPad(csvRow))
 
+    def _writeGroupI(self, csv, elementsModels):
+        group = "I"
+        for element in elementsModels:
+            csvRow = [ group, element.elementNumber ]
+
+            for node in element.getIncidences():
+                csvRow.append(node)
+
+            csv.writerow(self._csvPad(csvRow))
+
     def _writeGroupO(self, csv, seepageFaces):
         for seepageFace in seepageFaces:
             group = "O-1"
@@ -171,7 +188,7 @@ class FileWriter:
 
             groups = ["O-2", "O-3"]
             nodeLists = [seepageFace.diricheltNodes, seepageFace.nuemannNodes]
-            
+
             for x in range(len(groups)):
                 csvRow = [groups[x]]
                 for node in nodeLists[x]:
@@ -184,11 +201,3 @@ class FileWriter:
 
                 if len(csvRow) > 1:
                     csv.writerow(self._csvPad(csvRow))
-            
-
-
-            
-
-
-
-        
