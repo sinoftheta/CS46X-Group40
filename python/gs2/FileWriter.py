@@ -8,12 +8,12 @@ class FileWriter:
             simulationModel,
             seepageFaceModels,
             basicParametersModel,
-            elementsModels):
+            elementModels):
         self.materialModels = materialModels
         self.simulationModel = simulationModel
         self.seepageFaceModels = seepageFaceModels
         self.basicParametersModel = basicParametersModel
-        self.elementsModels = elementsModels
+        self.elementModels = elementModels
 
     def write(self, filepath):
 
@@ -29,7 +29,7 @@ class FileWriter:
             self._writeGroupA(writer, self.simulationModel)
             self._writeGroupB(writer, self.basicParametersModel)
             self._writeGroupD(writer, self.simulationModel)
-            self._writeGroupI(writer, self.elementsModels)
+            self._writeGroupI(writer, self.elementModels)
             self._writeGroupO(writer, self.seepageFaceModels)
             self._writeGroupQ(writer, self.materialModels)
 
@@ -168,9 +168,9 @@ class FileWriter:
 
         csv.writerow(self._csvPad(csvRow))
 
-    def _writeGroupI(self, csv, elementsModels):
+    def _writeGroupI(self, csv, elementModels):
         group = "I"
-        for element in elementsModels:
+        for element in elementModels:
             csvRow = [ group, element.elementNumber ]
 
             for node in element.getIncidences():

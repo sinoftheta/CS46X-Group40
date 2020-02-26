@@ -17,19 +17,8 @@ from .elementIncidences import ElementIncidences
 from .MaterialsController import MaterialsController
 from .MaterialsController import MaterialsChangeListener
 from .ElementsController import ElementsController
-from .ElementsController import ElementsChangeListener
 
 from .SeepageFaceController import SeepageFaceController
-
-parameters = [
-        'Import',
-        'Basic Parameters',
-        'Multipliers',
-        'Nodes',
-        'Node Types',
-        'Elements',
-        'Element Incidences',
-        'Materials' ]
 
 class ParametersPage(QGroupBox):
     def __init__(self, config):

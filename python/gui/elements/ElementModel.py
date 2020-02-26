@@ -1,7 +1,7 @@
 from ..LiveData import LiveData
 
 class ElementModel:
-    def __init__(self, elementNum, materialGroupMax):
+    def __init__(self, elementNum):
         self.elementNumber = elementNum
 
         # default to max number nodes per element in GS2
@@ -9,12 +9,11 @@ class ElementModel:
 
         # default to max number of nodes for GS2
         self.nodeCount = 52
-        self.maxMaterialGroup = materialGroupMax
 
         self.incidences = [0 for node in range(self.maxIncidenceCount)]
 
         # default to first material group
-        self.materialGroup = LiveData(1)
+        self.materialGroup = 1
 
     def getIncidences(self):
         # return list of incidences for element

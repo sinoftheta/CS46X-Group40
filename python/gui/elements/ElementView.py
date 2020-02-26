@@ -3,9 +3,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 class ElementView(QGroupBox):
-    def __init__(self, elementModel):
+    def __init__(self, elementModel, maxMaterialGroup):
         super(ElementView, self).__init__('Element ' + str(elementModel.elementNumber))
         self.viewModel = elementModel
+
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
@@ -16,9 +17,9 @@ class ElementView(QGroupBox):
         materialGroupLabel.setFont(QFont('Arial', 16))
         materialGroupLabel.setAlignment(Qt.AlignLeft)
         self.layout.addWidget(materialGroupLabel)
-        self.materialCB = MaterialsComboBox(self.viewModel.maxMaterialGroup)
+        self.materialCB = MaterialsComboBox(maxMaterialGroup)
         self.materialCB.currentIndexChanged.connect(self.updateModelMaterialGroup)
-        self.materialCB.setCurrentIndex(self.viewModel.materialGroup.getData()-1)
+        self.materialCB.setCurrentIndex(self.viewModel.materialGroup - 1)
 
         self.layout.addWidget(self.materialCB)
 
@@ -32,7 +33,8 @@ class ElementView(QGroupBox):
 
     def setIncidenceInputs(self):
         self.incidenceLayout = QGridLayout()
-        self.incidenceLayout.setSpacing(20)
+        self.incidenceLayout.setHorizontalSpacing(20)
+        self.incidenceLayout.setVerticalSpacing(10)
 
         col = row = 0
         for node in range(self.viewModel.maxIncidenceCount):
@@ -59,7 +61,7 @@ class ElementView(QGroupBox):
 
     def updateModelMaterialGroup(self):
         index = self.materialCB.currentIndex()
-        self.viewModel.materialGroup.setData(int(self.materialCB.itemText(index)))
+        self.viewModel.materialGroup = int(self.materialCB.itemText(index))
 
     def updateModelIncidence(self, index):
         def listener(node):

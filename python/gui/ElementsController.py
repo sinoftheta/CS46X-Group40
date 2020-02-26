@@ -14,10 +14,7 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
         # list of element models that this controller 'controls'
-        self.elementsModels = []
-
-        # Objects that want to know material group of elements
-        self.elementsChangeListeners = []
+        self.elementModels = []
 
         # TODO: adjust this mechanism for material groups ?
         # Max material group number
@@ -46,22 +43,19 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
         self.setLayout(self.layout)
 
     def getElements(self):
-        return self.elementsModels
+        return self.elementModels
 
     def pushElement(self):
-        elementNumber = str(len(self.elementsModels) + 1)
-        elementModel = ElementModel(elementNumber, self.materialMax)
+        elementNumber = str(len(self.elementModels) + 1)
+        elementModel = ElementModel(elementNumber)
         newElement = QListWidgetItem(elementNumber)
         newElement.setTextAlignment(Qt.AlignCenter)
-        self.elementsModels.append(elementModel)
+        self.elementModels.append(elementModel)
         self.elementsList.addItem(newElement)
 
-        self.notifyElementAdded(elementModel)
-
     def popElement(self):
-        lastElement = self.elementsModels.pop()
+        lastElement = self.elementModels.pop()
         element = self.elementsList.takeItem(self.elementsList.count() - 1)
-        self.notifyElementRemoved(lastElement)
 
     def elementSelectionChange(self, element):
         if self.currentElement != None:
@@ -71,8 +65,8 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
             self.currentElement = None
 
         elementIndex = int(element.text()) - 1
-        model = self.elementsModels[elementIndex]
-        self.currentElement = ElementView(model)
+        model = self.elementModels[elementIndex]
+        self.currentElement = ElementView(model, self.materialMax)
 
         # TODO: connect observer for currently displayed
         #       element's material group change ?
@@ -80,11 +74,11 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
         self.layout.addWidget(self.currentElement)
 
     def onElementCountChange(self, count):
-        if count > len(self.elementsModels):
-            while count > len(self.elementsModels):
+        if count > len(self.elementModels):
+            while count > len(self.elementModels):
                 self.pushElement()
         else:
-            while len(self.elementsModels) > count:
+            while len(self.elementModels) > count:
                 self.popElement()
 
         # clear currently selected element
@@ -106,40 +100,12 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
             self.currentElement = None
             self.elementsList.clearSelection()
 
-        for element in self.elementsModels:
-            element.maxMaterialGroup = count
+        for element in self.elementModels:
             # if new count of material groups is > an elements material group
-            #   set to 0
-            if (
-                    (element.materialGroup.getData() != None)
-                    and (element.materialGroup.getData() > count)
-               ):
-                element.materialGroup.setData(1)
+            #   set to 1
+            if ( element.materialGroup > count ):
+                element.materialGroup = 1
 
     def onNodeCountChange(self, count):
-        for element in self.elementsModels:
+        for element in self.elementModels:
             element.nodeCount = count
-
-    """
-        Listeners
-    """
-    def addElementChangeListener(self, listener):
-        if listener not in self.elementsChangeListeners:
-            self.elementsChangeListeners.append(listener)
-
-    def removeElementChangeListener(self, listener):
-        self.elementsChangeListeners.remove(listener)
-
-    def notifyElementAdded(self, elementModel):
-        for listener in self.elementsChangeListeners:
-            listener.onElementAdded(elementModel)
-
-    def notifyElementRemoved(self, elementModel):
-        for listener in self.elementsChangeListeners:
-            list.onElementRemoved(elementModel)
-
-class ElementsChangeListener:
-    def onElementAdded(self, elementModel):
-        pass
-    def onElementRemoved(self, elementModel):
-        pass
