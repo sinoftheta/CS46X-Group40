@@ -12,10 +12,12 @@ from .BasicParametersController import BasicParameterChangeListener
 from .multipliers import Multipliers
 from .nodes import Nodes
 from .nodeTypes import NodeTypes
-from .elements import Elements
+from .materialProperties import Elements
 from .elementIncidences import ElementIncidences
 from .MaterialsController import MaterialsController
 from .MaterialsController import MaterialsChangeListener
+from .ElementsController import ElementsController
+from .ElementsController import ElementsChangeListener
 
 from .SeepageFaceController import SeepageFaceController
 
@@ -61,14 +63,14 @@ class ParametersPage(QGroupBox):
         self.parametersPageNodes = Nodes()
         self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
-        self.parametersPageElemIncid = ElementIncidences()
+        self.elementsController = ElementsController()
         self.materialsController = MaterialsController()
         self.seepageFaceController = SeepageFaceController()
 
         # set up controller listeners
         self.parametersPageBasic.addBasicParameterListener(self.seepageFaceController)
         self.parametersPageBasic.addBasicParameterListener(self.materialsController)
-
+        self.parametersPageBasic.addBasicParameterListener(self.elementsController)
 
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
@@ -77,7 +79,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.parametersPageNodes)
         self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
         self.parametersPageStack.addWidget(self.parametersPageElem)
-        self.parametersPageStack.addWidget(self.parametersPageElemIncid)
+        self.parametersPageStack.addWidget(self.elementsController)
         self.parametersPageStack.addWidget(self.materialsController)
         self.parametersPageStack.addWidget(self.seepageFaceController)
 
@@ -177,7 +179,7 @@ class ParametersPage(QGroupBox):
         numElements = self.parametersPageBasic.parametersModel.NE.getData()
         # maxNodes = self.parametersPageBasic.getMaxNodesPerElem()
         self.parametersPageStack.setCurrentIndex(6)
-        self.parametersPageElemIncid.buildTable(numElements, 12)
+        #self.parametersPageElemIncid.buildTable(numElements, 12)
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)
