@@ -12,22 +12,13 @@ from .BasicParametersController import BasicParameterChangeListener
 from .multipliers import Multipliers
 from .nodes import Nodes
 from .nodeTypes import NodeTypes
-from .elements import Elements
+from .materialProperties import Elements
 from .elementIncidences import ElementIncidences
 from .MaterialsController import MaterialsController
 from .MaterialsController import MaterialsChangeListener
+from .ElementsController import ElementsController
 
 from .SeepageFaceController import SeepageFaceController
-
-parameters = [
-        'Import',
-        'Basic Parameters',
-        'Multipliers',
-        'Nodes',
-        'Node Types',
-        'Elements',
-        'Element Incidences',
-        'Materials' ]
 
 class ParametersPage(QGroupBox):
     def __init__(self, config):
@@ -56,28 +47,28 @@ class ParametersPage(QGroupBox):
 
         # Creates Classes for each sub-section of the Parameters section
         self.parametersPageHome = QWidget()
-        self.parametersPageBasic = BasicParametersController()
+        self.basicParametersController = BasicParametersController()
         self.parametersPageMult = Multipliers()
         self.parametersPageNodes = Nodes()
         self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
-        self.parametersPageElemIncid = ElementIncidences()
+        self.elementsController = ElementsController()
         self.materialsController = MaterialsController()
         self.seepageFaceController = SeepageFaceController()
 
         # set up controller listeners
-        self.parametersPageBasic.addBasicParameterListener(self.seepageFaceController)
-        self.parametersPageBasic.addBasicParameterListener(self.materialsController)
-
+        self.basicParametersController.addBasicParameterListener(self.seepageFaceController)
+        self.basicParametersController.addBasicParameterListener(self.materialsController)
+        self.basicParametersController.addBasicParameterListener(self.elementsController)
 
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
-        self.parametersPageStack.addWidget(self.parametersPageBasic)
+        self.parametersPageStack.addWidget(self.basicParametersController)
         self.parametersPageStack.addWidget(self.parametersPageMult)
         self.parametersPageStack.addWidget(self.parametersPageNodes)
         self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
         self.parametersPageStack.addWidget(self.parametersPageElem)
-        self.parametersPageStack.addWidget(self.parametersPageElemIncid)
+        self.parametersPageStack.addWidget(self.elementsController)
         self.parametersPageStack.addWidget(self.materialsController)
         self.parametersPageStack.addWidget(self.seepageFaceController)
 
@@ -114,14 +105,14 @@ class ParametersPage(QGroupBox):
         self.nodeTypesBtn.pressed.connect(self.nodeTypesClick)
         self.parametersPageNav.addWidget(self.nodeTypesBtn)
 
-        self.elemNavBtn = QPushButton("Elements")
+        self.elemNavBtn = QPushButton("Material Properties")
         self.elemNavBtn.setGeometry(0, 0, 150, 100)
-        self.elemNavBtn.pressed.connect(self.elementsClick)
+        self.elemNavBtn.pressed.connect(self.materialPropClick)
         self.parametersPageNav.addWidget(self.elemNavBtn)
 
-        self.elemIncNavBtn = QPushButton("Element Incidences")
+        self.elemIncNavBtn = QPushButton("Elements")
         self.elemIncNavBtn.setGeometry(0, 0, 150, 100)
-        self.elemIncNavBtn.pressed.connect(self.elementIncClick)
+        self.elemIncNavBtn.pressed.connect(self.elementsClick)
         self.parametersPageNav.addWidget(self.elemIncNavBtn)
 
         self.matsNavBtn = QPushButton("Materials")
@@ -156,7 +147,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(2)
 
     def nodesClick(self):
-        numNodes = self.parametersPageBasic.parametersModel.NN.getData()
+        numNodes = self.basicParametersController.parametersModel.NN.getData()
         self.parametersPageNodes.buildTable(numNodes)
         self.parametersPageStack.setCurrentIndex(3)
         #Test accessor
@@ -167,17 +158,14 @@ class ParametersPage(QGroupBox):
         self.parametersPageNodeTypes.setNodeTypes(nodeTypes)
         self.parametersPageStack.setCurrentIndex(4)
 
-    def elementsClick(self):
-        numElements = self.parametersPageBasic.parametersModel.NE.getData()
-        numMaterials = self.parametersPageBasic.parametersModel.NK.getData()
+    def materialPropClick(self):
+        numElements = self.basicParametersController.parametersModel.NE.getData()
+        numMaterials = self.basicParametersController.parametersModel.NK.getData()
         self.parametersPageElem.buildTable(numElements, numMaterials)
         self.parametersPageStack.setCurrentIndex(5)
 
-    def elementIncClick(self):
-        numElements = self.parametersPageBasic.parametersModel.NE.getData()
-        # maxNodes = self.parametersPageBasic.getMaxNodesPerElem()
+    def elementsClick(self):
         self.parametersPageStack.setCurrentIndex(6)
-        self.parametersPageElemIncid.buildTable(numElements, 12)
 
     def materialsClick(self):
         self.parametersPageStack.setCurrentIndex(7)

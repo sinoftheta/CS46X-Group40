@@ -12,6 +12,7 @@ from .parameters_window import ExportListener
 
 from .SimulationController import SimulationController
 from .BasicParametersController import BasicParametersController
+from .ElementsController import ElementsController
 
 class MainWindow(QMainWindow, ExportListener):
     def __init__(self, config, *args, **kwargs):
@@ -72,15 +73,16 @@ class MainWindow(QMainWindow, ExportListener):
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.parametersButton)
 
+        self.meshButton = QPushButton('Mesh')
+        self.meshButton.pressed.connect(lambda index=1:
+                            self.homePageStack.setCurrentIndex(index))
+        self.homePageButtons.addWidget(self.meshButton)
+
         self.simulationButton = QPushButton('Simulation')
         self.simulationButton.pressed.connect(lambda index=2:
                             self.homePageStack.setCurrentIndex(index))
         self.homePageButtons.addWidget(self.simulationButton)
 
-        self.meshButton = QPushButton('Mesh')
-        self.meshButton.pressed.connect(lambda index=1:
-                            self.homePageStack.setCurrentIndex(index))
-        self.homePageButtons.addWidget(self.meshButton)
 
 
     def onExport(self):
@@ -88,7 +90,8 @@ class MainWindow(QMainWindow, ExportListener):
             self.parametersPage.materialsController.getMaterials(),
             self.simulationPage.getSimulationModel(),
             self.parametersPage.seepageFaceController.getSeepageFaces(),
-            self.parametersPage.parametersPageBasic.getBasicParametersModel()
+            self.parametersPage.basicParametersController.getBasicParametersModel(),
+            self.parametersPage.elementsController.getElements()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])

@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 
-from .material.MaterialModel import MaterialModel 
+from .material.MaterialModel import MaterialModel
 from .material.MaterialView import MaterialView
 
 from .BasicParametersController import BasicParameterChangeListener
@@ -44,7 +44,7 @@ class MaterialsController(QGroupBox, BasicParameterChangeListener):
         self.materialGroup.addItem(group)
 
         self.notifyMaterialAdded(materialModel)
-        
+
     def popMaterialGroup(self):
         lastMaterial = self.materialModels.pop()
         self.materialGroup.removeItem(self.materialGroup.count() - 1)
@@ -56,7 +56,7 @@ class MaterialsController(QGroupBox, BasicParameterChangeListener):
             self.layout.removeWidget(self.currentMaterialGroup)
             self.currentMaterialGroup.deleteLater()
             self.currentMaterialGroup = None
-        
+
         groupIndex = self.materialGroup.currentIndex()
 
         model = self.materialModels[groupIndex]
