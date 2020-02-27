@@ -337,13 +337,13 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
             // Print element matrices for flow
             if (state->kod1 == 1) {
-                printf("1\n\n\n\n           ELEMENT MATRICES FOR FLOW\n           -------------------------\n");
+                fprintf(gs2stdout, "1\n\n\n\n           ELEMENT MATRICES FOR FLOW\n           -------------------------\n");
                 gs2Matgen3(&(state->pe), &(state->se), m, l);
             }
 
             // Assembly
             gs2Asembl(s, p, &(state->se), &(state->pe), rt, fx, &(state->srcr), phii, lr, lc,
-                      &jd, m, l, state->nb, state->nb, state->mb, state->mb2, &(state->istop));
+                      &jd, m, l, state->nb, state->nb, &(state->mb), &(state->mb2), &(state->istop));
         
         
         // Compute concentration coefficient matrices
@@ -549,13 +549,13 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
             // Print element matrices for concentration
             if (state->kod3 == 1) {
-                printf("1\n\n\n\n           ELEMENT MATRICES FOR CONCENTRATION\n           ----------------------------------\n");
+                fprintf(gs2stdout, "1\n\n\n\n           ELEMENT MATRICES FOR CONCENTRATION\n           ----------------------------------\n");
                 gs2Matgen3(&(state->pe), &(state->se), m, l);
             }
 
             // Assembly of global coefficient matrix
             gs2Asembl(s, p, &(state->se), &(state->pe), crt, crt, &(state->srcr), conci, klr, klc,
-                      &jd, m, l, state->knb, state->knb2, state->kmb, state->kmb2, &(state->istop));
+                      &jd, m, l, state->knb, state->knb2, &(state->kmb), &(state->kmb2), &(state->istop));
         }
     } while (l != state->ne);
 
@@ -564,85 +564,77 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
         if (*arrayAt(&(state->ispl), 1) == 0) {
             if (state->statp != 0) {
-                // REWIND 11
-                // WRITE (11) ((P(I,J),J=1,MB),I=1,MM)
                 for (i = 1; i <= state->mm; i++) {
                     for (j = 1; j <= state->mb; j++) {
-                        printf("%12.4f", *matrixAt(p, i, j));
+                        *matrixAt(&(state->tape11), i, j) = *matrixAt(p, i, j);
                     }
-                    printf("\n");
                 }
 
                 if (((state->it + 1) % state->itchng) == 0 || state->nsdn != 0) {
-                    // REWIND 13
-                    // WRITE (13) ((S(I,J),J=1,MM),I=1,MB)
                     for (i = 1; i <= state->mb; i++) {
                         for (j = 1; j <= state->mm; j++) {
-                            printf("%12.4f", *matrixAt(s, i, j));
+                            *matrixAt(&(state->tape13), i, j) = *matrixAt(s, i, j);
                         }
-                        printf("\n");
                     }
                 }
             }
         } else if (state->nsdn != 0) {
-            // REWIND 13
-            // WRITE (13) ((S(I,J),J=1,MM),I=1,MB)
             for (i = 1; i <= state->mb; i++) {
                 for (j = 1; j <= state->mm; j++) {
-                    printf("%12.4f", *matrixAt(s, i, j));
+                    *matrixAt(&(state->tape13), i, j) = *matrixAt(s, i, j);
                 }
-                printf("\n");
             }
         }
 
         if (state->kod2 - 1 > 0) {
-            printf("1          GLOBAL COEFFICIENT MATRICES FOR FLOW\n           ------------------------------------\n");
-            printf("0          S COEFFICIENT MATRIX - UPPER HALFBAND\n           -------------------------------------\n");
+            fprintf(gs2stdout, "1          GLOBAL COEFFICIENT MATRICES FOR FLOW\n           ------------------------------------\n");
+            fprintf(gs2stdout, "0          S COEFFICIENT MATRIX - UPPER HALFBAND\n           -------------------------------------\n");
             gs2Sos(s, state->mb, state->mm, 1);
-            printf("0          P COEFFICIENT MATRIX - UPPER HALFBAND\n           -------------------------------------\n");
+            fprintf(gs2stdout, "0          P COEFFICIENT MATRIX - UPPER HALFBAND\n           -------------------------------------\n");
             gs2Sos(p, state->mm, state->mb, 1);
         }
 
         if (state->kod2 - 1 >= 0) {
-            printf("\n\n\n\n\n           F COEFFICIENT MATRIX\n           --------------------\n\n\n");
-            printf("\n     ");
+            fprintf(gs2stdout, "\n\n\n\n\n           F COEFFICIENT MATRIX\n           --------------------\n\n\n");
             for (i = 1; i <= state->mm; i++) {
-                printf("%12.4f", *arrayAt(rt, i));
+                if (i % 10 == 1) {
+                    fprintf(gs2stdout, "\n     ");
+                }
+                fprintf(gs2stdout, "%12.4E", *arrayAt(rt, i));
             }
-            printf("\n");
+            fprintf(gs2stdout, "\n");
         }
 
     } else {
         if (((state->it + 1) % state->itchng) == 0) {
             kb1 = state->knb - state->kmb + 1;
-            // REWIND 2
-            // WRITE (2) ((S(I, J), J = 1, KM), I = KB1, KMB2)
             for (i = kb1; i <= state->kmb2; i++) {
                 for (j = 1; j <= state->km; j++) {
-                    printf("%12.4f", *matrixAt(s, i, j));
+                    *matrixAt(&(state->tape2), i - kb1 + 1, j) = *matrixAt(s, i, j);
                 }
-                printf("\n");
             }
         }
 
         if (state->kod4 > 0) {
-            printf("1          GLOBAL COEFFICIENT MATRICES FOR CONC.\n           -------------------------------------\n");
-            printf("0          S COEFFICIENT MATRIX\n           --------------------\n\n\n");
+            fprintf(gs2stdout, "1          GLOBAL COEFFICIENT MATRICES FOR CONC.\n           -------------------------------------\n");
+            fprintf(gs2stdout, "0          S COEFFICIENT MATRIX\n           --------------------\n\n\n");
             gs2Sos(s, state->kmb2, state->km, state->knb - state->kmb + 1);
-            printf("0          P COEFFICIENT MATRIX\n           --------------------\n\n\n");
+            fprintf(gs2stdout, "0          P COEFFICIENT MATRIX\n           --------------------\n\n\n");
             gs2Sos(p, state->km, state->kmb, 1);
         }
 
         if (state->kod4 >= 0) {
-            printf("\n\n\n\n\n           F COEFFICIENT MATRIX\n           --------------------\n\n\n");
-            printf("\n     ");
+            fprintf(gs2stdout, "\n\n\n\n\n           F COEFFICIENT MATRIX\n           --------------------\n\n\n");
             for (i = 1; i <= state->km; i++) {
-                printf("%12.4f", *arrayAt(crt, i));
+                if (i % 10 == 1) {
+                    fprintf(gs2stdout, "\n     ");
+                }
+                fprintf(gs2stdout, "%12.4E", *arrayAt(crt, i));
             }
-            printf("\n");
+            fprintf(gs2stdout, "\n");
         }
 
-        printf("\n           VMAX%15.5f\n", state->vmax);
+        fprintf(gs2stdout, "\n           VMAX%15.5E\n", state->vmax);
     }
 
     arrayFree(&jd);

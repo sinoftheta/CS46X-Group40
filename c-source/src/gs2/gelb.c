@@ -5,7 +5,7 @@
 
 void gs2Gelb(
     Array* r, Array* a, int m, int n, 
-    int mud, int mld, int eps, int* ier
+    int mud, int mld, double eps, int* ier
 ){
     double piv, tb, tol;
     int j, jj, kst, ic, idst, id, ilr, ii;

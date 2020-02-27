@@ -59,7 +59,7 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l) {
 
     int mm2, k1, k2, im, jm;
 
-    printf("\n\n\n\n          ELEMENT%4d     STIFFNESS MATRIX\n\n", l);
+    fprintf(gs2stdout, "\n\n\n\n          ELEMENT%4d     STIFFNESS MATRIX\n\n", l);
 
     mm2 = (m+7)/8*8 - 7;
 
@@ -69,16 +69,16 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l) {
             k2 = m;
         }
         for (im = 1; im <= m; im++) {
-            printf("%5d", im);
+            fprintf(gs2stdout, "%5d", im);
             for (jm = k1; jm <= k2; jm++) {
-                printf("%15.6f", *matrixAt(se, im, jm));
+                fprintf(gs2stdout, "%15.6E", *matrixAt(se, im, jm));
             }
-            printf("\n");
+            fprintf(gs2stdout, "\n");
         }
-        printf("\n\n\n");
+        fprintf(gs2stdout, "\n\n\n");
     }
 
-    printf("\n\n\n\n          ELEMENT%4d     STORAGE MATRIX\n\n", l);
+    fprintf(gs2stdout, "\n\n\n\n          ELEMENT%4d     STORAGE MATRIX\n\n", l);
 
     for (k1 = 1; k1 <= mm2; k1 += 8) {
         k2 = k1 + 7;
@@ -86,13 +86,13 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l) {
             k2 = m;
         }
         for (im = 1; im <= m; im++) {
-            printf("%5d", im);
+            fprintf(gs2stdout, "%5d", im);
             for (jm = k1; jm <= k2; jm++) {
-                printf("%15.6f", *matrixAt(pe, im, jm));
+                fprintf(gs2stdout, "%15.6E", *matrixAt(pe, im, jm));
             }
-            printf("\n");
+            fprintf(gs2stdout, "\n");
         }
-        printf("\n\n\n");
+        fprintf(gs2stdout, "\n\n\n");
     }
 }
 

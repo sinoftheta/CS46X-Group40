@@ -18,7 +18,7 @@
 */
 void gs2Gelb(
     Array* r, Array* a, int m, int n, 
-    int mud, int mld, int eps, int *ier
+    int mud, int mld, double eps, int *ier
 );
 
 #endif /*__CAP_GLEB_H__*/

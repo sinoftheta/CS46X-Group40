@@ -14,13 +14,13 @@ void gs2Sos(Matrix* a, int neq, int iband, int istart) {
             k2 = iband;
         }
         for (i = istart; i <= neq; i++) {
-            printf("%5d", i);
+            fprintf(gs2stdout, "%5d", i);
             for (j = k1; j <= k2; j++) {
-                printf("%12.4f", *matrixAt(a, i, j));
+                fprintf(gs2stdout, "%12.4E", *matrixAt(a, i, j));
             }
-            printf("\n");
+            fprintf(gs2stdout, "\n");
         }
-        printf("\n\n\n");
+        fprintf(gs2stdout, "\n\n\n");
     }
 }
 

@@ -45,8 +45,10 @@ typedef struct gs2State {
     // tape6 = output
     FILE* output;
     
-    FILE *tape7, *tape8, *tape2,
-          *tape4, *tape11, *tape13;
+    FILE *tape7, *tape8;
+
+    Matrix tape2, tape11, tape13;
+    Array tape4;
 
     // Common BLK1
     // should be dimensioned (MAXBW2, MAXS)
@@ -89,6 +91,8 @@ typedef struct gs2State {
            pchng, vmax, stime, ssec, h1, h2,
            pl, coefi, ei;
 
+    double initialDelt;
+
     int ne, np, nk, nseep, inc, me, igo, 
         kod1, kod2, kod3, kod4, kod7, 
         kod8, kod9, kod10, kod11, kod12,
@@ -115,9 +119,8 @@ typedef struct gs2State {
     Array ispl;
 
     // Common Three
-    int nn, mm, km, it, nsdn, nb, knb, knb2, istop;
-    double mb, mb2, 
-           kmb, kmb2;
+    int nn, mm, km, it, nsdn, nb, knb, knb2, istop,
+        mb, mb2, kmb, kmb2;
 
    // Common Four
    // Dimensions of variables in common block four should be
