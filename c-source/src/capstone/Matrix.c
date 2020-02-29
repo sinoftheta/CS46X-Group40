@@ -49,7 +49,8 @@ double* matrixAt(Matrix* matrix, int row, int col) {
 
     if (col - 1 >= matrix->columns || row - 1 >= matrix->rows) {
         fprintf(gs2stderr, "matrixAt index out of bounds at row: %d, column: %d\n", row, col);
-        exit(1);
+        ((Matrix*)(0))->elements[0][0] = 1.0;
+        // exit(1);
     }
 
     return &matrix->elements[row - 1][col -1];

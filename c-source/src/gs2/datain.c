@@ -86,6 +86,26 @@ void gs2Datain(
     arrayDimension(&(state->cfq), state->memoryRequirements.maxnn);
     arrayDimension(&(state->x), state->memoryRequirements.maxnn);
     arrayDimension(&(state->y), state->memoryRequirements.maxnn);
+
+    matrixDimension(&(state->p), state->memoryRequirements.maxs, state->memoryRequirements.maxbw);
+    matrixDimension(&(state->s), state->memoryRequirements.maxbw2, state->memoryRequirements.maxs);
+    arrayDimension(&(state->ff), state->memoryRequirements.mxc);
+    arrayDimension(&(state->dgx), state->memoryRequirements.mxc);
+    arrayDimension(&(state->dgy), state->memoryRequirements.mxc);
+    matrixDimension(&(state->f), state->memoryRequirements.mxc, state->memoryRequirements.mxt);
+    matrixDimension(&(state->dx), state->memoryRequirements.mxc, state->memoryRequirements.mxt);
+    matrixDimension(&(state->dy), state->memoryRequirements.mxc, state->memoryRequirements.mxt);
+    arrayDimension(&(state->detj), state->memoryRequirements.mxt);
+    arrayDimension(&(state->srcr), state->memoryRequirements.mxc);
+    arrayDimension(&(state->srcrt), state->memoryRequirements.mxt);
+    arrayDimension(&(state->cphi), state->memoryRequirements.mxt);
+    arrayDimension(&(state->vkx), state->memoryRequirements.mxt);
+    arrayDimension(&(state->vky), state->memoryRequirements.mxt);
+    arrayDimension(&(state->qp), state->memoryRequirements.mxt);
+    arrayDimension(&(state->q), state->memoryRequirements.mxt);
+    matrixDimension(&(state->pe), state->memoryRequirements.mxc, state->memoryRequirements.mxc);
+    matrixDimension(&(state->se), state->memoryRequirements.mxc, state->memoryRequirements.mxc);
+
     // coef should already be dimensioned
     arrayDimension(&(state->fmobx), state->memoryRequirements.maxne);
     arrayDimension(&(state->fmoby), state->memoryRequirements.maxne);

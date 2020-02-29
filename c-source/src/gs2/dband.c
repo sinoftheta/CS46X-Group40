@@ -5,6 +5,8 @@
 
 void gs2Dband(Matrix* s, int n, int nb, int* iex){
 
+    printf("n = %d, nb = %d\n", n, nb);
+
     *iex = 0;
     int ip, iq, ii, jz;
 
@@ -22,7 +24,9 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
         for(int j = 1; j <= ip; j++){ 
 
             iq = nb - j;
-            if((i - 1) < iq) iq = i - 1;
+            
+            if ((i - j) < iq) 
+                iq = i - 1;
 
             sum = *matrixAt(s, i, j);
 
@@ -36,7 +40,7 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
                     jz = j + k;
                     siijz = *matrixAt(s, ii, jz);
                     // matches if(siijz == 0.0) go to 10 in the fortran source
-                    if(siijz != 0.0){ 
+                    if (siijz != 0.0) { 
 
                         sum = sum - siik * siijz;
                     }
@@ -46,24 +50,24 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
             // 20
         
             // captures behavior of, if(j != 1) go to 40, in the fortran source
-            if(j == 1){ 
+            if (j == 1) {  
                         
                 // captures behavior of, if(sum <= 0.0) go to 30, in the fortran source
                 if(sum > 0.0){ 
                     temp = 1.0 / sqrt(sum);
                     *matrixAt(s, i, j) = temp;
-                }
-                //30
+                } else {
+                    //30
 
-                //write error messages
-                //change to fprintf? write to stderr? need file pointer
-                fprintf(gs2stderr, "Dband fails at row %d\n", i); 
-                fprintf(gs2stderr, "N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
-                    n, nb, ip, iq, i, j, sum
-                );
-                
-                *iex = 1;
-                return;
+                    //write error messages
+                    fprintf(gs2stderr, "Dband fails at row %d\n", i); 
+                    fprintf(gs2stderr, "N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
+                        n, nb, ip, iq, i, j, sum
+                    );
+                    
+                    *iex = 1;
+                    return;
+                }
             }
             //40
             *matrixAt(s, i, j) = sum * temp;
