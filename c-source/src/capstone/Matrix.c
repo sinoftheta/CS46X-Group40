@@ -48,7 +48,7 @@ double* matrixAt(Matrix* matrix, int row, int col) {
 
 
     if (col - 1 >= matrix->columns || row - 1 >= matrix->rows) {
-        fprintf(gs2stderr, "matrixAt index out of bounds at row: %d, column: %d\n", row, col);
+        fprintf(gs2stderr, "matrixAt index out of bounds at row: %d (%d), column: %d (%d)\n", row, matrix->rows, col, matrix->columns);
         ((Matrix*)(0))->elements[0][0] = 1.0;
         // exit(1);
     }
@@ -60,5 +60,15 @@ void matrixAssertNotNull(Matrix* matrix, const char* message) {
     if (matrix == NULL) {
         fprintf(gs2stderr, "%s\n", message);
         exit(1);
+    }
+}
+
+void matrixPrint(const char* name, Matrix* matrix) {
+    fprintf(gs2stderr, "Matrix: %s\n", name);
+    for (int i = 0; i < matrix->rows; i++) {
+        for (int j = 0; j < matrix->columns; j++) {
+            fprintf(gs2stderr, "%0.2f  ", matrix->elements[i][j]);
+        }
+        fprintf(gs2stderr, "\n");
     }
 }

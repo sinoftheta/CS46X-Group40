@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS := -pedantic -Wall -Werror -g -std=c99
+CFLAGS := -pedantic -Wall -Werror -g -std=c99 -DDO_DEBUG
 CLIBS := -lgsl -lgslcblas -lm
 
 SRCDIR := src

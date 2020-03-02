@@ -2,12 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../capstone/Debug.h"
+
 void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array* phi, Array* phii,
              Array* u, Array* old, Array* cfm, Array* crt, Array* conc, Array* conci, Array* fx,
              Array* cn, Array* est, Array* fq, Array* cfq, Array* x, Array* y, Array* fmobx,
              Array* fmoby, Array* por, Array* elong, Array* etrans, Array* alpha, Array* tta,
              Array* kd, Array* lambda, Array* rho, Matrix* in, Array* kf, Array* lr, Array* klr,
              Array* lc, Array* klc, Matrix* ie, int jtest) {
+
+    
 
     arrayAssertNotNull(fm, "Array 'fm' NULL in gs2Cogen!");
     arrayAssertNotNull(rt, "Array 'rt' NULL in gs2Cogen!");
@@ -551,6 +555,8 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
             if (state->kod3 == 1) {
                 fprintf(gs2stdout, "1\n\n\n\n           ELEMENT MATRICES FOR CONCENTRATION\n           ----------------------------------\n");
                 gs2Matgen3(&(state->pe), &(state->se), m, l);
+
+                matrixPrint("state->se", &(state->se));
             }
 
             // Assembly of global coefficient matrix

@@ -153,9 +153,12 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                         // Generate coef. matrices for flow
                         jtest = 1;
+                        DEBUG_LOG("gs2Cogen called");
                         gs2Cogen(state, s, p, fm, rt, phi, phii, u, old, cfm, crt, conc, conci, fx, cn, est, fq, cfq,
                                  x, y, fmobx, fmoby, por, elong, etrans, alpha, tta, kd, lambda, rho, in, kf, lr, klr,
                                  lc, klc, ie, jtest);
+
+                        matrixPrint("p", p);
 
                         if (state->istop > 0) {
                             return;
@@ -185,6 +188,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         }
                     }
 
+                    DEBUG_LOG("gs2Lrhs called");
                     gs2Lrhs(s, p, fm, old, u, lc, state->nn, state->nb, state->mb, a3, 0.0, 1);
 
                     if (state->kod8 >= 1) {
@@ -201,7 +205,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     }
 
                     if (jtest <= 1) {
-
+                        DEBUG_LOG("gs2Lrhs called");
                         gs2Lrhs(s, p, fm, old, u, lc, state->nn, state->nb, state->mb, a3, 0.0, 3);
 
                         // Apply boundary conditions
@@ -286,7 +290,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                     // Solve for pressure
                     if (kkk <= 1) {
-                        
+                        // fprintf(gs2stderr, "maxs = %d, maxbw = %d\n", state->memoryRequirements.maxs, state->memoryRequirements.maxbw);
+                        DEBUG_LOG("gs2Dband called");
                         gs2Dband(p, state->mm, state->mb, &iex);
 
                         if (iex != 0) {
