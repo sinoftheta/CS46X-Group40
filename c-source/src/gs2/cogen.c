@@ -271,7 +271,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
                         hmz = fabs(*arrayAt(&(state->cphi), k));
                         hmz = log10(hmz);
-                        hmz = min(hmz, *matrixAt(&(state->xpsi), 1, ik));
+                        hmz = fmin(hmz, *matrixAt(&(state->xpsi), 1, ik));
 
                         stop = 0;
                         for (j = 1; j <= ispm && !stop; j++) {
@@ -288,8 +288,8 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
                                 pp = *matrixAt(&(state->ckt[2]), j, ik) * x3 + *matrixAt(&(state->ckt[1]), j, ik) * x2 + *matrixAt(&(state->ckt[0]), j, ik) * x1 + *matrixAt(&(state->xk), j, ik);
                                 ppk = pow(10.0, pp - *matrixAt(&(state->xk), ispk, ik));
 
-                                teta = min(teta, 1.0);
-                                ppk = min(ppk, 1.0);
+                                teta = fmin(teta, 1.0);
+                                ppk = fmin(ppk, 1.0);
                                 ce = fabs(ce);
                             }
                         }
@@ -403,7 +403,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
                         hmz = fabs(*arrayAt(&(state->cphi), k));
                         hmz = log10(hmz);
-                        hmz = min(hmz, *matrixAt(&(state->xpsi), 1, ik));
+                        hmz = fmin(hmz, *matrixAt(&(state->xpsi), 1, ik));
 
                         stop = 0;
                         for (j = 1; j <= ispm && !stop; j++) {
@@ -422,8 +422,8 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
                             * 0.43429 / *arrayAt(&(state->cphi), k);
                         pp = *matrixAt(&(state->ckt[2]), j, ik) * x3 + *matrixAt(&(state->ckt[1]), j, ik) * x2 + *matrixAt(&(state->ckt[0]), j, ik) * x1 + *matrixAt(&(state->xk), j, ik);
                         ppk = pow(10.0, pp - *matrixAt(&(state->xk), ispk, ik));
-                        teta = min(teta, 1.0);
-                        ppk = min(ppk, 1.0);
+                        teta = fmin(teta, 1.0);
+                        ppk = fmin(ppk, 1.0);
 
                         xcond = -ppk * *arrayAt(fmobx, l) / (teta * *arrayAt(tta, l));
                         ycond = -ppk * *arrayAt(fmoby, l) / (teta * *arrayAt(tta, l));
@@ -453,7 +453,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
             vlx /= np2;
             vly /= np2;
-            vmax = max(vmax, max(fabs(vlx), fabs(vly)));
+            vmax = fmax(vmax, fmax(fabs(vlx), fabs(vly)));
 
             for (i = 1; i <= m; i++) {
                 *arrayAt(&(state->srcr), i) = 0.0;

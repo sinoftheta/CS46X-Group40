@@ -78,7 +78,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 for (i = 1; i <= state->nn; i++) {
                     if (*arrayAt(lr, i) != 1) {
                         j = i - *arrayAt(lc, i);
-                        state->delp = max(state->delp, fabs(*arrayAt(phi, i) - *arrayAt(old, j)));
+                        state->delp = fmax(state->delp, fabs(*arrayAt(phi, i) - *arrayAt(old, j)));
                     }
                 }
             }
@@ -360,7 +360,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                                 *arrayAt(coef, k) = 1.0;
                                             }
 
-                                            *arrayAt(coef, k) = max(*arrayAt(coef, k), 1.0);
+                                            *arrayAt(coef, k) = fmax(*arrayAt(coef, k), 1.0);
                                             *arrayAt(fq, i) = *arrayAt(coef, k) * state->ei * *arrayAt(vn, k);
                                         }
 
@@ -381,7 +381,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                                             *arrayAt(coef, k) = 1.0;
                                         }
 
-                                        *arrayAt(coef, k) = max(*arrayAt(coef, k), 1.0);
+                                        *arrayAt(coef, k) = fmax(*arrayAt(coef, k), 1.0);
                                         *arrayAt(fq, i) = *arrayAt(coef, k) * state->ei * *arrayAt(vn, k);
                                     }
                                 }
