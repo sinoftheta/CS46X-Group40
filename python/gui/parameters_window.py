@@ -9,7 +9,7 @@ from os import path
 
 from .BasicParametersController import BasicParametersController
 from .BasicParametersController import BasicParameterChangeListener
-from .multipliers import Multipliers
+from .MultipliersController import MultipliersController
 from .nodes import Nodes
 from .nodeTypes import NodeTypes
 from .materialProperties import Elements
@@ -48,7 +48,7 @@ class ParametersPage(QGroupBox):
         # Creates Classes for each sub-section of the Parameters section
         self.parametersPageHome = QWidget()
         self.basicParametersController = BasicParametersController()
-        self.parametersPageMult = Multipliers()
+        self.parametersPageMult = MultipliersController()
         self.parametersPageNodes = Nodes()
         self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
