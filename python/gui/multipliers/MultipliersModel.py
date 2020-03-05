@@ -22,7 +22,7 @@ class MultipliersModel:
     def setVal(self, key, val):
         if hasattr(self, key):
             setattr(self, key, val)
-            print(str(key) + ": " + str(val))
+            #print(str(key) + ": " + str(val))
 
     #other mutators would have to be written for live data
     def setLiveData():
