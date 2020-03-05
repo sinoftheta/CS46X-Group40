@@ -132,7 +132,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
 
             } else {
 
-                hmz = abs( (int)*arrayAt(cphi, k));
+                hmz = fabs(*arrayAt(cphi, k));
                 hmz = log10(hmz);
                 if (hmz > *matrixAt(&(state->xpsi), 1, ik)) {
                     hmz = *matrixAt(&(state->xpsi), 1, ik);

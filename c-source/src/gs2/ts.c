@@ -78,7 +78,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 for (i = 1; i <= state->nn; i++) {
                     if (*arrayAt(lr, i) != 1) {
                         j = i - *arrayAt(lc, i);
-                        state->delp = max(state->delp, abs(*arrayAt(phi, i) - *arrayAt(old, j)));
+                        state->delp = max(state->delp, fabs(*arrayAt(phi, i) - *arrayAt(old, j)));
                     }
                 }
             }
@@ -354,8 +354,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                                         } else {
 
-                                            if (abs(pn) > -0.001 * state->pl) {
-                                                *arrayAt(coef, k) *= abs(state->pl / pn);
+                                            if (fabs(pn) > -0.001 * state->pl) {
+                                                *arrayAt(coef, k) *= fabs(state->pl / pn);
                                             } else {
                                                 *arrayAt(coef, k) = 1.0;
                                             }
@@ -371,8 +371,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                                     } else {
 
-                                        if (abs(pn - state->pl) > -0.001 * state->pl) {
-                                            *arrayAt(coef, k) *= abs(state->pl / (pn - state->pl));
+                                        if (fabs(pn - state->pl) > -0.001 * state->pl) {
+                                            *arrayAt(coef, k) *= fabs(state->pl / (pn - state->pl));
                                         } else {
                                             *arrayAt(coef, k) = 1.0;
                                         }
@@ -475,7 +475,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                             if (*arrayAt(est, i) != 0) {
                                 un = 0.5 * (state->tdr * *arrayAt(u, i) + (1.0 - state->tdr) * *arrayAt(old, i) + *arrayAt(old, i));
 
-                                if (abs((un - *arrayAt(est, i)) / *arrayAt(est, i)) > state->clos1) {
+                                if (fabs((un - *arrayAt(est, i)) / *arrayAt(est, i)) > state->clos1) {
                                     isk++;
                                 }
                             }
