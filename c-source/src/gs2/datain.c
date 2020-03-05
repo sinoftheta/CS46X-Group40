@@ -1420,6 +1420,13 @@ void gs2ReadGroupQ(
             }
         }
 
+
+        // matrixPrint("ctt", &(state->ctt[0]));
+        // matrixPrint("ctt", &(state->ctt[1]));
+        // matrixPrint("ctt", &(state->ctt[2]));
+        
+
+
         gs2ICS1CU(wxk, wxpsi, ispk, ispm, cc, &ier);
 
         for (int i = 1; i <=  ispm; i++) {

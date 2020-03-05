@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
 
 
     gs2DefaultIO();
+    gs2OutputFile("res/out.txt");
 
     gs2MemoryRequirements memReqs = gs2CreateMemoryRequirements(
         12,
@@ -60,6 +61,9 @@ int main(int argc, char** argv) {
     arrayDimension(&cfm, memReqs.maxm2);
     arrayDimension(&crt, memReqs.maxm2);
     arrayDimension(&fx, memReqs.maxm1);
+
+    state.h1 = 0.347854;
+    state.h2 = 0.652145;
 
     gs2Datain(
         &state,

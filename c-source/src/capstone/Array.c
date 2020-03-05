@@ -28,7 +28,7 @@ double* arrayAt(Array* array, int index) {
     arrayAssertNotNull(array, "array null in arrayAt!");
 
 
-    if (index - 1 >= array->size) {
+    if (index - 1 >= array->size || index <= 0) {
         fprintf(gs2stderr, "arrayAt index out of bounds: %d\n", index);
         int a = ((Array*)(NULL))->elements[0];
         exit(a);
@@ -42,4 +42,15 @@ void arrayAssertNotNull(Array* array, const char* message) {
         fprintf(gs2stderr, "%s\n", message);
         exit(-1);
     }
+}
+
+void arrayPrint(const char* name, Array* array) {
+    fprintf(gs2stderr, "Array: %s\n", name);
+
+    for (int i = 0; i < array->size; i++) {
+        if ((i+1) % 5 == 0)
+            fprintf(gs2stderr, "\n");
+        fprintf(gs2stderr, "%15.6E", array->elements[i]);
+    }
+    fprintf(gs2stderr, "\n");
 }
