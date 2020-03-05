@@ -10,8 +10,6 @@ class MultipliersView():
         self.setInputs()
 
     def setInputs(self):
-        
-        print('MultipliersView setInputs()')
 
         XFACTLabel = QLabel("X-Coordinate")
         XFACTLabel.setAlignment(Qt.AlignLeft)
