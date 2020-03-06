@@ -91,7 +91,8 @@ class MainWindow(QMainWindow, ExportListener):
             self.simulationPage.getSimulationModel(),
             self.parametersPage.seepageFaceController.getSeepageFaces(),
             self.parametersPage.basicParametersController.getBasicParametersModel(),
-            self.parametersPage.elementsController.getElements()
+            self.parametersPage.elementsController.getElements(),
+            self.parametersPage.multipliersController.getElements()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])

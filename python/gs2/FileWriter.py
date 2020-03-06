@@ -8,12 +8,14 @@ class FileWriter:
             simulationModel,
             seepageFaceModels,
             basicParametersModel,
-            elementModels):
+            elementModels,
+            multipliersModel):
         self.materialModels = materialModels
         self.simulationModel = simulationModel
         self.seepageFaceModels = seepageFaceModels
         self.basicParametersModel = basicParametersModel
         self.elementModels = elementModels
+        self.multipliersModel = multipliersModel
 
     def write(self, filepath):
 
@@ -28,6 +30,7 @@ class FileWriter:
             # write groups
             self._writeGroupA(writer, self.simulationModel)
             self._writeGroupB(writer, self.basicParametersModel)
+            self._writeGroupC(writer, self.multipliersModel)
             self._writeGroupD(writer, self.simulationModel)
             self._writeGroupI(writer, self.elementModels)
             self._writeGroupO(writer, self.seepageFaceModels)
@@ -155,6 +158,33 @@ class FileWriter:
         csv.writerow(self._csvPad(csvRow3))
         csv.writerow(self._csvPad(csvRow4))
 
+    def _writeGroupC(self, csv, model):
+        group = "C"
+
+        csvRow1 = [
+            group,
+            model.AFMOBX,
+            model.AFMOBY,
+            model.APOR,
+            model.AELONG,
+            model.AETRANS,
+            model.APHII,
+            model.ACONCI,
+            model.XFACT
+        ]
+
+        csvRow2 = [
+            group,
+            model.YFACT,
+            model.ATETA,
+            model.AAL,
+            model.AKD,
+            model.ALAM,
+            model.ARHO
+        ]
+
+        csv.writerow(self._csvPad(csvRow1))
+        csv.writerow(self._csvPad(csvRow2))
 
     def _writeGroupD(self, csv, simulation):
         group = "D"
