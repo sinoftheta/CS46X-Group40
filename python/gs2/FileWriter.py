@@ -30,6 +30,7 @@ class FileWriter:
             # write groups
             self._writeGroupA(writer, self.simulationModel)
             self._writeGroupB(writer, self.basicParametersModel)
+            self._writeGroupC()
             self._writeGroupD(writer, self.simulationModel)
             self._writeGroupI(writer, self.elementModels)
             self._writeGroupO(writer, self.seepageFaceModels)
@@ -156,8 +157,9 @@ class FileWriter:
         csv.writerow(self._csvPad(csvRow2))
         csv.writerow(self._csvPad(csvRow3))
         csv.writerow(self._csvPad(csvRow4))
-    def writeGroupC(self):
+    def _writeGroupC(self):
         pass
+
     def _writeGroupD(self, csv, simulation):
         group = "D"
         csvRow = [group]
