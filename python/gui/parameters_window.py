@@ -48,7 +48,7 @@ class ParametersPage(QGroupBox):
         # Creates Classes for each sub-section of the Parameters section
         self.parametersPageHome = QWidget()
         self.basicParametersController = BasicParametersController()
-        self.parametersPageMult = MultipliersController()
+        self.multipliersController = MultipliersController()
         self.parametersPageNodes = Nodes()
         self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
@@ -64,7 +64,7 @@ class ParametersPage(QGroupBox):
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
         self.parametersPageStack.addWidget(self.basicParametersController)
-        self.parametersPageStack.addWidget(self.parametersPageMult)
+        self.parametersPageStack.addWidget(self.multipliersController)
         self.parametersPageStack.addWidget(self.parametersPageNodes)
         self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
         self.parametersPageStack.addWidget(self.parametersPageElem)
