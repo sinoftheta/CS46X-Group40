@@ -89,6 +89,7 @@ void gs2Datain(
 
     matrixDimension(&(state->p), state->memoryRequirements.maxs, state->memoryRequirements.maxbw);
     matrixDimension(&(state->s), state->memoryRequirements.maxbw2, state->memoryRequirements.maxs);
+    arrayDimension(&(state->w), state->s.columns * state->s.rows);
     arrayDimension(&(state->ff), state->memoryRequirements.mxc);
     arrayDimension(&(state->dgx), state->memoryRequirements.mxc);
     arrayDimension(&(state->dgy), state->memoryRequirements.mxc);
@@ -117,6 +118,10 @@ void gs2Datain(
     arrayDimension(&(state->kd), state->memoryRequirements.maxne);
     arrayDimension(&(state->lambda), state->memoryRequirements.maxne);
     arrayDimension(&(state->rho), state->memoryRequirements.maxne);
+    arrayDimension(&(state->dpordt), state->memoryRequirements.mxt);
+    arrayDimension(&(state->dh), state->memoryRequirements.mxt);
+    arrayDimension(&(state->dk), state->memoryRequirements.mxt);
+    arrayDimension(&(state->d0), state->memoryRequirements.mxt);
    
     matrixDimension(&(state->in), state->me, state->memoryRequirements.maxne);
     matrixDimension(&(state->ie), 2, state->memoryRequirements.maxne);
