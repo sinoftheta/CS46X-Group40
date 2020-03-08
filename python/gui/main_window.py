@@ -13,6 +13,7 @@ from .parameters_window import ExportListener
 from .SimulationController import SimulationController
 from .BasicParametersController import BasicParametersController
 from .ElementsController import ElementsController
+from .MeshViewController import MeshViewController
 
 class MainWindow(QMainWindow, ExportListener):
     def __init__(self, config, *args, **kwargs):
@@ -44,10 +45,11 @@ class MainWindow(QMainWindow, ExportListener):
         self.parametersPage.addExportListener(self)
         self.homePageStack.addWidget(self.parametersPage)
         #   Mesh
-        self.meshPage = QGroupBox('Mesh')
+        self.meshPage = MeshViewController()
         self.homePageStack.addWidget(self.meshPage)
         #   Simulation
         self.simulationPage = SimulationController(self.config)
+        self.simulationPage.addGS2CallbackListener(self.meshPage)
         self.homePageStack.addWidget(self.simulationPage)
 
         self.meshPageLayout = QVBoxLayout()
