@@ -1,45 +1,27 @@
-BASEPATH = /usr/local/apps/tex_live/current/bin/x86_64-linux/
-LATEX	= $(BASEPATH)/latex -shell-escape
-BIBTEX	= $(BASEPATH)/bibtex
-GLOSSARIES = $(BASEPATH)/makeglossaries
-DVIPS	= $(BASEPATH)/dvips
-DVIPDF  = $(BASEPATH)/dvipdfm
-XDVI	= $(BASEPATH)/xdvi -gamma 4
-GH	= $(BASEPATH)/gv
+# Makefile
+#  Build the LaTeX files defined by latexfile.
+#
+# Dakota Alton
 
-EXAMPLES = $(wildcard *.h)
-SRC	:= $(shell egrep -l '^[^%]*\\begin\{document\}' *.tex)
-TRG	= $(SRC:%.tex=%.dvi)
-PSF	= $(SRC:%.tex=%.ps)
-PDF	= $(SRC:%.tex=%.pdf)
+latexfile = main
+LATEX = /usr/local/apps/tex_live/current/bin/x86_64-linux/pdflatex
+BIBTEX = /usr/local/apps/tex_live/current/bin/x86_64-linux/bibtex
+DVIPS = /usr/local/apps/tex_live/current/bin/x86_64-linux/dvips
 
-pdf: $(PDF)
+$(latexfile).pdf : $(latexfile).ps
+	ps2pdf $^ $@
 
-ps: $(PSF)
+$(latexfile).ps : $(latexfile).dvi
+	$(DVIPS) $^
 
-$(TRG): %.dvi: %.tex $(EXAMPLES)
-	$(LATEX) $<
-	$(BIBTEX) $(<:%.tex=%)
-	- $(GLOSSARIES) $(<:%.tex=%)
-	$(LATEX) $<
-	$(LATEX) $<
+$(latexfile).dvi : $(latexfile).tex
+	#$(LATEX) $^
+	#$(BIBTEX) $(<:%.tex=%)
+	# run a second time to generate bib and toc
+	$(LATEX) $^
+	$(LATEX) $^
 
-$(PSF): %.ps: %.dvi
-	$(DVIPS) -R -Poutline $< -o $@
-	# $(DVIPS) -R -Poutline -t letter $< -o $@
-
-$(PDF): %.pdf: %.ps
-#	$(DVIPDF) -o $@ $<
-	ps2pdf $<
-
-show: $(TRG)
-	@for i in $(TRG) ; do $(XDVI) $$i & done
-
-showps: $(PSF)
-	@for i in $(PSF) ; do $(GH) $$i & done
+.PHONY : clean
 
 clean:
-	git clean -Xf
-
-
-default: pdf
+	rm -rf *.pdf *.ps *.dvi *.out *.log *.aux *.bbl *.blg *.pyg *.toc
