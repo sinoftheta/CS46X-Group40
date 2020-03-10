@@ -107,4 +107,6 @@ class MainWindow(QMainWindow, IOListener):
         # file read now has data foreach model
         # the controllers should have updateModel methods
         # so the views can be updated.
+        self.simulationPage.updateView(fileReader.simulationModel)
+        self.parametersPage.basicParametersController.updateView(fileReader.parametersModel)
         

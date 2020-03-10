@@ -22,18 +22,18 @@ class SimulationController(QGroupBox):
         pageLayout.setAlignment(Qt.AlignLeft)
         self.setLayout(pageLayout)
 
-        sideNav = QVBoxLayout()
-        sideNav.setAlignment(Qt.AlignCenter | Qt.AlignTop)
-        sideNav.setGeometry(QRect(0, 0, 150, 100))
-        sideNav.setSizeConstraint(QLayout.SetFixedSize)
-        pageLayout.addLayout(sideNav)
+        self.sideNav = QVBoxLayout()
+        self.sideNav.setAlignment(Qt.AlignCenter | Qt.AlignTop)
+        self.sideNav.setGeometry(QRect(0, 0, 150, 100))
+        self.sideNav.setSizeConstraint(QLayout.SetFixedSize)
+        pageLayout.addLayout(self.sideNav)
 
-        sideNav.addWidget(self.simulationView)
+        self.sideNav.addWidget(self.simulationView)
 
         runSimulationBttn = QPushButton('Run Simulation')
         runSimulationBttn.setGeometry(0, 0, 150, 100)
         runSimulationBttn.pressed.connect(self.onClickRun)
-        sideNav.addWidget(runSimulationBttn)
+        self.sideNav.addWidget(runSimulationBttn)
 
         self.simOutput = QTextEdit()
         self.simOutput.setReadOnly(True)
@@ -63,6 +63,13 @@ class SimulationController(QGroupBox):
 
         simulationRunner.run()
     
+    def updateView(self, model):
+        self.simulationModel = model
+        self.sideNav.removeWidget(self.simulationView)
+        self.simulationView.deleteLater()
+        self.simulationView = SimulationView(self.simulationModel)
+        self.sideNav.addWidget(self.simulationView)
+
     def getSimulationModel(self):
         return self.simulationModel
 

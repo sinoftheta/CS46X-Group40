@@ -23,12 +23,17 @@ class FileReader:
                 quotechar='|'
             )
 
+            # set data input file here 
+            # so it shows up in the sim page
+            self.simulationModel.dataInputFile = filepath
+            
             self.csvRows = [row for row in reader]
 
             # for the readGroup functions it is important to modify csvRows
             # each readGroup should check the first entry of the first row to check
             # that it is operating on the correct row
             self._readGroupA()
+            self._readGroupB()
         
     def _readGroupA(self):
         if self.csvRows[0][0] != "A":
@@ -48,27 +53,65 @@ class FileReader:
         card4 = self.csvRows.pop(0)
 
         # remove group label
-        card1.pop()
-        card2.pop()
-        card3.pop()
-        card4.pop()
+        card1.pop(0)
+        card2.pop(0)
+        card3.pop(0)
+        card4.pop(0)
 
         # read card 1
-        card1 = list(map(card1, lambda elem: int(elem)))
-
-        self.parametersModel.NN.setData(card1[0])
-        self.parametersModel.NE.setData(card1[1])
-
+       
+        self.parametersModel.NN.setData(int(card1[0]))
+        self.parametersModel.NE.setData(int(card1[1]))
         ns = card1[2]
         kns = card1[3]
-        
+        self.parametersModel.NB = int(card1[4])
+        self.parametersModel.KNB = int(card1[5])
+        nf = int(card1[6])
+        inc = int(card1[7])
+        self.parametersModel.NK.setData(int(card1[8]))
+        self.parametersModel.NSEEP.setData(int(card1[9]))
 
         # read card 2
+        nsdn = int(card2[0])
+        mq4 = int(card2[1])
+        knsdn = int(card2[2])
+        self.parametersModel.PL = float(card2[3])
+        coefi = float(card2[4])
+        self.parametersModel.EI = float(card2[5])
+        nvs = int(card2[6])
 
         # read card 3
+        self.parametersModel.DELT = float(card3[0])
+        self.parametersModel.CHNG = float(card3[1])
+        self.parametersModel.ITMAX = int(card3[2])
+        self.parametersModel.ITCHNG = int(card3[3])
+        self.parametersModel.PCHNG = float(card3[4])
+        self.parametersModel.BETAP = float(card3[5])
+        if str(card3[6]) == "BACK":
+            self.parametersModel.TYPE = "Implicit"
+        else:
+            self.parametersModel.TYPE = "Centered"
 
         # read card 4
+        self.parametersModel.DIFUSN = float(card4[0])
+        dprdt = float(card4[1])
+        statNumeric = str(card4[2])
+        if statNumeric == "-1.0":
+            self.parametersModel.STAT = "Flow equation only"
+        elif statNumeric == "0.0":
+            self.parametersModel.STAT = "Steady-state"
+        else:
+            self.parametersModel.STAT = "Transient"
         
+        statpNumeric = str(card4[3])
+        if statpNumeric == "0.0":
+            self.parametersModel.STATP = "Steady-state"
+        else:
+            self.parametersModel.STATP = "Transient"
+
+        self.parametersModel.CLOS1 = float(card4[4])
+        self.parametersModel.ITER1 = int(card4[5])
+        self.parametersModel.IGO = int(card4[6])
 
     def _readGroupC(self):
       pass
