@@ -7,13 +7,17 @@ from PyQt5.QtGui import *
 
 from .SimulationController import GS2CallbackListener
 from gs2 import types
+from os import path
+from ctypes import CDLL
 
 class MeshViewController(QGroupBox, GS2CallbackListener):
-    def __init__(self, gs2):
+    def __init__(self, config):
         super(MeshViewController, self).__init__('Mesh')
-        self.gs2 = gs2
-        self.layout = QVBoxLayout()
 
+        gs2_lib_path = path.abspath(path.join(config['paths']['bundle'], config['paths']['gs2Lib']))
+        self.gs2 = CDLL(gs2_lib_path)
+        
+        self.layout = QVBoxLayout()
         self.frame = QFrame()
         self.frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         self.vtk_widget = pv.QtInteractor(self.frame)
@@ -23,7 +27,7 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         self.setLayout(self.layout)
 
     def createMesh(self, state):
-
+        
         vertices = np.array([
             [
                 cast(self.gs2.arrayAt(byref(state.x), i), POINTER(c_double)).contents.value,

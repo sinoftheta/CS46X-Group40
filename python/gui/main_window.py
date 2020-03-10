@@ -45,7 +45,7 @@ class MainWindow(QMainWindow, ExportListener):
         self.parametersPage.addExportListener(self)
         self.homePageStack.addWidget(self.parametersPage)
         #   Mesh
-        self.meshPage = MeshViewController()
+        self.meshPage = MeshViewController(self.config)
         self.homePageStack.addWidget(self.meshPage)
         #   Simulation
         self.simulationPage = SimulationController(self.config)
