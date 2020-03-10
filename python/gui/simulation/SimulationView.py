@@ -120,10 +120,6 @@ class SimulationView(QGroupBox):
 
         self.setLayout(layout)
 
-    def setSimulationModel(self, model):
-        self.simulationModel = model
-        self.updateView()
-
     def _onEditClick(self, simulationEnum):
         def inner():
             dialog = QFileDialog(None)
