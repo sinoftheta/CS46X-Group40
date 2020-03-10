@@ -25,7 +25,7 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
 
     def createMesh(self, state):
         vertices = np.array([[x, y] for x, y in zip(state.x, state.y)])
-        faces = [[inc - 1 for inc in face if inc > 0] for face in faces]
+        faces = [[inc - 1 for inc in face if inc > 0] for face in state._in]
         faces = [[len(row)] + row for row in faces]
         faces = np.hstack(faces)
         self.mesh = pv.PolyData(vertices, faces)
