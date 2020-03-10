@@ -135,9 +135,8 @@ class ParametersPage(QGroupBox):
     def importNavClick(self):
         filename = QFileDialog.getOpenFileName(self, 'Open file',
             '/home', "CSV Files (*.csv)")
-        self.notifyImport(filename[0])
-        
-
+        if (len(filename[0]) > 0):
+            self.notifyImport(filename[0])
 
     def basicParamClick(self):
         self.parametersPageStack.setCurrentIndex(1)

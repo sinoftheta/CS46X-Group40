@@ -52,7 +52,7 @@ class MainWindow(QMainWindow, IOListener):
         self.simulationPage.addGS2CallbackListener(self.meshPage)
         self.homePageStack.addWidget(self.simulationPage)
 
-        self.meshPageLayout = QVBoxLayout()
+        #self.meshPageLayout = QVBoxLayout()
         self.simulationPageLayout = QVBoxLayout()
 
         self.setHomePageButtons()
@@ -107,4 +107,3 @@ class MainWindow(QMainWindow, IOListener):
         # file read now has data foreach model
         # the controllers should have updateModel methods
         # so the views can be updated.
-        

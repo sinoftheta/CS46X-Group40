@@ -16,7 +16,6 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
         # list of element models that this controller 'controls'
         self.elementModels = []
 
-        # TODO: adjust this mechanism for material groups ?
         # Max material group number
         self.materialGroupIdMax = 0
         self.nodeIdMax = 0
@@ -34,7 +33,7 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
         self.elementsList = QListWidget()
         #self.elementsList.setContentsMargins(0, 0, 0, 0)
         self.elementsList.itemClicked.connect(self.elementSelectionChange)
-        self.elementsList.setFixedSize(100, 200)
+        self.elementsList.setFixedWidth(100)
         self.elementLayout.addWidget(self.elementsList)
 
         self.layout.addLayout(self.elementLayout)
@@ -69,11 +68,14 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
         model = self.elementModels[elementIndex]
         self.currentElement = ElementView(model, self.materialGroupIdMax, self.nodeIdMax)
 
-        # TODO: connect observer for currently displayed
-        #       element's material group change ?
-
         self.layout.addWidget(self.currentElement)
 
+    def getMaterialGroupElements(self):
+        print("material girl in a material world")
+
+    """
+        BasicParameterChangeListener methods
+    """
     def onElementCountChange(self, count):
         if count > len(self.elementModels):
             while count > len(self.elementModels):
@@ -90,7 +92,6 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
             self.currentElement = None
             self.elementsList.clearSelection()
 
-    # TODO: adjust this to use MaterialsChangeListener onMaterialRemoved instead ?
     def onMaterialCountChange(self, count):
         self.materialGroupIdMax = count
         # clear currently selected element
