@@ -9,6 +9,8 @@ FILE* gs2stdin = NULL;
 FILE* gs2stdout = NULL;
 FILE* gs2stderr = NULL;
 
+gs2CallbackType gs2Callback = &gs2DefaultCallback;
+
 gs2MemoryRequirements gs2CreateMemoryRequirements(
     int mxc,
     int mxt,
@@ -84,4 +86,13 @@ void gs2CloseFiles() {
         fclose(gs2stdout);
 
     gs2DefaultIO();
+}
+
+void gs2RegisterCallback(gs2CallbackType callback) {
+    gs2Callback = callback;
+}
+
+int gs2DefaultCallback(gs2State state) {
+    fprintf(stderr, "Default gs2Callback has been called!\n");
+    return 0;
 }

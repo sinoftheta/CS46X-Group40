@@ -27,6 +27,11 @@ class Runner:
         if self.stderr:
             self.gs2.gs2ErrorFile(create_string_buffer(self.stderr.encode('utf-8')))
 
+    # it is required that the `pythonFunc` parameter is the result of a call to 
+    # types.CallbackType(callback to be registered)
+    def registerCallback(self, pythonFunc):
+        self.gs2.gs2RegisterCallback(pythonFunc)
+        
 
     def run(self):
         self.gs2.gs2CreateMemoryRequirements.restype = types.MemoryRequirements
