@@ -22,28 +22,23 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         self.setLayout(self.layout)
 
     def createMesh(self, gs2, state):
-        # vertices = np.array([[gs2.arrayAt(byref(state.x), i), gs2.arrayAt(byref(state.y), i)] for i in range(1, state.nn + 1)])
 
-        vertices = []
-        for i in range(1, state.nn + 1):
-            x = cast(gs2.arrayAt(byref(state.x), i), POINTER(c_double)).contents.value
-            y = cast(gs2.arrayAt(byref(state.y), i), POINTER(c_double)).contents.value
-            vertices.append([x, y])
-        vertices = np.array(vertices)
-        
+        vertices = np.array([
+            [
+                cast(gs2.arrayAt(byref(state.x), i), POINTER(c_double)).contents.value,
+                cast(gs2.arrayAt(byref(state.y), i), POINTER(c_double)).contents.value
+            ]
+            for i in range(1, state.nn + 1)
+        ])
 
-        # faces = [[gs2.matrixAt(byref(state.in), i, j) - 1 for j in range(1, state.memoryRequirements.maxne + 1)\
-        #          if gs2.matrixAt(byref(state.in), i, j) > 0] for i in range(1, state.ne + 1)]
-
-        faces = []
-        for i in range(1, state.ne + 1):
-            incidences = []
-            for j in range(1, state.memoryRequirements.maxne + 1):
-                inc = cast(gs2.matrixAt(byref(state.in), i, j, POINTER(c_double)).contents.value
-                if inc > 0:
-                    incidences.append(inc - 1)
-            faces.append(incidences)
-
+        faces = [
+            [
+                cast(gs2.matrixAt(byref(state.in), i, j, POINTER(c_double)).contents.value - 1
+                for j in range(1, state.memoryRequirements.maxne + 1)
+                if cast(gs2.matrixAt(byref(state.in), i, j, POINTER(c_double)).contents.value > 0
+            ]
+            for i in range(1, state.ne + 1)
+        ]
 
         faces = [[len(row)] + row for row in faces]
         faces = np.hstack(faces)
@@ -55,18 +50,12 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         if self.mesh is None:
             self.createMesh(gs2, state)
 
-        # self.mesh.point_arrays['Pressure Head'] = np.array([gs2.arrayAt(byref(state.phi), i) for i in range(1, state.nn + 1)])
+        self.mesh.point_arrays['Pressure Head'] = np.array([
+            cast(gs2.arrayAt(byref(state.phi), i), POINTER(c_double)).contents.value
+            for i in range(1, state.nn + 1)
+        ])
 
-        head = []
-        for i in range(1, state.nn + 1):
-            h = cast(gs2.arrayAt(byref(state.phi), i), POINTER(c_double)).contents.value
-            head.append(h)
-        self.mesh.point_arrays['Pressure Head'] = np.array(head)
-
-        # self.mesh.point_arrays['Concentration'] = np.array([gs2.arrayAt(byref(state.conc), i) for i in range(1, state.nn + 1)])
-
-        conc = []
-        for i in range(1, state.nn + 1):
-            c = cast(gs2.arrayAt(byref(state.conc), i), POINTER(c_double)).contents.value
-            conc.append(c)
-        self.mesh.point_arrays['Concentration'] = np.array(conc)
+        self.mesh.point_arrays['Concentration'] = np.array([
+            cast(gs2.arrayAt(byref(state.conc), i), POINTER(c_double)).contents.value
+            for i in range(1, state.nn + 1)
+        ])
