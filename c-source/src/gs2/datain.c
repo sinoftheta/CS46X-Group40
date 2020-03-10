@@ -296,6 +296,9 @@ void gs2Datain(
     arrayFree(&wxk);
     matrixFree(&cc);
     csvFreeFile(&csvFile);
+
+
+    gs2Callback(*state);
 }
 
 gs2DataGroup gs2GetGroup(CSVRow* csvRow, gs2DataGroup defaultTo) {

@@ -3,7 +3,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 import csv
-import gs2
 
 from os import path
 

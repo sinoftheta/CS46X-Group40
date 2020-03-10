@@ -6,6 +6,8 @@
 #include "../capstone/Array.h"
 #include "../capstone/Matrix.h"
 
+
+
 typedef struct gs2MemoryRequirements {
     int mxc;
     int mxt;
@@ -136,6 +138,8 @@ typedef struct gs2State {
 
 } gs2State;
 
+typedef int (*gs2CallbackType)(gs2State);
+
 
 // This function exists as a convience for creating a memReqs
 // struct in python
@@ -163,6 +167,14 @@ void gs2DefaultIO();
 void gs2InputFile(const char* filepath);
 void gs2OutputFile(const char* filepath);
 void gs2ErrorFile(const char* filepath);
+
+
+extern gs2CallbackType gs2Callback;
+
+void gs2RegisterCallback(gs2CallbackType callback);
+int gs2DefaultCallback(gs2State state);
+
+
 
 
 

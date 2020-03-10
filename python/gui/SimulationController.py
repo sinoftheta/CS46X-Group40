@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from .simulation import SimulationModel
 from .simulation import SimulationView
 from gs2.runner import Runner
+from gs2 import types
 
 class SimulationController(QGroupBox):
     def __init__(self, config):
@@ -14,6 +15,8 @@ class SimulationController(QGroupBox):
 
         self.simulationModel = SimulationModel(config)
         self.simulationView = SimulationView(self.simulationModel)
+
+        self.gs2CallbackListeners = []
 
         pageLayout = QHBoxLayout()
         pageLayout.setAlignment(Qt.AlignLeft)
@@ -49,6 +52,9 @@ class SimulationController(QGroupBox):
         simulationRunner = Runner(self.simulationModel, self.config)
         simulationRunner.openFiles()
 
+        callback = types.CallbackType(self.notifyOnCallback)
+        simulationRunner.registerCallback(callback)
+
         stdout = simulationRunner.stdout
 
         if stdout in self.fileWatcher.files():
@@ -60,4 +66,21 @@ class SimulationController(QGroupBox):
     def getSimulationModel(self):
         return self.simulationModel
 
+    def addGS2CallbackListener(self, listener):
+        if listener not in self.gs2CallbackListeners:
+            self.gs2CallbackListeners.append(listener)
+
+    def removeGS2CallbackListener(self, listener):
+        self.gs2CallbackListeners.remove(listener)
+
+    # return 0 required as to match the type in c
+    def notifyOnCallback(self, state):
+        for listener in self.gs2CallbackListeners:
+            listener.onCallback(state)
+        return 0
+
+
+class GS2CallbackListener:
+    def onCallback(self, state):
+        pass
 
