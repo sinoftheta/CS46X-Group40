@@ -3,6 +3,7 @@ import csv
 from gui.simulation.SimulationModel import GS2KOD
 
 from gui.simulation import SimulationModel
+from gui.parameters import ParametersModel
 
 class FileReader:
     def __init__(self):
@@ -10,6 +11,7 @@ class FileReader:
         # as FileWriter I.E. various models 
         
         self.simulationModel = SimulationModel()
+        self.parametersModel = ParametersModel()
 
         self.csvRows = []
 
@@ -39,6 +41,34 @@ class FileReader:
     def _readGroupB(self):
         if self.csvRows[0][0] != "B":
             return
+
+        card1 = self.csvRows.pop(0)
+        card2 = self.csvRows.pop(0)
+        card3 = self.csvRows.pop(0)
+        card4 = self.csvRows.pop(0)
+
+        # remove group label
+        card1.pop()
+        card2.pop()
+        card3.pop()
+        card4.pop()
+
+        # read card 1
+        card1 = list(map(card1, lambda elem: int(elem)))
+
+        self.parametersModel.NN.setData(card1[0])
+        self.parametersModel.NE.setData(card1[1])
+
+        ns = card1[2]
+        kns = card1[3]
+        
+
+        # read card 2
+
+        # read card 3
+
+        # read card 4
+        
 
     def _readGroupC(self):
       pass
