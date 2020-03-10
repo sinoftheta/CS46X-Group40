@@ -44,6 +44,7 @@ void arrayAssertNotNull(Array* array, const char* message) {
     }
 }
 
+#ifdef DO_DEBUG
 void arrayPrint(const char* name, Array* array) {
     fprintf(gs2stderr, "Array: %s\n", name);
 
@@ -54,3 +55,8 @@ void arrayPrint(const char* name, Array* array) {
     }
     fprintf(gs2stderr, "\n");
 }
+#else
+void arrayPrint(const char* name, Array* array) {
+    
+}
+#endif

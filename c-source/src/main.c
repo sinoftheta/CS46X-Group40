@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 
 
     gs2DefaultIO();
-    gs2OutputFile("res/out.txt");
+    //gs2OutputFile("res/out.txt");
 
     gs2MemoryRequirements memReqs = gs2CreateMemoryRequirements(
         12,

@@ -67,6 +67,7 @@ void matrixAssertNotNull(Matrix* matrix, const char* message) {
     } 
 }
 
+#ifdef DO_DEBUG
 void matrixPrint(const char* name, Matrix* matrix) {
     fprintf(gs2stderr, "Matrix: %s\n", name);
     for (int i = 0; i < matrix->rows; i++) {
@@ -76,3 +77,8 @@ void matrixPrint(const char* name, Matrix* matrix) {
         fprintf(gs2stderr, "\n");
     }
 }
+#else
+void matrixPrint(const char* name, Matrix* matrix) {
+    
+}
+#endif
