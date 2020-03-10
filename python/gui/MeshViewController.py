@@ -13,9 +13,6 @@ from ctypes import CDLL
 class MeshViewController(QGroupBox, GS2CallbackListener):
     def __init__(self, config):
         super(MeshViewController, self).__init__('Mesh')
-
-        gs2_lib_path = path.abspath(path.join(config['paths']['bundle'], config['paths']['gs2Lib']))
-        self.gs2 = CDLL(gs2_lib_path)
         
         self.layout = QVBoxLayout()
         self.frame = QFrame()
@@ -28,22 +25,13 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
 
     def createMesh(self, state):
         
-        vertices = np.array([
-            [
-                cast(self.gs2.arrayAt(byref(state.x), i), POINTER(c_double)).contents.value,
-                cast(self.gs2.arrayAt(byref(state.y), i), POINTER(c_double)).contents.value
-            ]
-            for i in range(1, state.nn + 1)
-        ])
+        vertices = np.array([[state.x[i], state.y[i]] for i in range(state.nn)])
 
-        faces = [
-            [
-                cast(self.gs2.matrixAt(byref(state.in), i, j, POINTER(c_double)).contents.value - 1
-                for j in range(1, state.memoryRequirements.maxne + 1)
-                if cast(self.gs2.matrixAt(byref(state.in), i, j, POINTER(c_double)).contents.value > 0
-            ]
-            for i in range(1, state.ne + 1)
-        ]
+        faces = []
+        for i in range(state.ne):
+            for j in range(state.memoryRequirements.maxne):
+                if state._in[i][j] > 0:
+                    faces.append(state._in[i][j] - 1)
 
         faces = [[len(row)] + row for row in faces]
         faces = np.hstack(faces)
@@ -55,12 +43,5 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         if self.mesh is None:
             self.createMesh(self.gs2, state)
 
-        self.mesh.point_arrays['Pressure Head'] = np.array([
-            cast(self.gs2.arrayAt(byref(state.phi), i), POINTER(c_double)).contents.value
-            for i in range(1, state.nn + 1)
-        ])
-
-        self.mesh.point_arrays['Concentration'] = np.array([
-            cast(self.gs2.arrayAt(byref(state.conc), i), POINTER(c_double)).contents.value
-            for i in range(1, state.nn + 1)
-        ])
+        self.mesh.point_arrays['Pressure Head'] = np.array([state.phi[i] for i in range(state.nn)])
+        self.mesh.point_arrays['Concentration'] = np.array([state.conc[i] for i in range(state.nn)])
