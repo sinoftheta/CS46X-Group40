@@ -21,7 +21,7 @@ class GS2KOD(Enum):
     KOD12 = 1
 
 class SimulationModel:
-    def __init__(self, config):
+    def __init__(self, config=None):
         self.simulationTitle = ""
 
         # File descriptors for gs2
@@ -41,17 +41,18 @@ class SimulationModel:
             if kod.value < 0:
                 self.outputModifiers[kod] = 1
 
-        if config['io']['default-in']:
-            self.stdin = path.abspath(path.join(config['paths']['bundle'], config['io']['default-in']))
+        if config:
+            if config['io']['default-in']:
+                self.stdin = path.abspath(path.join(config['paths']['bundle'], config['io']['default-in']))
 
-        if config['io']['default-out']:
-            self.stdout = path.abspath(path.join(config['paths']['bundle'], config['io']['default-out']))
+            if config['io']['default-out']:
+                self.stdout = path.abspath(path.join(config['paths']['bundle'], config['io']['default-out']))
 
-        if config['io']['default-err']:
-            self.stderr = path.abspath(path.join(config['paths']['bundle'], config['io']['default-err']))
+            if config['io']['default-err']:
+                self.stderr = path.abspath(path.join(config['paths']['bundle'], config['io']['default-err']))
 
-        if config['paths']['data-in']:
-            self.dataInputFile = path.abspath(path.join(config['paths']['bundle'], config['paths']['data-in']))
+            if config['paths']['data-in']:
+                self.dataInputFile = path.abspath(path.join(config['paths']['bundle'], config['paths']['data-in']))
 
 
     def setOutputModifier(self, kod, state):

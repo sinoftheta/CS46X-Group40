@@ -28,7 +28,7 @@ class ParametersPage(QGroupBox):
         self.config = config
 
         # objects that care when the export button is clicked
-        self.exportListeners = []
+        self.IOListeners = []
 
         # Create layout class and apply to Parameters section
         self.parametersPageLayout = QHBoxLayout()
@@ -133,10 +133,10 @@ class ParametersPage(QGroupBox):
 
 
     def importNavClick(self):
-        #self.parametersPageStack.setCurrentIndex(0)
         filename = QFileDialog.getOpenFileName(self, 'Open file',
-
-            '/home', "CSV Files (*.csv);;Text files (*.txt)")
+            '/home', "CSV Files (*.csv)")
+        self.notifyImport(filename[0])
+        
 
 
     def basicParamClick(self):
@@ -149,8 +149,6 @@ class ParametersPage(QGroupBox):
         numNodes = self.basicParametersController.parametersModel.NN.getData()
         self.parametersPageNodes.buildTable(numNodes)
         self.parametersPageStack.setCurrentIndex(3)
-        #Test accessor
-        #print(self.parametersPageNodes.getCONCI())
 
     def nodeTypesClick(self):
         nodeTypes = self.parametersPageNodes.nodeTypeCounts()
@@ -175,30 +173,24 @@ class ParametersPage(QGroupBox):
         # in the number of seepage faces.
 
     def notifyExport(self):
-        for listener in self.exportListeners:
+        for listener in self.IOListeners:
             listener.onExport()
 
-    def addExportListener(self, listener):
-        if listener not in self.exportListeners:
-            self.exportListeners.append(listener)
+    def notifyImport(self, filename):
+        for listener in self.IOListeners:
+            listener.onImport(filename)
 
-    def removeExportListener(self, listener):
-        self.exportListeners.remove(listener)
+    def addIOListener(self, listener):
+        if listener not in self.IOListeners:
+            self.IOListeners.append(listener)
 
-    # Handling  file exporting is being moved.
-    # this is being done as this class should not know about the simulation page
-    # so in the export button will notify those who care that the button has been pressed.
-    # def exportNavClick(self):
-    #     fileWriter = gs2.FileWriter(
-    #         self.materialsController.getMaterials(),
-    #         self.
-    #     )
-
-    #     filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
-    #     fileWriter.write(filePath)
+    def removeIOListener(self, listener):
+        self.IOListeners.remove(listener)
 
 
-
-class ExportListener:
+class IOListener:
     def onExport(self):
+        pass
+
+    def onImport(self, filepath):
         pass

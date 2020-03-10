@@ -8,14 +8,14 @@ import gs2
 from os import path
 
 from .parameters_window import ParametersPage
-from .parameters_window import ExportListener
+from .parameters_window import IOListener
 
 from .SimulationController import SimulationController
 from .BasicParametersController import BasicParametersController
 from .ElementsController import ElementsController
 from .MeshViewController import MeshViewController
 
-class MainWindow(QMainWindow, ExportListener):
+class MainWindow(QMainWindow, IOListener):
     def __init__(self, config, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
@@ -42,7 +42,7 @@ class MainWindow(QMainWindow, ExportListener):
         #   Then add to array of pages 'self.homePageStack'
         #   Parameters
         self.parametersPage = ParametersPage(self.config)
-        self.parametersPage.addExportListener(self)
+        self.parametersPage.addIOListener(self)
         self.homePageStack.addWidget(self.parametersPage)
         #   Mesh
         self.meshPage = MeshViewController()
@@ -99,3 +99,12 @@ class MainWindow(QMainWindow, ExportListener):
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
         fileWriter.write(filePath)
+
+    def onImport(self, filepath):
+        fileReader = gs2.FileReader()
+        fileReader.read(filepath)
+
+        # file read now has data foreach model
+        # the controllers should have updateModel methods
+        # so the views can be updated.
+        
