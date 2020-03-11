@@ -24,8 +24,9 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         self.setLayout(self.layout)
 
     def createMesh(self, state):
-        vertices = np.array([[x, y] for x, y in zip(state.x, state.y)])
-        faces = [[inc - 1 for inc in face if inc > 0] for face in state._in]
+        vertices = np.array([[x, y] for x, y in zip(state.x, state.y)][:state.nn])
+        incidences = np.array(state._in[:state.inc]).T
+        faces = [[inc - 1 for inc in face if inc > 0] for face in incidences][:state.ne]
         faces = [[len(row)] + row for row in faces]
         faces = np.hstack(faces)
         self.mesh = pv.PolyData(vertices, faces)
@@ -34,5 +35,5 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
     def onCallback(self, state):
         if self.mesh is None:
             self.createMesh(self.gs2, state)
-        self.mesh.point_arrays['Pressure Head'] = np.array([head for head in state.phi])
-        self.mesh.point_arrays['Concentration'] = np.array([conc for conc in state.conc])
+        self.mesh.point_arrays['Pressure Head'] = np.array([head for head in state.phi][:state.nn])
+        self.mesh.point_arrays['Concentration'] = np.array([conc for conc in state.conc][:state.nn])
