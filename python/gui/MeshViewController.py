@@ -24,7 +24,7 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         self.setLayout(self.layout)
 
     def createMesh(self, state):
-        vertices = np.array([[x, y] for x, y in zip(state.x, state.y)][:state.nn.value])
+        vertices = np.array([[x, y, 0.0] for x, y in zip(state.x, state.y)][:state.nn.value])
         incidences = np.array(state._in[:state.inc.value]).T
         faces = [[inc - 1 for inc in face if inc > 0] for face in incidences][:state.ne.value]
         faces = [[len(row)] + row for row in faces]
