@@ -128,8 +128,8 @@ C
 C     Compute element matrices for flow
 C
           if (JTEST.EQ.0) go to 290
-      ST = TTA(L)/POR(L) * (ALPH(L) + POR(L) * BETAP)
-      IE(I, L) = 0
+      ST = TTA(L)/POR(L) * (ALPHA(L) + POR(L) * BETAP)
+      IE(1, L) = 0
           if (ISPL(1).EQ.0) go to 268
       IK = IE(2, L)
       ISPK = ISPL(IK)
@@ -217,7 +217,7 @@ C     Compute volume integrals
           do 880 J = I, M
           do 875 K = 1, NP2
       QP(K) = CPHI(K) * F(I, K) * F(J, K) * DETJ(K)
-      Q(K) = CPHI(K) * DX(J, K) + VKY(K) * DY(J, K) * DY(I, K)
+      Q(K) = (VKX(K) * DX(I, K) * DX(J, K) + VKY(K) * DY(J, K) * DY(I, K))
      & * DETJ(K)
   875 continue
       call MATGEN (PE, SE, SRCR, Q, QP, SRCRT, MXC, MXT, I, J, L, M)
@@ -267,6 +267,7 @@ C     compute concentration coefficient matrices
       JC = JD(J) - LC(JDJ)
           if (LR(JDJ).EQ.1) go to 293
       DPORDT(K) = DPORDT(K) + F(J, K) * PHI(JDJ)
+  293 CPHI(K) = CPHI(K) + F(J, K) * PHI(JDJ)
   294 continue
           if (IE(1, L).EQ.0) go to 297
       IK = IE(2, L)
@@ -276,7 +277,9 @@ C     compute concentration coefficient matrices
           if (CPHI(K).GE.PSIK) go to 297
       HMZ = ABS(CPHI(K))
       HMZ = ALOG10(HMZ)
-          if (HMZ.GE.XPSI(1, IK)) go to 296
+          if (HMZ.GE.XPSI(1, IK)) HMZ=XPSI(1, IK)
+          do 295 J=1, ISPM  
+          if (HMZ.GE.XPSI(j+1, IK)) go to 296
   295 continue
       J = ISPM
   296 X1 = HMZ - XPSI(J, IK)
@@ -292,11 +295,12 @@ C     compute concentration coefficient matrices
      & X1 + XK(J, IK)
 
       PPK = 10.**(PP - XK(ISPK, IK))
+C mar 3
           if (PPK.GT.1.0) PPK = 1.0
           if (TETA.GT.1.0) TETA = 1.0
       XCOND = -PPK * FMOBX(L) / (TETA * TTA(L))
       YCOND = -PPK * FMOBY(L) / (TETA * TTA(L))
-      CPHI(K) TETA * TTA(L)
+      CPHI(K) = TETA * TTA(L)
       D0(K) = EXP(10. * CPHI(K))
       DH(K) = RD * ALPHA(L) * CPHI(K) * DPORDT(K) / DELT
       DPORDT(K) = DPORDT(K) / DELT * CE
@@ -380,7 +384,7 @@ C
       JDJJ = JD(JJ)
           if (KLR(JDJJ).NE.-4) go to 325
           do 324 K = 1, NP
-  324 Q(K) = (VKX(K) * DETJ(K + NP) - VKY(K) * DETJ(K)) * F(II, K)
+  324 Q(K) = (VKX(K) * DETJ(K + NP) - VKY(K) * DETJ(K)) * F(II, K) * F(JJ, K)
           if (NP.EQ.4) go to 326
       AP = Q(1) + Q(2)
           go to 327

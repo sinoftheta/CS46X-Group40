@@ -14,7 +14,7 @@ C**
             IF (NB.LT.IP) IP=NB
             DO 50 J=1,IP
       IQ = NB - J
-            IF ((I-J).LT.IQ) IQ=I-1
+            IF ((I-1).LT.IQ) IQ=I-1
       SUM = S(I,J)
             IF (IQ.LT.1) GO TO 20
             DO 10 K=1,IQ

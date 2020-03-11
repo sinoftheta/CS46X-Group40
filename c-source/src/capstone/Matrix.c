@@ -47,9 +47,10 @@ double* matrixAt(Matrix* matrix, int row, int col) {
     
 
 
-    if (col - 1 >= matrix->columns || row - 1 >= matrix->rows) {
-        fprintf(gs2stderr, "matrixAt index out of bounds at row: %d, column: %d\n", row, col);
-        exit(1);
+    if (col - 1 >= matrix->columns || row - 1 >= matrix->rows || row <= 0 || col <= 0) {
+        fprintf(gs2stderr, "matrixAt index out of bounds at row: %d (%d), column: %d (%d)\n", row, matrix->rows, col, matrix->columns);
+        ((Matrix*)(0))->elements[0][0] = 1.0;
+        // exit(1);
     }
 
     return &matrix->elements[row - 1][col -1];
@@ -60,4 +61,24 @@ void matrixAssertNotNull(Matrix* matrix, const char* message) {
         fprintf(gs2stderr, "%s\n", message);
         exit(1);
     }
+
+    if (matrix->columns * matrix->rows == 0) {
+        fprintf(gs2stderr, "[Warn] matrix has zero elements: %s\n", message);
+    } 
 }
+
+#ifdef DO_DEBUG
+void matrixPrint(const char* name, Matrix* matrix) {
+    fprintf(gs2stderr, "Matrix: %s\n", name);
+    for (int i = 0; i < matrix->rows; i++) {
+        for (int j = 0; j < matrix->columns; j++) {
+            fprintf(gs2stderr, "%15.3E   ", matrix->elements[i][j]);
+        }
+        fprintf(gs2stderr, "\n");
+    }
+}
+#else
+void matrixPrint(const char* name, Matrix* matrix) {
+    
+}
+#endif
