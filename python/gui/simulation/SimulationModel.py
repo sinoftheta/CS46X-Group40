@@ -41,7 +41,7 @@ class SimulationModel:
             if kod.value < 0:
                 self.outputModifiers[kod] = 1
 
-        if config:
+        if config != None:
             if config['io']['default-in']:
                 self.stdin = path.abspath(path.join(config['paths']['bundle'], config['io']['default-in']))
 

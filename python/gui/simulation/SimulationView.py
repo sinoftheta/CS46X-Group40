@@ -15,7 +15,10 @@ class SimulationView(QGroupBox):
     def __init__(self, simulationModel):
         super(SimulationView, self).__init__('Simulation Config')
         self.simulationModel = simulationModel
+        self.updateView()
 
+
+    def updateView(self):
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignLeft)
 

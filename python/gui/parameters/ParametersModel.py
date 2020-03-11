@@ -21,6 +21,7 @@ class ParametersModel:
         self.ITCHNG = 0
         self.IGO = 0
 
+        # TODO: Refactor to enums
         self.TYPE = "Implicit"
         self.STAT = "Steady-state"
         self.STATP = "Steady-state"
