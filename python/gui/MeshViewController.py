@@ -35,5 +35,5 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
     def onCallback(self, state):
         if self.mesh is None:
             self.createMesh(self.gs2, state)
-        self.mesh.point_arrays['Pressure Head'] = np.array([head for head in state.phi][:state.nn.value])
-        self.mesh.point_arrays['Concentration'] = np.array([conc for conc in state.conc][:state.nn.value])
+        self.mesh.point_arrays['Pressure Head'] = np.array(state.phi[:state.nn.value])
+        self.mesh.point_arrays['Concentration'] = np.array(state.conc[:state.nn.value])
