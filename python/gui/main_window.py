@@ -111,4 +111,5 @@ class MainWindow(QMainWindow, IOListener):
         self.simulationPage.updateView(fileReader.simulationModel)
 
         self.parametersPage.basicParametersController.updateView(fileReader.parametersModel)
+        self.parametersPage.multipliersController.updateView(fileReader.multipliersModel)
         
