@@ -136,6 +136,11 @@ class ParametersPage(QGroupBox):
         filename = QFileDialog.getOpenFileName(self, 'Open file',
             '/home', "CSV Files (*.csv)")
 
+        if filename[0] != '':
+            self.notifyImport(filename[0])
+
+
+
     def basicParamClick(self):
         self.parametersPageStack.setCurrentIndex(1)
 
@@ -156,9 +161,6 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(5)
 
     def elementPropClick(self):
-        #numElements = self.basicParametersController.parametersModel.NE.getData()
-        #numMaterials = self.basicParametersController.parametersModel.NK.getData()
-        #self.elementPropertiesController.buildTable(numElements, numMaterials)
         self.parametersPageStack.setCurrentIndex(6)
 
     def materialsClick(self):

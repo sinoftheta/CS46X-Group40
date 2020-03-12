@@ -106,6 +106,6 @@ class MainWindow(QMainWindow, IOListener):
         fileReader = gs2.FileReader()
         fileReader.read(filepath)
 
-        # file read now has data foreach model
+        # file read now has data for each model
         # the controllers should have updateModel methods
         # so the views can be updated.
