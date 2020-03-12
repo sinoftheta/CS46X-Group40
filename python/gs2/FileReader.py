@@ -37,6 +37,21 @@ class FileReader:
             self._readGroupA()
             self._readGroupB()
             self._readGroupC()
+            self._readGroupD()
+            self._readGroupE()
+            self._readGroupF()
+            self._readGroupG()
+            self._readGroupH()
+            self._readGroupI()
+            self._readGroupJ()
+            self._readGroupK()
+            self._readGroupL()
+            self._readGroupM()
+            self._readGroupN()
+            self._readGroupO()
+            self._readGroupP()
+            self._readGroupQ()
+            self._readGroupR()
         
     def _readGroupA(self):
         if self.csvRows[0][0] != "A":
@@ -60,7 +75,7 @@ class FileReader:
         card2.pop(0)
         card3.pop(0)
         card4.pop(0)
-
+        
         # read card 1
        
         self.parametersModel.NN.setData(int(card1[0]))
@@ -148,7 +163,30 @@ class FileReader:
         self.multipliersModel.ARHO = card2[5]
 
     def _readGroupD(self):
-        pass
+        if self.csvRows[0][0] != "D":
+            return 
+
+        card1 = self.csvRows.pop(0)
+        
+        # remove label
+        card1.pop(0)
+
+        # data in this group are ints
+        card1 = list(map(lambda elem: int(elem), card1[0:11]))
+
+
+        self.simulationModel.setOutputModifier(GS2KOD.KOD1, card1[0])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD2, card1[1])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD3, card1[2])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD4, card1[3])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD7, card1[4])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD8, card1[5])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD9, card1[6])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD10, card1[7])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD11, card1[8])
+        self.simulationModel.setOutputModifier(GS2KOD.KOD12, card1[9])
+
+            
 
     def _readGroupE(self):
         pass
