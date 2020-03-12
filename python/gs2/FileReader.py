@@ -4,6 +4,7 @@ from gui.simulation.SimulationModel import GS2KOD
 
 from gui.simulation import SimulationModel
 from gui.parameters import ParametersModel
+from gui.material import MaterialModel
 
 class FileReader:
     def __init__(self):
@@ -12,6 +13,9 @@ class FileReader:
         
         self.simulationModel = SimulationModel()
         self.parametersModel = ParametersModel()
+
+        # dictionary keyed off of materialID
+        self.materialModels = {}
 
         self.csvRows = []
 
@@ -195,7 +199,57 @@ class FileReader:
         pass
 
     def _readGroupQ(self):
-        pass
+             
+        if self.csvRows[0][0] != "Q-1":
+            return
 
+
+        # sub group Q1
+        q1Card = self.csvRows.pop(0)
+        q1Card.pop(0)
+
+        for i in range(len(q1Card)):
+            if q1Card[i] == '':
+                break
+
+            materialNumber = str(i+1)
+            material = MaterialModel(materialNumber)
+            material.setInterpolationPointCount(int(q1Card[0]))
+            self.materialModels[materialNumber] = material
+
+
+        for materialNumber in self.materialModels:
+            while self.csvRows[0][0] == "Q-2":
+                q2Card = self.csvRows.pop(0)
+                q2Card.pop(0)
+                
+                for i in range(len(q2Card)):
+                    if q2Card[i] == '':
+                        break
+
+                    self.materialModels[materialNumber].pressureHead[i] = float(q2Card[i])
+
+            while self.csvRows[0][0] == "Q-3":
+                q3Card = self.csvRows.pop(0)
+                q3Card.pop(0)
+                
+                for i in range(len(q3Card)):
+                    if q3Card[i] == '':
+                        break
+
+                    self.materialModels[materialNumber].moistureContent[i] = float(q3Card[i])
+
+            # include check for last csvrow, as Q4 will often be the final card
+            while len(self.csvRows) and self.csvRows[0][0] == "Q-4":
+                q4Card = self.csvRows.pop(0)
+                q4Card.pop(0)
+                
+                for i in range(len(q4Card)):
+                    if q4Card[i] == '':
+                        break
+
+                    self.materialModels[materialNumber].hydraulicConductivity[i] = float(q4Card[i])
+            
+        
     def _readGroupR(self):
         pass
