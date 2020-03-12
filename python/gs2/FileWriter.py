@@ -96,15 +96,16 @@ class FileWriter:
             STAT = '1.0'
 
         # derived parameters
-        NS = ''
-        KNS = ''
-        NF = ''
-        INC = ''
-        NSDN = ''
-        MQ4 = ''
-        KNSDN = ''
-        COEFI = ''
-        NVS = ''
+        # assume zeros for the time being; makes testing import do able
+        NS = '0'
+        KNS = '0'
+        NF = '0'
+        INC = '0'
+        NSDN = '0'
+        MQ4 = '0'
+        KNSDN = '0'
+        COEFI = '0'
+        NVS = '0'
         DPRDT = '0'
 
         csvRow = [
@@ -145,6 +146,7 @@ class FileWriter:
 
         csvRow4 = [
                 group,
+                basicParameters.DIFUSN,
                 DPRDT,
                 STAT,
                 STATP,
