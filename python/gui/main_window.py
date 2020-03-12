@@ -109,6 +109,9 @@ class MainWindow(QMainWindow, IOListener):
         # so the views can be updated.
 
         self.simulationPage.updateView(fileReader.simulationModel)
-
+        
         self.parametersPage.basicParametersController.updateView(fileReader.parametersModel)
         self.parametersPage.materialsController.updateView(list(fileReader.materialModels.values()))
+        self.parametersPage.multipliersController.updateView(fileReader.multipliersModel)
+        self.parametersPage.elementsController.updateView(list(fileReader.elementModels.values()))
+
