@@ -13,6 +13,7 @@ class ElementPropertiesView(QGroupBox):
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setInputs()
         self.setLayout(self.layout)
+        self.updateInputs(self.viewModel)
 
     def setInputs(self):
         materialGroupLabel = QLabel("Material Group " + str(self.viewModel.materialGroupId))
@@ -152,3 +153,15 @@ class ElementPropertiesView(QGroupBox):
         self.RHO.setFixedWidth(100)
         self.RHO.valueChanged.connect(lambda value: self.viewModel.setValue("RHO", value))
         self.layout.addWidget(self.RHO, 14, 3)
+
+    def updateInputs(self, viewModel):
+        self.FMOBX.setValue(viewModel.FMOBX)
+        self.FMOBY.setValue(viewModel.FMOBY)
+        self.ETRANS.setValue(viewModel.ETRANS)
+        self.ELONG.setValue(viewModel.ELONG)
+        self.POR.setValue(viewModel.POR)
+        self.TTA.setValue(viewModel.TTA)
+        self.ALPHA.setValue(viewModel.ALPHA)
+        self.KD.setValue(viewModel.KD)
+        self.LAMBDA.setValue(viewModel.LAMBDA)
+        self.RHO.setValue(viewModel.RHO)
