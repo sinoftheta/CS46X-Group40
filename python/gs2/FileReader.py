@@ -36,6 +36,7 @@ class FileReader:
             # that it is operating on the correct row
             self._readGroupA()
             self._readGroupB()
+            self._readGroupC()
         
     def _readGroupA(self):
         if self.csvRows[0][0] != "A":
@@ -127,8 +128,8 @@ class FileReader:
         card2.pop(0)
 
         # all values are expected to be floats
-        card1 = map(lambda elem: float(elem), card1)
-        card2 = map(lambda elem: float(elem), card2)
+        card1 = list(map(lambda elem: float(elem), card1[0:8]))
+        card2 = list(map(lambda elem: float(elem), card2[0:6]))
 
         self.multipliersModel.AFMOBX = card1[0]
         self.multipliersModel.AFMOBY = card1[1]
