@@ -11,12 +11,10 @@ from .BasicParametersController import BasicParameterChangeListener
 from .MultipliersController import MultipliersController
 from .nodes import Nodes
 from .nodeTypes import NodeTypes
-from .materialProperties import Elements
-from .elementIncidences import ElementIncidences
+from .ElementsController import ElementsController
+from .ElementPropertiesController import ElementPropertiesController
 from .MaterialsController import MaterialsController
 from .MaterialsController import MaterialsChangeListener
-from .ElementsController import ElementsController
-
 from .SeepageFaceController import SeepageFaceController
 
 class ParametersPage(QGroupBox):
@@ -50,8 +48,8 @@ class ParametersPage(QGroupBox):
         self.multipliersController = MultipliersController()
         self.parametersPageNodes = Nodes()
         self.parametersPageNodeTypes = NodeTypes()
-        self.parametersPageElem = Elements()
         self.elementsController = ElementsController()
+        self.elementPropertiesController = ElementPropertiesController()
         self.materialsController = MaterialsController()
         self.seepageFaceController = SeepageFaceController()
 
@@ -59,6 +57,7 @@ class ParametersPage(QGroupBox):
         self.basicParametersController.addBasicParameterListener(self.seepageFaceController)
         self.basicParametersController.addBasicParameterListener(self.materialsController)
         self.basicParametersController.addBasicParameterListener(self.elementsController)
+        self.basicParametersController.addBasicParameterListener(self.elementPropertiesController)
 
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
@@ -66,62 +65,63 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.multipliersController)
         self.parametersPageStack.addWidget(self.parametersPageNodes)
         self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
-        self.parametersPageStack.addWidget(self.parametersPageElem)
         self.parametersPageStack.addWidget(self.elementsController)
+        self.parametersPageStack.addWidget(self.elementPropertiesController)
         self.parametersPageStack.addWidget(self.materialsController)
         self.parametersPageStack.addWidget(self.seepageFaceController)
 
+        # Create navigation buttons
+        importNavBtn = QPushButton("Import")
+        importNavBtn.setGeometry(0, 0, 150, 100)
+        importNavBtn.clicked.connect(self.importNavClick)
 
-        #   Add navigation buttons (widgets) to
-        #       button container 'self.parametersPageStack'
-        self.importNavBtn = QPushButton("Import")
-        self.importNavBtn.setGeometry(0, 0, 150, 100)
-        self.importNavBtn.clicked.connect(self.importNavClick)
-        self.parametersPageNav.addWidget(self.importNavBtn)
+        exportNavBtn = QPushButton("Export")
+        exportNavBtn.setGeometry(0, 0, 150, 100)
+        exportNavBtn.clicked.connect(self.notifyExport)
 
-        self.exportNavBtn = QPushButton("Export")
-        self.exportNavBtn.setGeometry(0, 0, 150, 100)
-        self.exportNavBtn.clicked.connect(self.notifyExport)
-        self.parametersPageNav.addWidget(self.exportNavBtn)
+        basicPNavBtn = QPushButton("Basic Parameters")
+        basicPNavBtn.setGeometry(0, 0, 150, 100)
+        basicPNavBtn.pressed.connect(self.basicParamClick)
 
-        self.basicPNavBtn = QPushButton("Basic Parameters")
-        self.basicPNavBtn.setGeometry(0, 0, 150, 100)
-        self.basicPNavBtn.pressed.connect(self.basicParamClick)
-        self.parametersPageNav.addWidget(self.basicPNavBtn)
+        multipliersNavBtn = QPushButton("Multipliers")
+        multipliersNavBtn.setGeometry(0, 0, 150, 100)
+        multipliersNavBtn.pressed.connect(self.multipliersClick)
 
-        self.multipliersNavBtn = QPushButton("Multipliers")
-        self.multipliersNavBtn.setGeometry(0, 0, 150, 100)
-        self.multipliersNavBtn.pressed.connect(self.multipliersClick)
-        self.parametersPageNav.addWidget(self.multipliersNavBtn)
+        nodesNavBtn = QPushButton("Nodes")
+        nodesNavBtn.setGeometry(0, 0, 150, 100)
+        nodesNavBtn.pressed.connect(self.nodesClick)
 
-        self.nodesNavBtn = QPushButton("Nodes")
-        self.nodesNavBtn.setGeometry(0, 0, 150, 100)
-        self.nodesNavBtn.pressed.connect(self.nodesClick)
-        self.parametersPageNav.addWidget(self.nodesNavBtn)
+        nodeTypesBtn = QPushButton("Node Types")
+        nodeTypesBtn.setGeometry(0, 0, 150, 100)
+        nodeTypesBtn.pressed.connect(self.nodeTypesClick)
 
-        self.nodeTypesBtn = QPushButton("Node Types")
-        self.nodeTypesBtn.setGeometry(0, 0, 150, 100)
-        self.nodeTypesBtn.pressed.connect(self.nodeTypesClick)
-        self.parametersPageNav.addWidget(self.nodeTypesBtn)
+        elemNavBtn = QPushButton("Elements")
+        elemNavBtn.setGeometry(0, 0, 150, 100)
+        elemNavBtn.pressed.connect(self.elementsClick)
 
-        self.elemNavBtn = QPushButton("Material Properties")
-        self.elemNavBtn.setGeometry(0, 0, 150, 100)
-        self.elemNavBtn.pressed.connect(self.materialPropClick)
-        self.parametersPageNav.addWidget(self.elemNavBtn)
+        elemPropsNavBtn = QPushButton("Element Properties")
+        elemPropsNavBtn.setGeometry(0, 0, 150, 100)
+        elemPropsNavBtn.pressed.connect(self.elementPropClick)
 
-        self.elemIncNavBtn = QPushButton("Elements")
-        self.elemIncNavBtn.setGeometry(0, 0, 150, 100)
-        self.elemIncNavBtn.pressed.connect(self.elementsClick)
-        self.parametersPageNav.addWidget(self.elemIncNavBtn)
-
-        self.matsNavBtn = QPushButton("Materials")
-        self.matsNavBtn.setGeometry(0, 0, 150, 100)
-        self.matsNavBtn.pressed.connect(self.materialsClick)
-        self.parametersPageNav.addWidget(self.matsNavBtn)
+        matDataPointsNavBtn = QPushButton("Material Data Points")
+        matDataPointsNavBtn.setGeometry(0, 0, 150, 100)
+        matDataPointsNavBtn.pressed.connect(self.materialsClick)
 
         seepageFaceNavBtn = QPushButton("Seepage Faces")
         seepageFaceNavBtn.setGeometry(0, 0, 150, 150)
         seepageFaceNavBtn.pressed.connect(self.seepageFaceClick)
+
+        #   Add navigation buttons (widgets) to
+        #       button container 'self.parametersPageStack'
+        self.parametersPageNav.addWidget(importNavBtn)
+        self.parametersPageNav.addWidget(exportNavBtn)
+        self.parametersPageNav.addWidget(basicPNavBtn)
+        self.parametersPageNav.addWidget(multipliersNavBtn)
+        self.parametersPageNav.addWidget(nodesNavBtn)
+        self.parametersPageNav.addWidget(nodeTypesBtn)
+        self.parametersPageNav.addWidget(elemNavBtn)
+        self.parametersPageNav.addWidget(elemPropsNavBtn)
+        self.parametersPageNav.addWidget(matDataPointsNavBtn)
         self.parametersPageNav.addWidget(seepageFaceNavBtn)
 
         self.parametersPageNav.setContentsMargins(0, 0, 0, 0)
@@ -138,7 +138,7 @@ class ParametersPage(QGroupBox):
 
         if filename[0] != '':
             self.notifyImport(filename[0])
-        
+
 
 
     def basicParamClick(self):
@@ -157,13 +157,10 @@ class ParametersPage(QGroupBox):
         self.parametersPageNodeTypes.setNodeTypes(nodeTypes)
         self.parametersPageStack.setCurrentIndex(4)
 
-    def materialPropClick(self):
-        numElements = self.basicParametersController.parametersModel.NE.getData()
-        numMaterials = self.basicParametersController.parametersModel.NK.getData()
-        self.parametersPageElem.buildTable(numElements, numMaterials)
+    def elementsClick(self):
         self.parametersPageStack.setCurrentIndex(5)
 
-    def elementsClick(self):
+    def elementPropClick(self):
         self.parametersPageStack.setCurrentIndex(6)
 
     def materialsClick(self):

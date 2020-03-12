@@ -1,4 +1,3 @@
-
 class ElementModel:
     def __init__(self, elementNum):
         self.elementNumber = elementNum

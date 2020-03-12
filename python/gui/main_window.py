@@ -14,6 +14,7 @@ from .SimulationController import SimulationController
 from .BasicParametersController import BasicParametersController
 from .ElementsController import ElementsController
 from .MeshViewController import MeshViewController
+from .ElementPropertiesController import ElementPropertiesController
 
 class MainWindow(QMainWindow, IOListener):
     def __init__(self, config, *args, **kwargs):
@@ -52,7 +53,7 @@ class MainWindow(QMainWindow, IOListener):
         self.simulationPage.addGS2CallbackListener(self.meshPage)
         self.homePageStack.addWidget(self.simulationPage)
 
-        self.meshPageLayout = QVBoxLayout()
+        #self.meshPageLayout = QVBoxLayout()
         self.simulationPageLayout = QVBoxLayout()
 
         self.setHomePageButtons()
@@ -94,7 +95,8 @@ class MainWindow(QMainWindow, IOListener):
             self.parametersPage.seepageFaceController.getSeepageFaces(),
             self.parametersPage.basicParametersController.getBasicParametersModel(),
             self.parametersPage.elementsController.getElements(),
-            self.parametersPage.multipliersController.getElements()
+            self.parametersPage.multipliersController.getElements(),
+            self.parametersPage.elementPropertiesController.getElementProperties()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
@@ -109,9 +111,8 @@ class MainWindow(QMainWindow, IOListener):
         # so the views can be updated.
 
         self.simulationPage.updateView(fileReader.simulationModel)
-        
+
         self.parametersPage.basicParametersController.updateView(fileReader.parametersModel)
         self.parametersPage.materialsController.updateView(list(fileReader.materialModels.values()))
         self.parametersPage.multipliersController.updateView(fileReader.multipliersModel)
         self.parametersPage.elementsController.updateView(list(fileReader.elementModels.values()))
-

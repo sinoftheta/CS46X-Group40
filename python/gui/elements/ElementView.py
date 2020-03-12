@@ -15,7 +15,7 @@ class ElementView(QGroupBox):
         self.layout.setContentsMargins(20, 10, 0, 50)
 
         materialGroupLabel = QLabel("Material Group")
-        materialGroupLabel.setFont(QFont('Arial', 16))
+        materialGroupLabel.setFont(QFont('Helvetica', 14))
         materialGroupLabel.setAlignment(Qt.AlignLeft)
         self.layout.addWidget(materialGroupLabel)
         self.materialCB = MaterialsComboBox(materialGroupIdMax)
@@ -26,7 +26,7 @@ class ElementView(QGroupBox):
 
 
         elementIncidenceLabel = QLabel("Element Incidences")
-        elementIncidenceLabel.setFont(QFont('Arial', 16))
+        elementIncidenceLabel.setFont(QFont('Arial', 14))
         elementIncidenceLabel.setAlignment(Qt.AlignLeft)
         self.layout.addWidget(elementIncidenceLabel)
 
@@ -44,7 +44,7 @@ class ElementView(QGroupBox):
                 col = 0
 
             incidenceLabel = QLabel("Incidence " + str(node+1))
-            incidenceLabel.setFont(QFont('Arial', 13))
+            incidenceLabel.setFont(QFont('Arial', 12))
             incidenceLabel.setAlignment(Qt.AlignLeft)
             self.incidenceLayout.addWidget(incidenceLabel, row, col)
 
