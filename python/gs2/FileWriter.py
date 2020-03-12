@@ -9,13 +9,15 @@ class FileWriter:
             seepageFaceModels,
             basicParametersModel,
             elementModels,
-            multipliersModel):
+            multipliersModel,
+            elementPropertiesModels):
         self.materialModels = materialModels
         self.simulationModel = simulationModel
         self.seepageFaceModels = seepageFaceModels
         self.basicParametersModel = basicParametersModel
         self.elementModels = elementModels
         self.multipliersModel = multipliersModel
+        self.elementPropertiesModels = elementPropertiesModels
 
     def write(self, filepath):
 
@@ -33,6 +35,7 @@ class FileWriter:
             self._writeGroupC(writer, self.multipliersModel)
             self._writeGroupD(writer, self.simulationModel)
             self._writeGroupI(writer, self.elementModels)
+            self._writeGroupJ(writer, self.elementPropertiesModels)
             self._writeGroupO(writer, self.seepageFaceModels)
             self._writeGroupQ(writer, self.materialModels)
 
@@ -206,6 +209,41 @@ class FileWriter:
             for node in element.getIncidences():
                 csvRow.append(node)
 
+            csv.writerow(self._csvPad(csvRow))
+
+    def _writeGroupJ(self, csv, elementPropertiesModels):
+        materialGroups = {}
+        for group in range(1, (self.basicParametersModel.NK.getData()+1)):
+            materialGroups[str(group)] = []
+        for element in self.elementModels:
+            materialGroups[str(element.materialGroup)].append(element.elementNumber)
+
+        for materialGroup in elementPropertiesModels:
+            group = "J-1"
+            csvRow = [
+                group, materialGroups[materialGroup.materialGroupId][0],
+                materialGroups[materialGroup.materialGroupId][-1],
+                materialGroup.materialGroupId
+            ]
+            csv.writerow(self._csvPad(csvRow))
+            group = "J-2"
+            csvRow = [
+                group,
+                materialGroup.FMOBX,
+                materialGroup.FMOBY,
+                materialGroup.ELONG,
+                materialGroup.ETRANS,
+                materialGroup.POR,
+                materialGroup.TTA,
+                materialGroup.ALPHA,
+                materialGroup.KD,
+            ]
+            csv.writerow(self._csvPad(csvRow))
+            csvRow = [
+                group,
+                materialGroup.LAMBDA,
+                materialGroup.RHO,
+            ]
             csv.writerow(self._csvPad(csvRow))
 
     def _writeGroupO(self, csv, seepageFaces):

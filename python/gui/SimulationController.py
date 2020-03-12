@@ -62,14 +62,14 @@ class SimulationController(QGroupBox):
         self.fileWatcher.addPath(stdout)
 
         simulationRunner.run()
-    
+
     def getSimulationModel(self):
         return self.simulationModel
 
     def addGS2CallbackListener(self, listener):
         if listener not in self.gs2CallbackListeners:
             self.gs2CallbackListeners.append(listener)
-    
+
     def removeGS2CallbackListener(self, listener):
         self.gs2CallbackListeners.remove(listener)
 
@@ -83,5 +83,3 @@ class SimulationController(QGroupBox):
 class GS2CallbackListener:
     def onCallback(self, state):
         pass
-
-

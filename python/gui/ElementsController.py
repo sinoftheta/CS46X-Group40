@@ -22,18 +22,17 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
 
         self.elementLayout = QVBoxLayout()
         self.elementLayout.setAlignment(Qt.AlignTop)
-        self.elementLayout.setContentsMargins(0, 0, 0, 0)
-        self.elementLayout.setSpacing(0)
+        self.elementLayout.setContentsMargins(0, 10, 0, 10)
 
         self.elementListLabel = QLabel("Select Element")
-        self.elementListLabel.setFont(QFont('Arial', 16))
+        self.elementListLabel.setFont(QFont('Helvetica', 16))
         self.elementListLabel.setAlignment(Qt.AlignLeft)
         self.elementLayout.addWidget(self.elementListLabel)
 
         self.elementsList = QListWidget()
         #self.elementsList.setContentsMargins(0, 0, 0, 0)
         self.elementsList.itemClicked.connect(self.elementSelectionChange)
-        self.elementsList.setFixedWidth(100)
+        self.elementsList.setFixedWidth(120)
         self.elementLayout.addWidget(self.elementsList)
 
         self.layout.addLayout(self.elementLayout)
@@ -70,12 +69,9 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
 
         self.layout.addWidget(self.currentElement)
 
-    def getMaterialGroupElements(self):
-        print("material girl in a material world")
-
-    """
-        BasicParameterChangeListener methods
-    """
+    #
+    #   BasicParameterChangeListener methods
+    #
     def onElementCountChange(self, count):
         if count > len(self.elementModels):
             while count > len(self.elementModels):

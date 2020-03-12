@@ -23,10 +23,12 @@ class MaterialView(QGroupBox):
         self.pointCountLabel.setAlignment(Qt.AlignLeft)
         layout.addWidget(self.pointCountLabel)
 
-        self.pointCountLineEdit = QLineEdit()
-        self.pointCountLineEdit.setFixedWidth(60)
-        self.pointCountLineEdit.editingFinished.connect(self.updatePointCount)
-        layout.addWidget(self.pointCountLineEdit)
+        self.pointCountSB = QSpinBox()
+        self.pointCountSB.setFixedWidth(60)
+        self.pointCountSB.setAlignment(Qt.AlignCenter)
+        self.pointCountSB.setRange(1, 15)
+        self.pointCountSB.valueChanged.connect(self.updatePointCount)
+        layout.addWidget(self.pointCountSB)
 
         self.interpolationPointsHeader = QLabel("Interpolation Points")
         self.interpolationPointsHeader.setFont(QFont('Arial', 16))
@@ -131,11 +133,11 @@ class MaterialView(QGroupBox):
         self._addModelData(self.moistureContentLayout, MaterialEnum.MOISTURE_CONTENT)
         self._addModelData(self.hydraulicConductivityLayout, MaterialEnum.HYDRAULIC_CONDUCTIVITY)
 
-        self.pointCountLineEdit.setText(str(self.viewModel.getInterpolationPointCount()))
+        self.pointCountSB.setValue(self.viewModel.getInterpolationPointCount())
 
     def updatePointCount(self):
-        lineEditText = self.pointCountLineEdit.text()
-        self.viewModel.setInterpolationPointCount(int(lineEditText))
+        pointCount = self.pointCountSB.value()
+        self.viewModel.setInterpolationPointCount(pointCount)
 
         # important to update the entire view here as UI
         # elements need to be added/removed when a new

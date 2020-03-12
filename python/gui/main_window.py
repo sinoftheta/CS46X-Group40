@@ -14,6 +14,7 @@ from .SimulationController import SimulationController
 from .BasicParametersController import BasicParametersController
 from .ElementsController import ElementsController
 from .MeshViewController import MeshViewController
+from .ElementPropertiesController import ElementPropertiesController
 
 class MainWindow(QMainWindow, IOListener):
     def __init__(self, config, *args, **kwargs):
@@ -94,7 +95,8 @@ class MainWindow(QMainWindow, IOListener):
             self.parametersPage.seepageFaceController.getSeepageFaces(),
             self.parametersPage.basicParametersController.getBasicParametersModel(),
             self.parametersPage.elementsController.getElements(),
-            self.parametersPage.multipliersController.getElements()
+            self.parametersPage.multipliersController.getElements(),
+            self.parametersPage.elementPropertiesController.getElementProperties()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
