@@ -44,6 +44,15 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
     def getElements(self):
         return self.elementModels
 
+    def updateView(self, elementModels):
+        # clear all currenlty bound elements
+        self.onElementCountChange(0)
+        for element in elementModels:
+            newElement = QListWidgetItem(element.elementNumber)
+            newElement.setTextAlignment(Qt.AlignCenter)
+            self.elementModels.append(element)
+            self.elementsList.addItem(newElement)
+
     def pushElement(self):
         elementNumber = str(len(self.elementModels) + 1)
         elementModel = ElementModel(elementNumber)
