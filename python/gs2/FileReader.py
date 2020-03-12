@@ -3,6 +3,7 @@ import csv
 from gui.simulation.SimulationModel import GS2KOD
 
 from gui.simulation import SimulationModel
+from gui.elements import ElementModel
 from gui.parameters import ParametersModel
 from gui.multipliers import MultipliersModel
 
@@ -14,6 +15,10 @@ class FileReader:
         self.simulationModel = SimulationModel()
         self.parametersModel = ParametersModel()
         self.multipliersModel = MultipliersModel()
+
+        # dictionary of element models keyed off
+        # of the element number
+        self.elementModels = {}
 
         self.csvRows = []
 
@@ -34,6 +39,9 @@ class FileReader:
             # for the readGroup functions it is important to modify csvRows
             # each readGroup should check the first entry of the first row to check
             # that it is operating on the correct row
+
+            # TODO: probably create somesort of dispatch like in the c code
+
             self._readGroupA()
             self._readGroupB()
             self._readGroupC()
@@ -201,8 +209,29 @@ class FileReader:
         pass
 
     def _readGroupI(self):
-        pass
+        if self.csvRows[0][0] != "I":
+            return
 
+        # Emulate Do While
+
+        while True:
+            
+            card = self.csvRows.pop(0)
+            card.pop(0)
+            #card = list(map(lambda elem: int(elem), card[1:14]))
+
+            element = ElementModel(card[0])
+            
+            for i in range(len(card) - 1):
+                if card[i+1] == '':
+                    break
+                element.incidences[i] = int(card[i + 1])
+
+            self.elementModels[element.elementNumber] = element
+
+            if self.csvRows[0][0] != "I":
+                break
+         
     def _readGroupJ(self):
         pass
 
