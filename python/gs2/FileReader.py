@@ -5,6 +5,7 @@ from gui.simulation.SimulationModel import GS2KOD
 from gui.simulation import SimulationModel
 from gui.elements import ElementModel
 from gui.parameters import ParametersModel
+from gui.multipliers import MultipliersModel
 
 class FileReader:
     def __init__(self):
@@ -13,6 +14,7 @@ class FileReader:
         
         self.simulationModel = SimulationModel()
         self.parametersModel = ParametersModel()
+        self.multipliersModel = MultipliersModel()
 
         # dictionary of element models keyed off
         # of the element number
@@ -138,7 +140,35 @@ class FileReader:
         self.parametersModel.IGO = int(card4[6])
 
     def _readGroupC(self):
-      pass
+        if self.csvRows[0][0] != "C":
+            return
+        
+        card1 = self.csvRows.pop(0)
+        card2 = self.csvRows.pop(0)
+
+        # remove group labels
+        card1.pop(0)
+        card2.pop(0)
+
+        # all values are expected to be floats
+        card1 = list(map(lambda elem: float(elem), card1[0:8]))
+        card2 = list(map(lambda elem: float(elem), card2[0:6]))
+
+        self.multipliersModel.AFMOBX = card1[0]
+        self.multipliersModel.AFMOBY = card1[1]
+        self.multipliersModel.APOR = card1[2]
+        self.multipliersModel.AELONG = card1[3]
+        self.multipliersModel.AETRANS = card1[4]
+        self.multipliersModel.APHII = card1[5]
+        self.multipliersModel.ACONCI = card1[6]
+        self.multipliersModel.XFACT = card1[7]
+
+        self.multipliersModel.YFACT = card2[0]
+        self.multipliersModel.ATETA = card2[1]
+        self.multipliersModel.AAL = card2[2]
+        self.multipliersModel.AKD = card2[3]
+        self.multipliersModel.ALAM = card2[4]
+        self.multipliersModel.ARHO = card2[5]
 
     def _readGroupD(self):
         if self.csvRows[0][0] != "D":
