@@ -40,6 +40,12 @@ class SeepageFaceController(QGroupBox, BasicParameterChangeListener):
     def getSeepageFaces(self):
         return self.seepageFaces
 
+    def updateView(self, seepageFaces):
+        self.onSeepageFaceCountChange(0)
+
+        for sf in seepageFaces:
+            self.seepageFaces.append(sf)
+            self.seepageFaceGroup.addItem(sf.seepageFaceID)
 
     def popSeepageFace(self):
         lastSeepageFace = self.seepageFaces.pop()
@@ -67,6 +73,9 @@ class SeepageFaceController(QGroupBox, BasicParameterChangeListener):
                 self.popSeepageFace()
 
     def seepageFaceGroupChanged(self):
+        if not self.seepageFaceGroup.count():
+            return 
+
         if self.currentSeepageFace != None:
             self.layout.removeWidget(self.currentSeepageFace)
             self.currentSeepageFace.deleteLater()
