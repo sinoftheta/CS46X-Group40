@@ -45,6 +45,15 @@ class ElementPropertiesController(QGroupBox, BasicParameterChangeListener):
     def getElementProperties(self):
         return self.elementPropertiesModels
 
+    def updateView(self, elementPropertiesModels):
+        self.onMaterialCountChange(0)
+
+        for epm in elementPropertiesModels:
+            newMaterialGroup = QListWidgetItem(str(epm.materialGroupId))
+            newMaterialGroup.setTextAlignment(Qt.AlignCenter)
+            self.elementPropertiesModels.append(epm)
+            self.materialGroupList.addItem(newMaterialGroup)
+
     def pushMaterialGroup(self):
         materialGroupId = str(len(self.elementPropertiesModels) + 1)
         viewModel = ElementPropertiesModel(materialGroupId)
@@ -58,7 +67,10 @@ class ElementPropertiesController(QGroupBox, BasicParameterChangeListener):
         materialGroup = self.materialGroupList.takeItem(self.materialGroupList.count() - 1)
 
     def materialGroupSelectionChange(self, materialGroup):
-        if (self.currentMaterialGroup != None):
+        if not len(self.elementPropertiesModels):
+            return
+
+        if self.currentMaterialGroup != None:
             # TODO: delete widgets from self.currentMaterialGroup
             self.layout.removeWidget(self.currentMaterialGroup)
             self.currentMaterialGroup.deleteLater()
@@ -71,7 +83,7 @@ class ElementPropertiesController(QGroupBox, BasicParameterChangeListener):
 
     # BasicParameterChangeListener "interface" method
     def onMaterialCountChange(self, count):
-        if (self.currentMaterialGroup != None):
+        if self.currentMaterialGroup != None:
             # TODO: delete widgets from self.currentMaterialGroup
             self.layout.removeWidget(self.currentMaterialGroup)
             self.currentMaterialGroup.deleteLater()
