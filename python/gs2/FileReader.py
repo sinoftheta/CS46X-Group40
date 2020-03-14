@@ -7,6 +7,7 @@ from gui.elements import ElementModel
 from gui.parameters import ParametersModel
 from gui.material import MaterialModel
 from gui.multipliers import MultipliersModel
+from gui.element_properties import ElementPropertiesModel
 
 
 class FileReader:
@@ -24,6 +25,8 @@ class FileReader:
 
         # dictionary keyed off of materialID
         self.materialModels = {}
+
+        self.elementPropertiesModels = {}
 
         self.csvRows = []
 
@@ -238,7 +241,50 @@ class FileReader:
                 break
          
     def _readGroupJ(self):
-        pass
+        if self.csvRows[0][0] != "J-1":
+            return
+            
+        # formatted 
+        # j-1 card
+        # j-2 card
+        # j-1 card
+        # ...
+        while self.csvRows[0][0][0] == "J":
+            j1Card = self.csvRows.pop(0)
+            j2Card1 = self.csvRows.pop(0)
+            j2Card2 = self.csvRows.pop(0)
+
+            j1Card.pop(0)
+
+            j2Card1 = list(map(lambda elem: float(elem), j2Card1[1:9]))
+            j2Card2 = list(map(lambda elem: float(elem), j2Card2[1:3]))
+
+            lowerElementBound = int(j1Card[0])
+            upperElementBound = int(j1Card[1])
+
+            materialGroup = int(j1Card[2])
+
+            elementPropertiesModel = ElementPropertiesModel(materialGroup)
+
+            for (key, element) in self.elementModels.items():
+                if element.elementNumber in range(lowerElementBound, upperElementBound+1):
+                    self.elementModels[key].materialGroup = materialGroup
+
+            elementPropertiesModel.FMOBX = j2Card1[0]
+            elementPropertiesModel.FMOBY = j2Card1[1]
+            elementPropertiesModel.ELONG = j2Card1[2]
+            elementPropertiesModel.ETRANS = j2Card1[3]
+            elementPropertiesModel.POR = j2Card1[4]
+            elementPropertiesModel.TTA = j2Card1[5]
+            elementPropertiesModel.ALPHA = j2Card1[6]
+            elementPropertiesModel.KD = j2Card1[7]
+
+            elementPropertiesModel.LAMBDA = j2Card2[0]
+            elementPropertiesModel.RHO = j2Card2[1]
+
+            self.elementPropertiesModels[materialGroup] = elementPropertiesModel
+
+            
 
     def _readGroupK(self):
         pass
