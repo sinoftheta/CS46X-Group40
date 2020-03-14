@@ -117,3 +117,10 @@ class MainWindow(QMainWindow, IOListener):
         self.parametersPage.multipliersController.updateView(fileReader.multipliersModel)
         self.parametersPage.elementsController.updateView(list(fileReader.elementModels.values()))
         self.parametersPage.elementPropertiesController.updateView(list(fileReader.elementPropertiesModels.values()))
+
+
+
+
+
+
+        # keep new line
