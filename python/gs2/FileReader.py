@@ -7,8 +7,8 @@ from gui.elements import ElementModel
 from gui.parameters import ParametersModel
 from gui.material import MaterialModel
 from gui.multipliers import MultipliersModel
+from gui.seepage_face import SeepageFaceModel
 from gui.element_properties import ElementPropertiesModel
-
 
 class FileReader:
     def __init__(self):
@@ -25,6 +25,8 @@ class FileReader:
 
         # dictionary keyed off of materialID
         self.materialModels = {}
+
+        self.seepageFaces = []
 
         self.elementPropertiesModels = {}
 
@@ -299,7 +301,54 @@ class FileReader:
         pass
 
     def _readGroupO(self):
-        pass
+        if self.csvRows[0][0] != "O-1":
+            return
+
+        seepageFaceNumber = 0
+
+        # format for group O is
+        # Cards for Group O-1
+        # Cards for Group O-2
+        # Cards for Group O-3
+        # Cards for Group O-1
+        # ...
+        while self.csvRows[0][0][0] == "O":
+            seepageFaceNumber += 1
+            
+            # handle sub group 1
+            o1Card = self.csvRows.pop(0)
+            o1Card.pop(0)
+
+            numberOfNodesOnFace = int(o1Card[0])
+            numberOfDiricheltNodes = int(o1Card[1])
+
+            seepageFace = SeepageFaceModel(seepageFaceNumber)
+            seepageFace.setNumberOfDiricheltNodes(numberOfDiricheltNodes)
+            seepageFace.setNumberOfNuemannNodes(numberOfNodesOnFace - numberOfDiricheltNodes)
+
+            # handle sub group 2
+            while self.csvRows[0][0] == "O-2":
+                o2Card = self.csvRows.pop(0)
+                o2Card.pop(0)
+
+                for i in range(len(o2Card)):
+                    if o2Card[i] == '':
+                        break
+                    seepageFace.setDiricheltNode(i, int(o2Card[i]))
+
+            # handle sub group 3
+            while self.csvRows[0][0] == "O-2":
+                o3Card = self.csvRows.pop(0)
+                o3Card.pop(0)
+
+                for i in range(len(o3Card)):
+                    if o3Card[i] == '':
+                        break
+                    seepageFace.setNuemannNode(i, int(o3Card[i]))
+
+            self.seepageFaces.append(seepageFace)
+            
+        
 
     def _readGroupP(self):
         pass
