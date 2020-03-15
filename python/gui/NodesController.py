@@ -2,7 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from .parameters.ParametersModel import parametersModel
+from .nodes.NodeModel import NodeModel
+from .nodes.nodeView import nodeView
 
 nodeTableLabels = [
     "Node",
@@ -27,3 +28,18 @@ class NodesController(QGroupBox):
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
         self.createTable()
+
+        parametersModel.NN.connectObserver(self._updateNodes)
+
+        self.nodes = []
+        for i in range(0, parametersModel.NN.getData()):
+            self.nodes.append(NodeModel(i + 1))
+
+    # updates the nodes array to have the same length as NN 
+    def _updateNodes(self, newNumNodes):
+        if(newNumNodes > len(self.nodes)):
+            while(len(self.nodes) != newNumNodes):
+                self.nodes.append(NodeModel(len(self.nodes) + 1))
+        elif(newNumNodes < len(self.nodes)):
+            while(len(self.nodes) != newNumNodes):
+                self.nodes.remove(len(self.nodes) + 1)
