@@ -10,7 +10,6 @@ from .SimulationController import GS2CallbackListener
 class MeshViewController(QGroupBox, GS2CallbackListener):
     def __init__(self, config):
         super(MeshViewController, self).__init__('Mesh')
-        self.mesh = None
         self.layout = QVBoxLayout()
         self.buttons = QHBoxLayout()
         self.stack = QStackedLayout()
@@ -69,15 +68,19 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         self.mesh.point_arrays['Pressure Head'] = np.array(state.phi[:state.nn.value])
         self.mesh.point_arrays['Concentration'] = np.array(state.conc[:state.nn.value])
 
+        self.plotter1.clear()
+        self.plotter2.clear()
         self.plotter1.add_mesh(self.mesh, show_edges=True, scalars='Pressure Head')
         self.plotter2.add_mesh(self.mesh, show_edges=True, scalars='Concentration')
+        self.plotter1.reset_camera()
+        self.plotter2.reset_camera()
 
     def updateMesh(self, state):
         self.mesh.point_arrays['Pressure Head'] = np.array(state.phi[:state.nn.value])
         self.mesh.point_arrays['Concentration'] = np.array(state.conc[:state.nn.value])
 
     def onCallback(self, state):
-        if self.mesh is None:
+        if state.it.value == 0:
             self.createMesh(state)
         else:
             self.updateMesh(state)
