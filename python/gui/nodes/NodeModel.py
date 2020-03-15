@@ -1,6 +1,6 @@
 class NodeModel():
-    def __init__(self):
-        self.I = NodeNum
+    def __init__(self, nodeNum):
+        self.I = nodeNum
         self.X = 0.0
         self.Y = 0.0
         self.CONCI = 0.0

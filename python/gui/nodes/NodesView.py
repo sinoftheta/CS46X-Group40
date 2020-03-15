@@ -32,7 +32,13 @@ class NodesView(QTableWidget):
         #self.clearContents()
 
     def populateTable(self):
-        for row in range(0, len(self.nodes)):
+        numNodes = len(self.nodes)
+        self.setRowCount(numNodes)
+
+        for row in range(0, numNodes):
+            self.clearContents()
+
+            print('helllooooooo')
             nodeLabel = QLabel(str(self.nodes[row].I))
             nodeLabel.setAlignment(Qt.AlignCenter)
             self.setCellWidget(row, 0, nodeLabel)
@@ -89,7 +95,11 @@ class NodesView(QTableWidget):
         #self.addWidget(self) not needed, keeping until merge with master
 
     def updateTable(self):
-        pass
+        #TODO: add or remove elements rather than rebuild entire table
+
+        print(len(self.nodes))
+        self.populateTable()
+
 
     def nodeTypeCounts(self):# unused?
         # get node type from QComboBox widget in nodeTable
@@ -100,8 +110,6 @@ class NodesView(QTableWidget):
                 if (self.cellWidget(row, 1).currentText() != '-Select Boundary Type-'):
                     nodeTypes[self.cellWidget(row, 1).currentText()].append(row+1)
             return nodeTypes
-
-
 
 
 class BoundaryComboBox(QComboBox):
