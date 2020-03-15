@@ -75,10 +75,6 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
     def updateMesh(self, state):
         self.mesh.point_arrays['Pressure Head'] = np.array(state.phi[:state.nn.value])
         self.mesh.point_arrays['Concentration'] = np.array(state.conc[:state.nn.value])
-        self.plotter1.update_scalar_bar_range([min(self.mesh.point_arrays['Pressure Head']),
-                                               max(self.mesh.point_arrays['Pressure Head'])])
-        self.plotter2.update_scalar_bar_range([min(self.mesh.point_arrays['Concentration']),
-                                               max(self.mesh.point_arrays['Concentration'])])
 
     def onCallback(self, state):
         if self.mesh is None:
