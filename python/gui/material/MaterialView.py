@@ -18,15 +18,17 @@ class MaterialView(QGroupBox):
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         layout.setSpacing(20)
-        
+
         self.pointCountLabel = QLabel("Number of Interpolation Points")
         self.pointCountLabel.setAlignment(Qt.AlignLeft)
         layout.addWidget(self.pointCountLabel)
 
-        self.pointCountLineEdit = QLineEdit()
-        self.pointCountLineEdit.setFixedWidth(60)
-        self.pointCountLineEdit.editingFinished.connect(self.updatePointCount)
-        layout.addWidget(self.pointCountLineEdit)
+        self.pointCountSB = QSpinBox()
+        self.pointCountSB.setFixedWidth(60)
+        self.pointCountSB.setAlignment(Qt.AlignCenter)
+        self.pointCountSB.setRange(1, 15)
+        self.pointCountSB.valueChanged.connect(self.updatePointCount)
+        layout.addWidget(self.pointCountSB)
 
         self.interpolationPointsHeader = QLabel("Interpolation Points")
         self.interpolationPointsHeader.setFont(QFont('Arial', 16))
@@ -52,7 +54,7 @@ class MaterialView(QGroupBox):
         self.moistureContentLayout.setContentsMargins(0, 0, 20, 2)
         self.moistureContentLayout.setSpacing(0)
         self.moistureContentLayout.setAlignment(Qt.AlignCenter)
-        
+
         self.moistureContentLabel = QLabel("Moisture Content")
         self.moistureContentLabel.setFont(QFont('Arial', 13))
         self.moistureContentLabel.setAlignment(Qt.AlignLeft)
@@ -65,7 +67,7 @@ class MaterialView(QGroupBox):
         self.hydraulicConductivityLayout.setSpacing(0)
         self.hydraulicConductivityLayout.setAlignment(Qt.AlignCenter)
 
-        self.hydraulicConductivityLabel = QLabel("Pressure Head")
+        self.hydraulicConductivityLabel = QLabel("Hydraulic Conductivity")
         self.hydraulicConductivityLabel.setFont(QFont('Arial', 13))
         self.hydraulicConductivityLabel.setAlignment(Qt.AlignLeft)
         self.hydraulicConductivityLayout.addWidget(self.hydraulicConductivityLabel)
@@ -78,11 +80,11 @@ class MaterialView(QGroupBox):
 
         # asserts that the view has all correct data showing
         self.updateView()
-    
+
 
     # clear layout save for labels
     def _clearLayout(self, layout):
-        for i in reversed(range(layout.count())): 
+        for i in reversed(range(layout.count())):
             if i == 0:
                 break
 
@@ -100,7 +102,7 @@ class MaterialView(QGroupBox):
     def _addModelData(self, layout, viewModelEnum):
 
         viewModelData = None
-        
+
         if viewModelEnum == MaterialEnum.HYDRAULIC_CONDUCTIVITY:
             viewModelData = self.viewModel.hydraulicConductivity
         elif viewModelEnum == MaterialEnum.MOISTURE_CONTENT:
@@ -109,7 +111,7 @@ class MaterialView(QGroupBox):
             viewModelData = self.viewModel.pressureHead
 
         for i in range(len(viewModelData)):
-            entryInput = QDoubleSpinBox()
+            entryInput = QDoubleSpinBox(buttonSymbols = QDoubleSpinBox.NoButtons)
             entryInput.setDecimals(3)
             entryInput.setSingleStep(0.001)
             entryInput.setRange(-999.999, 9999.999)
@@ -131,13 +133,13 @@ class MaterialView(QGroupBox):
         self._addModelData(self.moistureContentLayout, MaterialEnum.MOISTURE_CONTENT)
         self._addModelData(self.hydraulicConductivityLayout, MaterialEnum.HYDRAULIC_CONDUCTIVITY)
 
-        self.pointCountLineEdit.setText(str(self.viewModel.getInterpolationPointCount()))
+        self.pointCountSB.setValue(self.viewModel.getInterpolationPointCount())
 
     def updatePointCount(self):
-        lineEditText = self.pointCountLineEdit.text()
-        self.viewModel.setInterpolationPointCount(int(lineEditText))
+        pointCount = self.pointCountSB.value()
+        self.viewModel.setInterpolationPointCount(pointCount)
 
-        # important to update the entire view here as UI 
+        # important to update the entire view here as UI
         # elements need to be added/removed when a new
         # interpolation point count is set.
         self.updateView()

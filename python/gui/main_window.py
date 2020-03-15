@@ -8,14 +8,15 @@ import gs2
 from os import path
 
 from .parameters_window import ParametersPage
-from .parameters_window import ExportListener
+from .parameters_window import IOListener
 
 from .SimulationController import SimulationController
 from .BasicParametersController import BasicParametersController
 from .ElementsController import ElementsController
 from .MeshViewController import MeshViewController
+from .ElementPropertiesController import ElementPropertiesController
 
-class MainWindow(QMainWindow, ExportListener):
+class MainWindow(QMainWindow, IOListener):
     def __init__(self, config, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
@@ -42,17 +43,17 @@ class MainWindow(QMainWindow, ExportListener):
         #   Then add to array of pages 'self.homePageStack'
         #   Parameters
         self.parametersPage = ParametersPage(self.config)
-        self.parametersPage.addExportListener(self)
+        self.parametersPage.addIOListener(self)
         self.homePageStack.addWidget(self.parametersPage)
         #   Mesh
-        self.meshPage = MeshViewController(self.config)
+        self.meshPage = MeshViewController()
         self.homePageStack.addWidget(self.meshPage)
         #   Simulation
         self.simulationPage = SimulationController(self.config)
         self.simulationPage.addGS2CallbackListener(self.meshPage)
         self.homePageStack.addWidget(self.simulationPage)
 
-        self.meshPageLayout = QVBoxLayout()
+        #self.meshPageLayout = QVBoxLayout()
         self.simulationPageLayout = QVBoxLayout()
 
         self.setHomePageButtons()
@@ -94,8 +95,33 @@ class MainWindow(QMainWindow, ExportListener):
             self.parametersPage.seepageFaceController.getSeepageFaces(),
             self.parametersPage.basicParametersController.getBasicParametersModel(),
             self.parametersPage.elementsController.getElements(),
-            self.parametersPage.multipliersController.getElements()
+            self.parametersPage.multipliersController.getElements(),
+            self.parametersPage.elementPropertiesController.getElementProperties()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
         fileWriter.write(filePath)
+
+    def onImport(self, filepath):
+        fileReader = gs2.FileReader()
+        fileReader.read(filepath)
+
+        # file read now has data for each model
+        # the controllers should have updateModel methods
+        # so the views can be updated.
+
+        self.simulationPage.updateView(fileReader.simulationModel)
+
+        self.parametersPage.basicParametersController.updateView(fileReader.parametersModel)
+        self.parametersPage.materialsController.updateView(list(fileReader.materialModels.values()))
+        self.parametersPage.multipliersController.updateView(fileReader.multipliersModel)
+        self.parametersPage.elementsController.updateView(list(fileReader.elementModels.values()))
+        self.parametersPage.seepageFaceController.updateView(fileReader.seepageFaces)
+        self.parametersPage.elementPropertiesController.updateView(list(fileReader.elementPropertiesModels.values()))
+
+
+
+
+
+
+        # keep new line

@@ -12,6 +12,6 @@ void arrayFree(Array* array);
 double* arrayAt(Array* array, int index);
 
 void arrayAssertNotNull(Array* array, const char* message);
-
+void arrayPrint(const char* name, Array* array);
 
 #endif /* __CAP_ARRAY_H__ */

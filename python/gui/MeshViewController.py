@@ -8,7 +8,7 @@ from PyQt5.QtGui import *
 from .SimulationController import GS2CallbackListener
 
 class MeshViewController(QGroupBox, GS2CallbackListener):
-    def __init__(self, config):
+    def __init__(self):
         super(MeshViewController, self).__init__('Mesh')
         self.layout = QVBoxLayout()
         self.buttons = QHBoxLayout()

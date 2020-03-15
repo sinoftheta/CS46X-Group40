@@ -161,7 +161,6 @@ extern FILE* gs2stdin;
 extern FILE* gs2stdout;
 extern FILE* gs2stderr;
 
-
 void gs2DefaultIO();
 
 void gs2InputFile(const char* filepath);
@@ -169,7 +168,7 @@ void gs2OutputFile(const char* filepath);
 void gs2ErrorFile(const char* filepath);
 
 
-extern gs2CallbackType gs2Callback;
+extern gs2CallbackType gs2Callback; 
 
 void gs2RegisterCallback(gs2CallbackType callback);
 int gs2DefaultCallback(gs2State state);
