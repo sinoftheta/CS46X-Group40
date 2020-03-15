@@ -10,7 +10,7 @@ from os import path
 from .BasicParametersController import BasicParametersController
 from .BasicParametersController import BasicParameterChangeListener
 from .MultipliersController import MultipliersController
-from .nodes import Nodes
+from .NodesController import NodesController
 from .nodeTypes import NodeTypes
 from .materialProperties import Elements
 from .elementIncidences import ElementIncidences
@@ -49,7 +49,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageHome = QWidget()
         self.basicParametersController = BasicParametersController()
         self.multipliersController = MultipliersController()
-        self.parametersPageNodes = Nodes()
+        self.nodesController = NodesController()
         self.parametersPageNodeTypes = NodeTypes()
         self.parametersPageElem = Elements()
         self.elementsController = ElementsController()
@@ -60,12 +60,13 @@ class ParametersPage(QGroupBox):
         self.basicParametersController.addBasicParameterListener(self.seepageFaceController)
         self.basicParametersController.addBasicParameterListener(self.materialsController)
         self.basicParametersController.addBasicParameterListener(self.elementsController)
+        self.basicParametersController.addBasicParameterListener(self.nodesController)
 
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
         self.parametersPageStack.addWidget(self.basicParametersController)
         self.parametersPageStack.addWidget(self.multipliersController)
-        self.parametersPageStack.addWidget(self.parametersPageNodes)
+        self.parametersPageStack.addWidget(self.nodesController)
         self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
         self.parametersPageStack.addWidget(self.parametersPageElem)
         self.parametersPageStack.addWidget(self.elementsController)
@@ -148,13 +149,13 @@ class ParametersPage(QGroupBox):
 
     def nodesClick(self):
         numNodes = self.basicParametersController.parametersModel.NN.getData()
-        self.parametersPageNodes.buildTable(numNodes)
+        #self.nodesController.buildTable(numNodes)
         self.parametersPageStack.setCurrentIndex(3)
         #Test accessor
-        #print(self.parametersPageNodes.getCONCI())
+        #print(self.nodesController.getCONCI())
 
     def nodeTypesClick(self):
-        nodeTypes = self.parametersPageNodes.nodeTypeCounts()
+        nodeTypes = self.nodesController.nodeTypeCounts()
         self.parametersPageNodeTypes.setNodeTypes(nodeTypes)
         self.parametersPageStack.setCurrentIndex(4)
 
