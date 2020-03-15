@@ -44,12 +44,12 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
     def setMeshPageButtons(self):
         # Navigation Button for Pressure Head mesh
         self.pressureButton = QPushButton('Pressure Head')
-        self.pressureButton.pressed.connect(lambda index=0: self.stack.setCurrentIndex(index))
+        self.pressureButton.pressed.connect(lambda: self.stack.setCurrentIndex(0))
         self.buttons.addWidget(self.pressureButton)
 
         # Navigation Button for Concentration mesh
         self.concentrationButton = QPushButton('Concentration')
-        self.concentrationButton.pressed.connect(lambda index=0: self.stack.setCurrentIndex(index))
+        self.concentrationButton.pressed.connect(lambda: self.stack.setCurrentIndex(1))
         self.buttons.addWidget(self.concentrationButton)
 
     def createMesh(self, state):
