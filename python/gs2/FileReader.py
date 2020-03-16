@@ -30,6 +30,8 @@ class FileReader:
 
         self.elementPropertiesModels = {}
 
+        self.nodeModels = {}
+
         self.csvRows = []
 
     def read(self, filepath):
