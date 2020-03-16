@@ -34,11 +34,10 @@ class NodesView(QTableWidget):
     def populateTable(self):
         numNodes = len(self.nodes)
         self.setRowCount(numNodes)
+        self.clearContents()
 
         for row in range(0, numNodes):
-            self.clearContents()
-
-            print('helllooooooo')
+            
             nodeLabel = QLabel(str(self.nodes[row].I))
             nodeLabel.setAlignment(Qt.AlignCenter)
             self.setCellWidget(row, 0, nodeLabel)
@@ -83,6 +82,8 @@ class NodesView(QTableWidget):
             iConcentration.setValue(self.nodes[row].CONCI)
             self.setCellWidget(row, 5, iConcentration)
 
+        self.setRowCount(numNodes)
+
     def createTable(self):
         self.setColumnCount(len(nodeTableLabels))
         self.setMaximumWidth(730)
@@ -91,14 +92,6 @@ class NodesView(QTableWidget):
         self.verticalHeader().hide()
         # Set table column widths to match label size
         self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-
-        #self.addWidget(self) not needed, keeping until merge with master
-
-    def updateTable(self):
-        #TODO: add or remove elements rather than rebuild entire table
-
-        print(len(self.nodes))
-        self.populateTable()
 
 
     def nodeTypeCounts(self):# unused?

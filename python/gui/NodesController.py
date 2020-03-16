@@ -27,31 +27,18 @@ class NodesController(QGroupBox):
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
-
-        #parametersModel.NN.connectObserver(self._updateNodes)
-
         self.nodes = []
-        #for i in range(0, parametersModel.NN.getData()):
-        #    self.nodes.append(NodeModel(i + 1))
-
-        
-        #creation and population of the table go in NodesView
         self.view = NodesView(self.nodes, self.setTableVal)
-
-        #append table
         self.layout.addWidget(self.view)
 
-    # updates the nodes array to have the same length as NN ...REMOVING IS BROKEN
     def onNodeCountChange(self, newNumNodes):
         if(newNumNodes > len(self.nodes)):
             while(len(self.nodes) != newNumNodes):
                 self.nodes.append(NodeModel(len(self.nodes) + 1))
         elif(newNumNodes < len(self.nodes)):
             while(len(self.nodes) != newNumNodes):
-                self.nodes.remove(len(self.nodes))
-        print(self.nodes)
-        
-        self.view.updateTable()
+                self.nodes.pop()
+        self.view.populateTable()
 
     def setTableVal(self, row, key, val):
         print("setting row" + str(row) + " key: " + key + ", val: " + val)
