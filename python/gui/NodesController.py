@@ -32,11 +32,11 @@ class NodesController(QGroupBox):
         self.layout.addWidget(self.view)
 
     def onNodeCountChange(self, newNumNodes):
-        if(newNumNodes > len(self.nodes)):
-            while(len(self.nodes) != newNumNodes):
+        if newNumNodes > len(self.nodes) :
+            while len(self.nodes) != newNumNodes :
                 self.nodes.append(NodeModel(len(self.nodes) + 1))
-        elif(newNumNodes < len(self.nodes)):
-            while(len(self.nodes) != newNumNodes):
+        elif newNumNodes < len(self.nodes) :
+            while len(self.nodes) != newNumNodes :
                 self.nodes.pop()
         self.view.populateTable()
 

@@ -20,8 +20,6 @@ class NodesView(QTableWidget):
         self.clearContents()
 
         for row in range(0, numNodes):
-            
-            index = row
 
             nodeLabel = QLabel(str(self.nodes[row].I))
             nodeLabel.setAlignment(Qt.AlignCenter)
