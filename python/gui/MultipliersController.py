@@ -15,5 +15,9 @@ class MultipliersController(QGroupBox):
 
         self.model = MultipliersModel()
         self.view = MultipliersView(self.model, self.layout)
+
+    def updateView(self, model):
+        self.view.setInputs(model)
+
     def getElements(self):
         return self.model

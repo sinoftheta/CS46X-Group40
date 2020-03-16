@@ -3,6 +3,8 @@
 
 #include "lrhs.h"
 
+#include "../capstone/Debug.h"
+
 void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
           Array* u, Array* lq, int m, int ib, int jb, double a3,
           double a2, int kk){
@@ -14,12 +16,18 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
    arrayAssertNotNull(u, "Array 'u' NULL in gs2Lrhs");
    arrayAssertNotNull(lq, "Array 'lq' NULL in gs2Lrhs");
 
+  DEBUG_LOG("lrhs called");
+
+  // matrixPrint("b", b);
+  // matrixPrint("a", a);
+
    int l1, ll, jm, jn;
    int mq = m - *arrayAt(lq, m);
    int m2 = mq - 1;
 
 
     if (kk - 2 < 0){
+      DEBUG_LOG("case 1");
      // kk = 1 : Form right-hand side of equations
       for(int iter = 1; iter <= mq; iter++){
        *arrayAt(r, iter) = 0.0;
@@ -52,6 +60,7 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
       }
     }
     else if (kk - 2 == 0){ // 90
+      DEBUG_LOG("case 2");
       // kk = 2 : Form left-hand side of equations for mass transport
       *matrixAt(a, ib, mq) += (*matrixAt(b, mq, 1) * a3);
       if(m2 > 0){
@@ -76,12 +85,13 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
       } // 100
     }
     else { // 170
+      DEBUG_LOG("case 3");
       // kk = 3 : Form left-hand side of equations for flow
       *matrixAt(b, mq, 1) = (*matrixAt(a, 1, mq) + (*matrixAt(b, mq, 1) * a3));
 
       if(m2 > 0){
+        
         for(int iter = 1; iter <= m2; iter++){
-
           l1 = min(jb, mq + 1 - iter);
 
           *matrixAt(b, iter, 1) = *matrixAt(a, 1, iter) +

@@ -3,6 +3,7 @@ from ctypes import c_int
 from ctypes import c_double
 from ctypes import c_void_p
 from ctypes import POINTER
+from ctypes import CFUNCTYPE
 
 import ctypes
 
@@ -161,3 +162,6 @@ class State(Structure):
         ('dgy', Array),
         ('srcr', Array)
     ]
+
+
+CallbackType = CFUNCTYPE(c_int, State)

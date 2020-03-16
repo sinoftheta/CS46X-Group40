@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from .simulation import SimulationModel
 from .simulation import SimulationView
 from gs2.runner import Runner
+from gs2 import types
 
 class SimulationController(QGroupBox):
     def __init__(self, config):
@@ -15,22 +16,24 @@ class SimulationController(QGroupBox):
         self.simulationModel = SimulationModel(config)
         self.simulationView = SimulationView(self.simulationModel)
 
+        self.gs2CallbackListeners = []
+
         pageLayout = QHBoxLayout()
         pageLayout.setAlignment(Qt.AlignLeft)
         self.setLayout(pageLayout)
 
-        sideNav = QVBoxLayout()
-        sideNav.setAlignment(Qt.AlignCenter | Qt.AlignTop)
-        sideNav.setGeometry(QRect(0, 0, 150, 100))
-        sideNav.setSizeConstraint(QLayout.SetFixedSize)
-        pageLayout.addLayout(sideNav)
+        self.sideNav = QVBoxLayout()
+        self.sideNav.setAlignment(Qt.AlignCenter | Qt.AlignTop)
+        self.sideNav.setGeometry(QRect(0, 0, 150, 100))
+        self.sideNav.setSizeConstraint(QLayout.SetFixedSize)
+        pageLayout.addLayout(self.sideNav)
 
-        sideNav.addWidget(self.simulationView)
+        self.sideNav.addWidget(self.simulationView)
 
         runSimulationBttn = QPushButton('Run Simulation')
         runSimulationBttn.setGeometry(0, 0, 150, 100)
         runSimulationBttn.pressed.connect(self.onClickRun)
-        sideNav.addWidget(runSimulationBttn)
+        self.sideNav.addWidget(runSimulationBttn)
 
         self.simOutput = QTextEdit()
         self.simOutput.setReadOnly(True)
@@ -49,6 +52,9 @@ class SimulationController(QGroupBox):
         simulationRunner = Runner(self.simulationModel, self.config)
         simulationRunner.openFiles()
 
+        callback = types.CallbackType(self.notifyOnCallback)
+        simulationRunner.registerCallback(callback)
+
         stdout = simulationRunner.stdout
 
         if stdout in self.fileWatcher.files():
@@ -57,7 +63,30 @@ class SimulationController(QGroupBox):
 
         simulationRunner.run()
     
+    def updateView(self, model):
+        self.simulationModel = model
+        self.sideNav.removeWidget(self.simulationView)
+        self.simulationView.deleteLater()
+        self.simulationView = SimulationView(self.simulationModel)
+        self.sideNav.addWidget(self.simulationView)
+
     def getSimulationModel(self):
         return self.simulationModel
 
+    def addGS2CallbackListener(self, listener):
+        if listener not in self.gs2CallbackListeners:
+            self.gs2CallbackListeners.append(listener)
 
+    def removeGS2CallbackListener(self, listener):
+        self.gs2CallbackListeners.remove(listener)
+
+    # return 0 required as to match the type in c
+    def notifyOnCallback(self, state):
+        for listener in self.gs2CallbackListeners:
+            listener.onCallback(state)
+        return 0
+
+
+class GS2CallbackListener:
+    def onCallback(self, state):
+        pass

@@ -17,19 +17,24 @@ C
       Level 2, CFQ, CONC, CONCI, FQ, KLC, KLR, LC, LR, PHI, PHII,
      & X, Y, ALPHA, ELONG, ETRANS, FMOBX, FMOBY, KD, KF, LAMBDA,
      & POR, RHO, TTA, IN, IE
+
       Common /ONE/ BWD, CNTR, CHNG, TDR, STAT, STATP, OLDT, DELT,
      & DPRDT, BETAP, CLOS1, DELP, DifUSN, PCHNG, TYPE, VMAX,
      & STIME, SSEC, H1, H2, PL, COEFI, EI, ITER1, ITMAX, ITCHNG,
      & IGO, NE, NP, NK, NSEEP, INC, ME, KOD1, KOD2, KOD3, KOD4,
      & KOD7, KOD8, KOD9, KOD10, KOD11, KOD12
+
       Common /TWO/ WK(179), XK(15, 20), XM(15, 20), XPSI(15, 20),
      & CKT(3, 14, 20), CTT(3, 14, 20), PSIO(20), ISPL(20)
+
       Common /THREE/ NN, MM, KM, NB, KNB, KNB2, MB, MB2, KMB,
      & KMB2, NSDN, IT, ISTOP
+
       Common /FOUR/ PE(12, 12), SE(12, 12), F(12, 16), DX(12, 16),
      & DY(12, 16), Q(16), QP(16), DETJ(16), CPHI(16), VKX(16),
      & VKY(16), DPORDT(16), D0(16), DK(16), DH(16), SRCRT(16),
      & FF(12), DGX(12), DGY(12), SRCR(12)
+
       Dimension S(MAXBW2, MAXS), P(MAXS, MAXBW), W(MX), FM(MAXM1),
      & RT(MAXM1), PHI(MAXNN), PHII(MAXNN), OLD(MAXM1), U(MAXM1),
      & EST(MAXM1), CFM(MAXM2), CRT(MAXM2), CONC(MAXNN),
@@ -41,6 +46,7 @@ C
      & IE(2, MAXNE), KF(MAXNE), LR(MAXNN), KLR(MAXNN), LC(MAXNN),
      & KLC(MAXNN), LP(MAXM1), KLP(MAXM2), NSF(MAXM4), NSK(MAXM4),
      & NSP(MAXM5, MAXEEP), MSP(MAXEEP)
+     
       Data KTCAL/0/, YES/0./,NO/1/
 
 C     Transient Solution

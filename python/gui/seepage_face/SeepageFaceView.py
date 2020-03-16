@@ -36,7 +36,7 @@ class SeepageFaceView(QGroupBox):
         self.diricheltNodesCount.setAlignment(Qt.AlignCenter)
         self.diricheltNodesCount.setFixedWidth(85)
         self.diricheltNodesCount.setRange(0, 100)
-        self.diricheltNodesCount.setValue(self.seepageFaceModel.getNumberOfDiricheltNodes())
+        self.diricheltNodesCount.setValue(seepageFaceModel.getNumberOfDiricheltNodes())
         self.diricheltNodesCount.valueChanged.connect(self.updateNodeCount(SeepageFaceNodeType.DIRICHELT))
         self.diricheltNodesLayout.addWidget(self.diricheltNodesCount)
             
@@ -55,7 +55,7 @@ class SeepageFaceView(QGroupBox):
         self.nuemannNodesCount.setAlignment(Qt.AlignCenter)
         self.nuemannNodesCount.setRange(0, 100)
         self.nuemannNodesCount.setFixedWidth(85)
-        self.nuemannNodesCount.setValue(self.seepageFaceModel.getNumberOfNuemannNodes())
+        self.nuemannNodesCount.setValue(seepageFaceModel.getNumberOfNuemannNodes())
         self.nuemannNodesCount.valueChanged.connect(self.updateNodeCount(SeepageFaceNodeType.NUEMANN))
         self.nuemannNodesLayout.addWidget(self.nuemannNodesCount)
 
@@ -106,7 +106,6 @@ class SeepageFaceView(QGroupBox):
         
     def updateView(self):
         self._destroyView()
-        
         self._addModelData(self.nuemannNodesLayout, SeepageFaceNodeType.NUEMANN)
         self._addModelData(self.diricheltNodesLayout, SeepageFaceNodeType.DIRICHELT)
 

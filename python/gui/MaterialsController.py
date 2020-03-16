@@ -37,6 +37,13 @@ class MaterialsController(QGroupBox, BasicParameterChangeListener):
     def getMaterials(self):
         return self.materialModels
 
+    def updateView(self, materialModels):
+        self.onMaterialCountChange(0)
+        
+        for material in materialModels:
+            self.materialModels.append(material)
+            self.materialGroup.addItem(material.materialGroup)
+
     def pushMaterialGroup(self):
         group = str(len(self.materialModels) + 1)
         materialModel = MaterialModel(group)
@@ -52,6 +59,10 @@ class MaterialsController(QGroupBox, BasicParameterChangeListener):
         self.notifyMaterialRemoved(lastMaterial)
 
     def materialGroupChanged(self):
+        
+        if not self.materialGroup.count():
+            return
+
         if self.currentMaterialGroup != None:
             self.layout.removeWidget(self.currentMaterialGroup)
             self.currentMaterialGroup.deleteLater()
