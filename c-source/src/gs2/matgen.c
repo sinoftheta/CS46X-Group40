@@ -18,6 +18,9 @@ void gs2Matgen1(gs2State* state, Matrix* pe, Matrix* se, Array* q, Array* qp, in
     h12 = state->h1 * state->h2;
     h22 = state->h2 * state->h2;
 
+    // arrayPrint("q", q);
+    // arrayPrint("qp", qp);
+
     if (state->np == 4) {
         *matrixAt(se, i, j) = h11 * (*arrayAt(q, 1) + *arrayAt(q, 4) + *arrayAt(q, 13) + *arrayAt(q, 16)) \
                             + h12 * (*arrayAt(q, 2) + *arrayAt(q, 3) + *arrayAt(q, 5) + *arrayAt(q, 8) + *arrayAt(q, 9) + *arrayAt(q, 12) + *arrayAt(q, 14) + *arrayAt(q, 15)) \
@@ -30,6 +33,8 @@ void gs2Matgen1(gs2State* state, Matrix* pe, Matrix* se, Array* q, Array* qp, in
         *matrixAt(pe, i, j) = *arrayAt(qp, 1) + *arrayAt(qp, 2) + *arrayAt(qp, 3) + *arrayAt(qp, 4);
     }
 
+
+    //matrixPrint("se", pe);
 }
 
 void gs2Matgen2(gs2State* state, Array* srcr, Array* srcrt, int i) {

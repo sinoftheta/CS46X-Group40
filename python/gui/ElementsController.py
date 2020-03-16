@@ -16,25 +16,23 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
         # list of element models that this controller 'controls'
         self.elementModels = []
 
-        # TODO: adjust this mechanism for material groups ?
         # Max material group number
         self.materialGroupIdMax = 0
         self.nodeIdMax = 0
 
         self.elementLayout = QVBoxLayout()
         self.elementLayout.setAlignment(Qt.AlignTop)
-        self.elementLayout.setContentsMargins(0, 0, 0, 0)
-        self.elementLayout.setSpacing(0)
+        self.elementLayout.setContentsMargins(0, 10, 0, 10)
 
         self.elementListLabel = QLabel("Select Element")
-        self.elementListLabel.setFont(QFont('Arial', 16))
+        self.elementListLabel.setFont(QFont('Helvetica', 16))
         self.elementListLabel.setAlignment(Qt.AlignLeft)
         self.elementLayout.addWidget(self.elementListLabel)
 
         self.elementsList = QListWidget()
         #self.elementsList.setContentsMargins(0, 0, 0, 0)
         self.elementsList.itemClicked.connect(self.elementSelectionChange)
-        self.elementsList.setFixedSize(100, 200)
+        self.elementsList.setFixedWidth(120)
         self.elementLayout.addWidget(self.elementsList)
 
         self.layout.addLayout(self.elementLayout)
@@ -45,6 +43,15 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
 
     def getElements(self):
         return self.elementModels
+
+    def updateView(self, elementModels):
+        # clear all currenlty bound elements
+        self.onElementCountChange(0)
+        for element in elementModels:
+            newElement = QListWidgetItem(element.elementNumber)
+            newElement.setTextAlignment(Qt.AlignCenter)
+            self.elementModels.append(element)
+            self.elementsList.addItem(newElement)
 
     def pushElement(self):
         elementNumber = str(len(self.elementModels) + 1)
@@ -69,11 +76,11 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
         model = self.elementModels[elementIndex]
         self.currentElement = ElementView(model, self.materialGroupIdMax, self.nodeIdMax)
 
-        # TODO: connect observer for currently displayed
-        #       element's material group change ?
-
         self.layout.addWidget(self.currentElement)
 
+    #
+    #   BasicParameterChangeListener methods
+    #
     def onElementCountChange(self, count):
         if count > len(self.elementModels):
             while count > len(self.elementModels):
@@ -90,7 +97,6 @@ class ElementsController(QGroupBox, BasicParameterChangeListener):
             self.currentElement = None
             self.elementsList.clearSelection()
 
-    # TODO: adjust this to use MaterialsChangeListener onMaterialRemoved instead ?
     def onMaterialCountChange(self, count):
         self.materialGroupIdMax = count
         # clear currently selected element

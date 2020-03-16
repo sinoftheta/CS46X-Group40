@@ -86,6 +86,27 @@ void gs2Datain(
     arrayDimension(&(state->cfq), state->memoryRequirements.maxnn);
     arrayDimension(&(state->x), state->memoryRequirements.maxnn);
     arrayDimension(&(state->y), state->memoryRequirements.maxnn);
+
+    matrixDimension(&(state->p), state->memoryRequirements.maxs, state->memoryRequirements.maxbw);
+    matrixDimension(&(state->s), state->memoryRequirements.maxbw2, state->memoryRequirements.maxs);
+    arrayDimension(&(state->w), state->s.columns * state->s.rows);
+    arrayDimension(&(state->ff), state->memoryRequirements.mxc);
+    arrayDimension(&(state->dgx), state->memoryRequirements.mxc);
+    arrayDimension(&(state->dgy), state->memoryRequirements.mxc);
+    matrixDimension(&(state->f), state->memoryRequirements.mxc, state->memoryRequirements.mxt);
+    matrixDimension(&(state->dx), state->memoryRequirements.mxc, state->memoryRequirements.mxt);
+    matrixDimension(&(state->dy), state->memoryRequirements.mxc, state->memoryRequirements.mxt);
+    arrayDimension(&(state->detj), state->memoryRequirements.mxt);
+    arrayDimension(&(state->srcr), state->memoryRequirements.mxc);
+    arrayDimension(&(state->srcrt), state->memoryRequirements.mxt);
+    arrayDimension(&(state->cphi), state->memoryRequirements.mxt);
+    arrayDimension(&(state->vkx), state->memoryRequirements.mxt);
+    arrayDimension(&(state->vky), state->memoryRequirements.mxt);
+    arrayDimension(&(state->qp), state->memoryRequirements.mxt);
+    arrayDimension(&(state->q), state->memoryRequirements.mxt);
+    matrixDimension(&(state->pe), state->memoryRequirements.mxc, state->memoryRequirements.mxc);
+    matrixDimension(&(state->se), state->memoryRequirements.mxc, state->memoryRequirements.mxc);
+
     // coef should already be dimensioned
     arrayDimension(&(state->fmobx), state->memoryRequirements.maxne);
     arrayDimension(&(state->fmoby), state->memoryRequirements.maxne);
@@ -97,6 +118,10 @@ void gs2Datain(
     arrayDimension(&(state->kd), state->memoryRequirements.maxne);
     arrayDimension(&(state->lambda), state->memoryRequirements.maxne);
     arrayDimension(&(state->rho), state->memoryRequirements.maxne);
+    arrayDimension(&(state->dpordt), state->memoryRequirements.mxt);
+    arrayDimension(&(state->dh), state->memoryRequirements.mxt);
+    arrayDimension(&(state->dk), state->memoryRequirements.mxt);
+    arrayDimension(&(state->d0), state->memoryRequirements.mxt);
    
     matrixDimension(&(state->in), state->me, state->memoryRequirements.maxne);
     matrixDimension(&(state->ie), 2, state->memoryRequirements.maxne);
@@ -296,6 +321,9 @@ void gs2Datain(
     arrayFree(&wxk);
     matrixFree(&cc);
     csvFreeFile(&csvFile);
+
+
+    gs2Callback(*state);
 }
 
 gs2DataGroup gs2GetGroup(CSVRow* csvRow, gs2DataGroup defaultTo) {
@@ -1399,6 +1427,13 @@ void gs2ReadGroupQ(
                 *matrixAt(&(state->ctt[j-1]), i, k) = *matrixAt(cc, j, i);
             }
         }
+
+
+        // matrixPrint("ctt", &(state->ctt[0]));
+        // matrixPrint("ctt", &(state->ctt[1]));
+        // matrixPrint("ctt", &(state->ctt[2]));
+        
+
 
         gs2ICS1CU(wxk, wxpsi, ispk, ispm, cc, &ier);
 

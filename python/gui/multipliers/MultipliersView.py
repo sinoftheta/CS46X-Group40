@@ -7,9 +7,6 @@ class MultipliersView():
     def __init__(self, multipliersModel, layout):
         self.layout = layout
         self.model = multipliersModel
-        self.setInputs()
-
-    def setInputs(self):
 
         XFACTLabel = QLabel("X-Coordinate")
         XFACTLabel.setAlignment(Qt.AlignLeft)
@@ -22,7 +19,6 @@ class MultipliersView():
         self.layout.addWidget(XFACTLabel, 1, 0)
         self.layout.addWidget(self.XFACT, 2, 0)
         self.XFACT.textChanged.connect(lambda val: self.model.setVal("XFACT", val))
-        self.XFACT.setValue(self.model.XFACT)
 
         YFACTLabel = QLabel("Y-Coordinate")
         YFACTLabel.setAlignment(Qt.AlignLeft)
@@ -34,7 +30,6 @@ class MultipliersView():
         self.layout.addWidget(YFACTLabel, 1, 1)
         self.layout.addWidget(self.YFACT, 2, 1)
         self.YFACT.textChanged.connect(lambda val: self.model.setVal("YFACT", val))
-        self.YFACT.setValue(self.model.YFACT)
 
         APHIILabel = QLabel("Initial Pressure Head")
         APHIILabel.setAlignment(Qt.AlignLeft)
@@ -46,7 +41,6 @@ class MultipliersView():
         self.layout.addWidget(APHIILabel, 1, 2)
         self.layout.addWidget(self.APHII, 2, 2)
         self.APHII.textChanged.connect(lambda val: self.model.setVal("APHII", val))
-        self.APHII.setValue(self.model.APHII)
 
         ACONCILabel = QLabel("Initial Concentration")
         ACONCILabel.setAlignment(Qt.AlignLeft)
@@ -58,7 +52,6 @@ class MultipliersView():
         self.layout.addWidget(ACONCILabel, 1, 3)
         self.layout.addWidget(self.ACONCI, 2, 3)
         self.ACONCI.textChanged.connect(lambda val: self.model.setVal("ACONCI", val))
-        self.ACONCI.setValue(self.model.ACONCI)
 
         ATETALabel = QLabel("Saturated Moisture Content")
         ATETALabel.setAlignment(Qt.AlignLeft)
@@ -70,7 +63,6 @@ class MultipliersView():
         self.layout.addWidget(ATETALabel, 3, 0)
         self.layout.addWidget(self.ATETA, 4, 0)
         self.ATETA.textChanged.connect(lambda val: self.model.setVal("ATETA", val))
-        self.ATETA.setValue(self.model.ATETA)
 
         AALLabel = QLabel("Medium Compressibility")
         AALLabel.setAlignment(Qt.AlignLeft)
@@ -82,7 +74,6 @@ class MultipliersView():
         self.layout.addWidget(AALLabel, 3, 1)
         self.layout.addWidget(self.AAL, 4, 1)
         self.AAL.textChanged.connect(lambda val: self.model.setVal("AAL", val))
-        self.AAL.setValue(self.model.AAL)
 
         AKDLabel = QLabel("Distribution Coefficient")
         AKDLabel.setAlignment(Qt.AlignLeft)
@@ -94,7 +85,6 @@ class MultipliersView():
         self.layout.addWidget(AKDLabel, 3, 2)
         self.layout.addWidget(self.AKD, 4, 2)
         self.AKD.textChanged.connect(lambda val: self.model.setVal("AKD", val))
-        self.AKD.setValue(self.model.AKD)
 
         ALAMLabel = QLabel("Radioactive Decay Constant")
         ALAMLabel.setAlignment(Qt.AlignLeft)
@@ -106,7 +96,6 @@ class MultipliersView():
         self.layout.addWidget(ALAMLabel, 3, 3)
         self.layout.addWidget(self.ALAM, 4, 3)
         self.ALAM.textChanged.connect(lambda val: self.model.setVal("ALAM", val))
-        self.ALAM.setValue(self.model.ALAM)
 
         APORLabel = QLabel("Porosity")
         APORLabel.setAlignment(Qt.AlignLeft)
@@ -118,7 +107,6 @@ class MultipliersView():
         self.layout.addWidget(APORLabel, 5, 0)
         self.layout.addWidget(self.APOR, 6, 0)
         self.APOR.textChanged.connect(lambda val: self.model.setVal("APOR", val))
-        self.APOR.setValue(self.model.APOR)
 
         ARHOLabel = QLabel("Density")
         ARHOLabel.setAlignment(Qt.AlignLeft)
@@ -130,7 +118,6 @@ class MultipliersView():
         self.layout.addWidget(ARHOLabel, 5, 1)
         self.layout.addWidget(self.ARHO, 6, 1)
         self.ARHO.textChanged.connect(lambda val: self.model.setVal("ARHO", val))
-        self.ARHO.setValue(self.model.ARHO)
 
         AFMOBLabel = QLabel("Saturated Hydraulic Conductivity")
         AFMOBLabel.setFont(QFont('Helvetica', 14))
@@ -156,9 +143,7 @@ class MultipliersView():
         self.layout.addWidget(self.AFMOBX, 10, 0)
         self.layout.addWidget(self.AFMOBY, 10, 1)
         self.AFMOBY.textChanged.connect(lambda val: self.model.setVal("AFMOBY", val))
-        self.AFMOBY.setValue(self.model.AFMOBY)
         self.AFMOBX.textChanged.connect(lambda val: self.model.setVal("AFMOBX", val))
-        self.AFMOBX.setValue(self.model.AFMOBX)
 
         AELabel = QLabel("Dispersivity")
         AELabel.setFont(QFont('Helvetica', 14))
@@ -183,6 +168,22 @@ class MultipliersView():
         self.layout.addWidget(self.AETRANS, 10, 2)
         self.layout.addWidget(self.AELONG, 10, 3)
         self.AETRANS.textChanged.connect(lambda val: self.model.setVal("AETRANS", val))
-        self.AETRANS.setValue(self.model.AETRANS)
         self.AELONG.textChanged.connect(lambda val: self.model.setVal("AELONG", val))
-        self.AELONG.setValue(self.model.AELONG)
+
+        self.setInputs(self.model)
+
+    def setInputs(self, model):
+        self.XFACT.setValue(model.XFACT)
+        self.YFACT.setValue(model.YFACT)
+        self.APHII.setValue(model.APHII)
+        self.ACONCI.setValue(model.ACONCI)
+        self.ATETA.setValue(model.ATETA)
+        self.AAL.setValue(model.AAL)
+        self.AKD.setValue(model.AKD)
+        self.ALAM.setValue(model.ALAM)
+        self.APOR.setValue(model.APOR)
+        self.ARHO.setValue(model.ARHO)
+        self.AFMOBY.setValue(model.AFMOBY)
+        self.AFMOBX.setValue(model.AFMOBX)
+        self.AETRANS.setValue(model.AETRANS)
+        self.AELONG.setValue(model.AELONG)

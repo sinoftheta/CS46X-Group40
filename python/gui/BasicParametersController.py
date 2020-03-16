@@ -9,8 +9,9 @@ class BasicParametersController(QGroupBox):
     def __init__(self):
         super(BasicParametersController, self).__init__('Basic Parameters')
         self.parametersModel = ParametersModel()
-        self.layout = ParametersView(self.parametersModel)
-        self.setLayout(self.layout)
+
+        self.parametersView = ParametersView(self.parametersModel)
+        self.setLayout(self.parametersView)
 
         self.parameterChangeListeners = []
 
@@ -18,6 +19,9 @@ class BasicParametersController(QGroupBox):
         self.parametersModel.NE.connectObserver(lambda newData: self.notifyElementCountChange(newData))
         self.parametersModel.NK.connectObserver(lambda newData: self.notifyMaterialCountChange(newData))
         self.parametersModel.NSEEP.connectObserver(lambda newData: self.notifySeepageFaceCountChange(newData))
+
+    def updateView(self, model):
+        self.parametersView.updateView(model)
 
     def getBasicParametersModel(self):
         return self.parametersModel

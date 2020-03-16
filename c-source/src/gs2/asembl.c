@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../capstone/Debug.h"
+
 /*
   To assemble element matrices
 */
@@ -21,6 +23,8 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
       arrayAssertNotNull(lq, "Array 'lq' NULL in gs2Asembl!");
       arrayAssertNotNull(jd, "Array 'jd' NULL in gs2Asembl!");
 
+      DEBUG_LOG("asembl called");
+
       int ih, jdi, ir, jdj, jc;
 
       ih =  (ib2 - ib + 1);
@@ -29,7 +33,8 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
       for (int iter = 1; iter <= m; iter++){ //loop through all materials
 
         jdi = *arrayAt(jd, iter);
-        ir = (jdi - *arrayAt(lq, jdi));
+        int temp = *arrayAt(lq, jdi);
+        ir = (jdi - temp);
 
         if (*arrayAt(k0d, jdi) != 1){
           *arrayAt(r, ir) += *arrayAt(re, iter);
