@@ -43,4 +43,11 @@ class NodesController(QGroupBox):
     def setTableVal(self, i, key, val):
         #print("setting index " + str(i) + ", key: " + key + ", val: " + val)
         self.nodes[i].setVal(key, val)
+
+    def onMaterialCountChange(self, arg):
+        pass
+    def onElementCountChange(self, arg):
+        pass
+    def onSeepageFaceCountChange(self, arg):
+        pass
         
