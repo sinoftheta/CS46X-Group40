@@ -6,3 +6,8 @@ class NodeModel():
         self.CONCI = 0.0
         self.PHII = 0.0
         self.boundary = ""
+
+    #generic mutator
+    def setVal(self, key, val):
+        if hasattr(self, key):
+            setattr(self, key, val)

@@ -40,6 +40,9 @@ class NodesController(QGroupBox):
                 self.nodes.pop()
         self.view.populateTable()
 
-    def setTableVal(self, row, key, val):
-        print("setting row" + str(row) + " key: " + key + ", val: " + val)
+    def setTableVal(self, i, key, val):
+        print("setting index " + str(i) + ", key: " + key + ", val: " + val)
+        self.nodes[i].setVal(key, val)
+
+        #print(self.nodes)
         
