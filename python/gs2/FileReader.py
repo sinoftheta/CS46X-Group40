@@ -9,6 +9,7 @@ from gui.material import MaterialModel
 from gui.multipliers import MultipliersModel
 from gui.seepage_face import SeepageFaceModel
 from gui.element_properties import ElementPropertiesModel
+from gui.nodes import NodeModel
 
 class FileReader:
     def __init__(self):
@@ -209,7 +210,21 @@ class FileReader:
             
 
     def _readGroupE(self):
-        pass
+        if self.csvRows[0][0] != "E":
+            return
+
+        while self.csvRows[0][0] == "E":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+
+            nodeModel = NodeModel(int(card[0]))
+            nodeModel.X = float(card[1])
+            nodeModel.Y = float(card[2])
+
+            self.nodeModels[card[0]] = nodeModel
+
+        
 
     def _readGroupF(self):
         pass

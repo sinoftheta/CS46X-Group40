@@ -5,6 +5,8 @@ from PyQt5.QtGui import *
 from .nodes.NodeModel import NodeModel
 from .nodes.NodesView import NodesView
 
+from .BasicParametersController import BasicParameterChangeListener
+
 nodeTableLabels = [
     "Node",
     "Boundary Type",
@@ -21,7 +23,8 @@ nodeTypeLabels = [
     "Seepage Face",
     "Mixed Boundary Condition (Mass Transport)"
 ]
-class NodesController(QGroupBox):
+
+class NodesController(QGroupBox, BasicParameterChangeListener):
     def __init__(self):
         super(NodesController, self).__init__('Nodes')
         self.layout = QVBoxLayout()
@@ -31,6 +34,11 @@ class NodesController(QGroupBox):
         self.view = NodesView(self.nodes, self.setTableVal, nodeTypeLabels, nodeTableLabels)
         self.layout.addWidget(self.view)
 
+    def updateView(self, nodes):
+        self.nodes.clear()
+        self.nodes.extend(nodes)
+        self.view.populateTable()
+        
     def onNodeCountChange(self, newNumNodes):
         if(newNumNodes > len(self.nodes)):
             while(len(self.nodes) != newNumNodes):
