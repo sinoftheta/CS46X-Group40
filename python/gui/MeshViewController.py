@@ -52,35 +52,51 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         self.buttons.addWidget(self.concentrationButton)
 
     def createMesh(self, state):
-        vertices = np.array([[x, y, 0.0] for x, y in zip(state.x, state.y)][:state.nn.value])
+        nodeLocations = []
+        for i in range(state.nn):
+            nodeLocations.append([state.x.elements[i], state.y.elements[i], 0.0])
+
+        vertices = np.array(nodeLocations)
+        # vertices = np.array([[x, y, 0.0] for x, y in zip(list(state.x), list(state.y))][:state.nn.value])
 
         # Numbering scheme
         scheme = [1, 4, 7, 10, 2, 3, 5, 6, 8, 9, 11, 12]
 
-        incidences = np.array(state._in[:state.inc.value]).T
-        faces = [sorted(face, key=lambda x:scheme[face.index(x)]) for face in incidences]
+        faces = []
+        for i in range(state.ne):
+            face = []
+            for j in range(int(state._in.elements[state.me-1][i])):
+                face.append(int(state._in.elements[j][i]))
+            faces.append(face)
 
-        faces = [[inc - 1 for inc in face if inc > 0] for face in faces][:state.ne.value]
+
+        # incidences = np.array(state._in.elements[:state.inc]).T
+        faces = [sorted(face, key=lambda x: scheme[face.index(x)]) for face in faces]
+
+        faces = [[inc - 1 for inc in face if inc > 0] for face in faces][:state.ne]
         faces = [[len(row)] + row for row in faces]
         faces = np.hstack(faces)
 
-        self.mesh = pv.PolyData(vertices, faces)
-        self.mesh.point_arrays['Pressure Head'] = np.array(state.phi[:state.nn.value])
-        self.mesh.point_arrays['Concentration'] = np.array(state.conc[:state.nn.value])
+        self.mesh1 = pv.PolyData(vertices, faces)
+        self.mesh1.point_arrays['Pressure Head'] = np.array(state.phi.elements[:state.nn])
+        
+        # second mesh, can look more in depth, but this is showing both inital meshse
+        self.mesh2 = pv.PolyData(vertices, faces)
+        self.mesh2.point_arrays['Concentration'] = np.array(state.conc.elements[:state.nn])
 
         self.plotter1.clear()
         self.plotter2.clear()
-        self.plotter1.add_mesh(self.mesh, show_edges=True, scalars='Pressure Head')
-        self.plotter2.add_mesh(self.mesh, show_edges=True, scalars='Concentration')
+        self.plotter1.add_mesh(self.mesh1, show_edges=True, scalars='Pressure Head')
+        self.plotter2.add_mesh(self.mesh2, show_edges=True, scalars='Concentration')
         self.plotter1.reset_camera()
         self.plotter2.reset_camera()
 
     def updateMesh(self, state):
-        self.mesh.point_arrays['Pressure Head'] = np.array(state.phi[:state.nn.value])
-        self.mesh.point_arrays['Concentration'] = np.array(state.conc[:state.nn.value])
+        self.mesh1.point_arrays['Pressure Head'] = np.array(state.phi[:state.nn])
+        self.mesh2.point_arrays['Concentration'] = np.array(state.conc[:state.nn])
 
     def onCallback(self, state):
-        if state.it.value == 0:
+        if state.it == 0:
             self.createMesh(state)
         else:
             self.updateMesh(state)
