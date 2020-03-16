@@ -5,7 +5,7 @@ class NodeModel():
         self.Y = 0.0
         self.CONCI = 0.0
         self.PHII = 0.0
-        self.boundary = ""
+        self.boundary = "-Select Boundary Type-"
 
     #generic mutator
     def setVal(self, key, val):
