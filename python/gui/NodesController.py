@@ -28,7 +28,7 @@ class NodesController(QGroupBox):
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
         self.nodes = []
-        self.view = NodesView(self.nodes, self.setTableVal)
+        self.view = NodesView(self.nodes, self.setTableVal, nodeTypeLabels, nodeTableLabels)
         self.layout.addWidget(self.view)
 
     def onNodeCountChange(self, newNumNodes):

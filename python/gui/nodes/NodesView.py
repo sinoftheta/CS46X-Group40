@@ -2,34 +2,17 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-nodeTableLabels = [
-    "Node",
-    "Boundary Type",
-    "X-Coordinate",
-    "Y-Coordinate",
-    "Initial Pressure",
-    "Initial Concentration" 
-]
-
-nodeTypeLabels = [
-    "Constant Head (Dirichlet)",
-    "Source/Sink",
-    "Variable Boundary Condition (Flow)",
-    "Seepage Face",
-    "Mixed Boundary Condition (Mass Transport)"
-]
 
 class NodesView(QTableWidget):
-    def __init__(self, nodes, setTableVal):
+    def __init__(self, nodes, setTableVal, nodeTypes, nodeLabels):
         super(NodesView, self).__init__()
         self.nodes = nodes
-        self.setTableVal = setTableVal
+        self.nodeTypes = nodeTypes
+        self.nodeLabels = nodeLabels
 
+        self.setTableVal = setTableVal
         self.createTable()
         self.populateTable()
-        
-
-        #self.clearContents()
 
     def populateTable(self):
         numNodes = len(self.nodes)
@@ -42,8 +25,8 @@ class NodesView(QTableWidget):
             nodeLabel.setAlignment(Qt.AlignCenter)
             self.setCellWidget(row, 0, nodeLabel)
 
-            bComboBox = BoundaryComboBox()
-            bComboBox.setCurrentIndex(2)
+            bComboBox = BoundaryComboBox(self.nodeTypes)
+            bComboBox.setCurrentIndex(0)
             self.setCellWidget(row, 1, bComboBox)
             
 
@@ -63,6 +46,7 @@ class NodesView(QTableWidget):
             nodeY.setDecimals(3)
             nodeY.setSingleStep(0.001)
             nodeY.setValue(self.nodes[row].Y)
+            nodeY.textChanged.connect(lambda val: self.setTableVal(row, "Y", val))
             self.setCellWidget(row, 3, nodeY)
 
             iPressure = QDoubleSpinBox()
@@ -71,6 +55,7 @@ class NodesView(QTableWidget):
             iPressure.setDecimals(3)
             iPressure.setSingleStep(0.001)
             iPressure.setValue(self.nodes[row].PHII)
+            iPressure.textChanged.connect(lambda val: self.setTableVal(row, "PHII", val))
             self.setCellWidget(row, 4, iPressure)
 
 
@@ -80,15 +65,16 @@ class NodesView(QTableWidget):
             iConcentration.setDecimals(3)
             iConcentration.setSingleStep(0.001)
             iConcentration.setValue(self.nodes[row].CONCI)
+            nodeX.textChanged.connect(lambda val: self.setTableVal(row, "X", val))
             self.setCellWidget(row, 5, iConcentration)
 
         self.setRowCount(numNodes)
 
     def createTable(self):
-        self.setColumnCount(len(nodeTableLabels))
+        self.setColumnCount(len(self.nodeLabels))
         self.setMaximumWidth(730)
         # Set labels
-        self.setHorizontalHeaderLabels(nodeTableLabels)
+        self.setHorizontalHeaderLabels(self.nodeLabels)
         self.verticalHeader().hide()
         # Set table column widths to match label size
         self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
@@ -106,7 +92,7 @@ class NodesView(QTableWidget):
 
 
 class BoundaryComboBox(QComboBox):
-    def __init__(self):
+    def __init__(self, nodeTypeLabels):
         super(BoundaryComboBox, self).__init__()
         self.addItem('-Select Boundary Type-')
         for nodeType in nodeTypeLabels:
