@@ -6,6 +6,8 @@ from .nodes.NodeModel import NodeModel
 from .nodes.NodesView import NodesView
 from .BasicParametersController import BasicParameterChangeListener
 
+from .BasicParametersController import BasicParameterChangeListener
+
 nodeTableLabels = [
     "Node",
     "Boundary Type",
@@ -17,11 +19,12 @@ nodeTableLabels = [
 
 nodeTypeLabels = [
     "Constant Head (Dirichlet)",
+    "Constant Concentration (Dirichlet)",
     "Source/Sink",
     "Variable Boundary Condition (Flow)",
-    "Seepage Face",
     "Mixed Boundary Condition (Mass Transport)"
 ]
+
 class NodesController(QGroupBox, BasicParameterChangeListener):
     def __init__(self):
         super(NodesController, self).__init__('Nodes')
@@ -32,6 +35,11 @@ class NodesController(QGroupBox, BasicParameterChangeListener):
         self.view = NodesView(self.nodes, self.setTableVal, nodeTypeLabels, nodeTableLabels)
         self.layout.addWidget(self.view)
 
+    def updateView(self, nodes):
+        self.nodes.clear()
+        self.nodes.extend(nodes)
+        self.view.populateTable()
+        
     def onNodeCountChange(self, newNumNodes):
         if newNumNodes > len(self.nodes) :
             while len(self.nodes) != newNumNodes :

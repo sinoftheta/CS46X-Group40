@@ -118,7 +118,7 @@ class MainWindow(QMainWindow, IOListener):
         self.parametersPage.elementsController.updateView(list(fileReader.elementModels.values()))
         self.parametersPage.seepageFaceController.updateView(fileReader.seepageFaces)
         self.parametersPage.elementPropertiesController.updateView(list(fileReader.elementPropertiesModels.values()))
-
+        self.parametersPage.nodesController.updateView(list(fileReader.nodeModels.values()))
 
 
 

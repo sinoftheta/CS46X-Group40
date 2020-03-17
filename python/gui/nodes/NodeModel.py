@@ -5,6 +5,8 @@ class NodeModel():
         self.Y = 0.0
         self.CONCI = 0.0
         self.PHII = 0.0
+
+        # during spring refactor to enum
         self.boundary = "-Select Boundary Type-"
 
     #generic mutator
