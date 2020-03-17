@@ -37,8 +37,11 @@ class FileWriter:
             self._writeGroupB(writer, self.basicParametersModel)
             self._writeGroupC(writer, self.multipliersModel)
             self._writeGroupD(writer, self.simulationModel)
+            self._writeGroupF(writer, self.nodeTypesModels['SSNodes'])
             self._writeGroupI(writer, self.elementModels)
             self._writeGroupJ(writer, self.elementPropertiesModels)
+            self._writeGroupM(writer, self.nodeTypesModels['VariableBCNodes'])
+            self._writeGroupN(writer, self.nodeTypesModels['MixedBCNodes'])
             self._writeGroupO(writer, self.seepageFaceModels)
             self._writeGroupQ(writer, self.materialModels)
 
@@ -206,6 +209,33 @@ class FileWriter:
 
         csv.writerow(self._csvPad(csvRow))
 
+    def _writeGroupF(self, csv, ssModels):
+        group = "F-1"
+        csvRow = [group]
+
+        for node in ssModels:
+            csvRow.append(node.nodeID)
+            csvRow.append(node.FQ)
+            if len(csvRow) == 9:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+        group = "F-2"
+        csvRow = [group]
+
+        for node in ssModels:
+            csvRow.append(node.nodeID)
+            csvRow.append(node.CFQ)
+            if len(csvRow) == 9:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
     def _writeGroupI(self, csv, elementModels):
         group = "I"
         for element in elementModels:
@@ -249,6 +279,72 @@ class FileWriter:
                 materialGroup.LAMBDA,
                 materialGroup.RHO,
             ]
+            csv.writerow(self._csvPad(csvRow))
+
+    def _writeGroupM(self, csv, variableBCNodes):
+        group = "M-1"
+        csvRow = [group]
+        for vbcNode in variableBCNodes:
+            if vbcNode.dirichlet == true:
+                csvRow.append(vbcNode.nodeID)
+
+        csv.writerow(self._csvPad(csvRow))
+
+        group = "M-2"
+        csvRow = [group]
+        for vbcNode in variableBCNodes:
+            if vbcNode.neumann == true:
+                csvRow.append(vbcNode.nodeID)
+
+        csv.writerow(self._csvPad(csvRow))
+
+        group = "M-3"
+        csvRow = [group]
+        for vbcNode in variableBCNodes:
+            csvRow.append(vbcNode.nodeID)
+            csvRow.append(vbcNode.COEF)
+            if len(csvRow) == 11:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+        group = "M-4"
+        csvRow = [group]
+        for vbcNode in variableBCNodes:
+            csvRow.append(vbcNode.nodeID)
+            csvRow.append(vbcNode.VN)
+            if len(csvRow) == 11:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+    def _writeGroupN(self, csv, mixedBCNodes):
+        group = "N-1"
+        csvRow = [group]
+
+        for mbcNode in mixedBCNodes:
+            csvRow.append(mbcNode.nodeID)
+            if len(csvRow) == 21:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+        group = "N-2"
+        csvRow = [group]
+        for mbcNode in mixedBCNodes:
+            csvRow.append(mbcNode.nodeID)
+            csvRow.append(mbcNode.CN)
+            if len(csvRow) == 11:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
             csv.writerow(self._csvPad(csvRow))
 
     def _writeGroupO(self, csv, seepageFaces):
