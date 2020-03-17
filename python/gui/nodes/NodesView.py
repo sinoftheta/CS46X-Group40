@@ -36,7 +36,7 @@ class NodesView(QTableWidget):
             nodeX.setDecimals(3)
             nodeX.setSingleStep(0.001)
             nodeX.setValue(self.nodes[row].X)
-            nodeX.textChanged.connect(lambda val, index = row: self.setTableVal(index, "X", val))
+            nodeX.textChanged.connect(lambda val, index = row: self.setTableVal(index, "X", float(val)))
             self.setCellWidget(row, 2, nodeX)
             
             nodeY = QDoubleSpinBox()
@@ -45,7 +45,7 @@ class NodesView(QTableWidget):
             nodeY.setDecimals(3)
             nodeY.setSingleStep(0.001)
             nodeY.setValue(self.nodes[row].Y)
-            nodeY.textChanged.connect(lambda val, index = row: self.setTableVal(index, "Y", val))
+            nodeY.textChanged.connect(lambda val, index = row: self.setTableVal(index, "Y", float(val)))
             self.setCellWidget(row, 3, nodeY)
 
             iPressure = QDoubleSpinBox()
@@ -54,7 +54,7 @@ class NodesView(QTableWidget):
             iPressure.setDecimals(3)
             iPressure.setSingleStep(0.001)
             iPressure.setValue(self.nodes[row].PHII)
-            iPressure.textChanged.connect(lambda val, index = row: self.setTableVal(index, "PHII", val))
+            iPressure.textChanged.connect(lambda val, index = row: self.setTableVal(index, "PHII", float(val)))
             self.setCellWidget(row, 4, iPressure)
 
             iConcentration = QDoubleSpinBox()
@@ -63,7 +63,7 @@ class NodesView(QTableWidget):
             iConcentration.setDecimals(3)
             iConcentration.setSingleStep(0.001)
             iConcentration.setValue(self.nodes[row].CONCI)
-            iConcentration.textChanged.connect(lambda val, index = row: self.setTableVal(index, "CONCI", val))
+            iConcentration.textChanged.connect(lambda val, index = row: self.setTableVal(index, "CONCI", float(val)))
             self.setCellWidget(row, 5, iConcentration)
 
         self.setRowCount(numNodes)

@@ -38,6 +38,7 @@ class FileWriter:
             self._writeGroupC(writer, self.multipliersModel)
             self._writeGroupD(writer, self.simulationModel)
             self._writeGroupE(writer, self.nodesModel)
+            self._writeGroupG(writer, self.nodesModel)
             self._writeGroupI(writer, self.elementModels)
             self._writeGroupJ(writer, self.elementPropertiesModels)
             self._writeGroupO(writer, self.seepageFaceModels)
@@ -212,6 +213,22 @@ class FileWriter:
         for node in nodes:
             csvRow = [group, node.I, node.X, node.Y]
             csv.writerow(self._csvPad(csvRow))
+
+    def _writeGroupG(self, csv, nodes):
+        group = "G-1"
+        csv.writerow(self._csvPad([group]))
+
+        group = "G-2"
+        for i in range(0, len(nodes), 3):
+            a = 0
+            row = []
+            while i + a < len(nodes) and a < 3:
+                row.append(nodes[i + a].I)
+                row.append(nodes[i + a].CONCI)
+                a += 1
+            csv.writerow(self._csvPad([group, *row]))
+
+
 
     def _writeGroupI(self, csv, elementModels):
         group = "I"
