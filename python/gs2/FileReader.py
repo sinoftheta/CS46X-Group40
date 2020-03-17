@@ -400,7 +400,48 @@ class FileReader:
                 self.nodeModels[dirichletNode].boundary.setData("Constant Concentration (Dirichlet)")
 
     def _readGroupM(self):
-        pass
+        if self.csvRows[0][0] != "M-1":
+            return
+
+        while self.csvRows[0][0] == "M-1":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                self.variableBCModels[nodeNum] = VariableBCModel(nodeNum)
+                self.variableBCModels[nodeNum].dirichlet = True
+
+        while self.csvRows[0][0] == "M-2":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+
+                self.variableBCModels[nodeNum] = VariableBCModel(nodeNum)
+                self.variableBCModels[nodeNum].nuemann = True
+
+        while self.csvRows[0][0] == "M-3":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                coef = card.pop(0)
+
+                self.variableBCModels[nodeNum].COEF = coef
+
+        while self.csvRows[0][0] == "M-4":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                vn = card.pop(0)
+
+                self.variableBCModels[nodeNum].VN = vn
+            
 
     def _readGroupN(self):
         pass
