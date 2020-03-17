@@ -10,6 +10,8 @@ from gui.multipliers import MultipliersModel
 from gui.seepage_face import SeepageFaceModel
 from gui.element_properties import ElementPropertiesModel
 from gui.nodes import NodeModel
+from gui.node_types import MixedBCModel, VariableBCModel, SourceSinkModel
+
 
 class FileReader:
     def __init__(self):
@@ -32,6 +34,10 @@ class FileReader:
         self.elementPropertiesModels = {}
 
         self.nodeModels = {}
+
+        self.sourceSinkModels = {}
+        self.mixedBCModels = {}
+        self.variableBCModels = {}
 
         self.csvRows = []
 
@@ -227,7 +233,30 @@ class FileReader:
     
 
     def _readGroupF(self):
-        pass
+        if self.csvRows[0][0] != "F-1":
+            return
+        
+        while self.csvRows[0][0] == "F-1":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                fq = float(card.pop(0))
+
+                self.sourceSinkModels[nodeNum] = SourceSinkModel(nodeNum)
+                self.sourceSinkModels[nodeNum].FQ = fq
+
+        while self.csvRows[0][0] == "F-2":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                qfq = float(card.pop(0))
+
+                self.sourceSinkModels[nodeNum].QFQ = qfq
+
 
     def _readGroupG(self):
         if self.csvRows[0][0] != "G-1":
