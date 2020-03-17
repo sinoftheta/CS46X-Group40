@@ -96,7 +96,8 @@ class MainWindow(QMainWindow, IOListener):
             self.parametersPage.basicParametersController.getBasicParametersModel(),
             self.parametersPage.elementsController.getElements(),
             self.parametersPage.multipliersController.getElements(),
-            self.parametersPage.elementPropertiesController.getElementProperties()
+            self.parametersPage.elementPropertiesController.getElementProperties(),
+            self.parametersPage.nodesController.getNodes()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
