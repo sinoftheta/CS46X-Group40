@@ -98,6 +98,7 @@ class MainWindow(QMainWindow, IOListener):
             self.parametersPage.elementsController.getElements(),
             self.parametersPage.multipliersController.getElements(),
             self.parametersPage.elementPropertiesController.getElementProperties(),
+            self.parametersPage.nodesController.getNodes(),
             self.parametersPage.nodeTypesController.getNodeTypes()
         )
 

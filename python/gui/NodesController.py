@@ -48,6 +48,8 @@ class NodesController(QGroupBox, BasicParameterChangeListener):
             while len(self.nodes) != newNumNodes :
                 self.nodes.pop()
         self.view.populateTable()
+    def getNodes(self):
+        return self.nodes
 
     def setTableVal(self, i, key, val):
         #print("setting index " + str(i) + ", key: " + key + ", val: " + val)
