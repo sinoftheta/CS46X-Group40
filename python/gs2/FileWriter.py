@@ -19,6 +19,7 @@ class FileWriter:
         self.multipliersModel = multipliersModel
         self.elementPropertiesModels = elementPropertiesModels
 
+
     def write(self, filepath):
 
         with open(filepath, 'w', newline='') as csvfile:
