@@ -20,8 +20,6 @@ class NodesView(QTableWidget):
         self.clearContents()
 
         for row in range(0, numNodes):
-            
-            index = row
 
             nodeLabel = QLabel(str(self.nodes[row].I))
             nodeLabel.setAlignment(Qt.AlignCenter)
@@ -40,7 +38,6 @@ class NodesView(QTableWidget):
             bComboBox.currentTextChanged.connect(lambda val, index = row: self.setTableVal(index, "boundary", val))
             self.setCellWidget(row, 1, bComboBox)
             
-
             nodeX = QDoubleSpinBox()
             nodeX.setAlignment(Qt.AlignRight)
             nodeX.setRange(-9999.999, 9999.999)
@@ -50,7 +47,6 @@ class NodesView(QTableWidget):
             nodeX.textChanged.connect(lambda val, index = row: self.setTableVal(index, "X", val))
             self.setCellWidget(row, 2, nodeX)
             
-
             nodeY = QDoubleSpinBox()
             nodeY.setAlignment(Qt.AlignRight)
             nodeY.setRange(-9999.999, 9999.999)
@@ -68,7 +64,6 @@ class NodesView(QTableWidget):
             iPressure.setValue(self.nodes[row].PHII)
             iPressure.textChanged.connect(lambda val, index = row: self.setTableVal(index, "PHII", val))
             self.setCellWidget(row, 4, iPressure)
-
 
             iConcentration = QDoubleSpinBox()
             iConcentration.setAlignment(Qt.AlignRight)
@@ -93,11 +88,11 @@ class NodesView(QTableWidget):
 
     def nodeTypeCounts(self):# unused?
         # get node type from QComboBox widget in nodeTable
-        if (hasattr(self, 'nodeTable')):
+        if hasattr(self, 'nodeTable'):
             nodeTypes = { type: [] for type in nodeTypeLabels }
             numNodes = self.rowCount()
             for row in range(0, numNodes):
-                if (self.cellWidget(row, 1).currentText() != '-Select Boundary Type-'):
+                if self.cellWidget(row, 1).currentText() != '-Select Boundary Type-' :
                     nodeTypes[self.cellWidget(row, 1).currentText()].append(row+1)
             return nodeTypes
 

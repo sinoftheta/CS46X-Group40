@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 
 from .nodes.NodeModel import NodeModel
 from .nodes.NodesView import NodesView
+from .BasicParametersController import BasicParameterChangeListener
 
 from .BasicParametersController import BasicParameterChangeListener
 
@@ -41,15 +42,14 @@ class NodesController(QGroupBox, BasicParameterChangeListener):
         self.view.populateTable()
         
     def onNodeCountChange(self, newNumNodes):
-        if(newNumNodes > len(self.nodes)):
-            while(len(self.nodes) != newNumNodes):
+        if newNumNodes > len(self.nodes) :
+            while len(self.nodes) != newNumNodes :
                 self.nodes.append(NodeModel(len(self.nodes) + 1))
-        elif(newNumNodes < len(self.nodes)):
-            while(len(self.nodes) != newNumNodes):
+        elif newNumNodes < len(self.nodes) :
+            while len(self.nodes) != newNumNodes :
                 self.nodes.pop()
         self.view.populateTable()
 
     def setTableVal(self, i, key, val):
         #print("setting index " + str(i) + ", key: " + key + ", val: " + val)
         self.nodes[i].setVal(key, val)
-        
