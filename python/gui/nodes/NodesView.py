@@ -28,7 +28,15 @@ class NodesView(QTableWidget):
             self.setCellWidget(row, 0, nodeLabel)
 
             bComboBox = BoundaryComboBox(self.nodeTypes)
-            bComboBox.setCurrentIndex(0)
+            try:
+                index = self.nodeTypes.index(self.nodes[row].boundary)
+                # bComboBox.setCurrentIndex(index)
+            except ValueError:
+                bComboBox.setCurrentIndex(0)
+            else:
+                bComboBox.setCurrentIndex(index+1)
+
+            # bComboBox.setCurrentIndex()
             bComboBox.currentTextChanged.connect(lambda val, index = row: self.setTableVal(index, "boundary", val))
             self.setCellWidget(row, 1, bComboBox)
             

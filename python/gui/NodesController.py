@@ -18,6 +18,7 @@ nodeTableLabels = [
 
 nodeTypeLabels = [
     "Constant Head (Dirichlet)",
+    "Constant Concentration (Dirichlet)",
     "Source/Sink",
     "Variable Boundary Condition (Flow)",
     "Seepage Face",
