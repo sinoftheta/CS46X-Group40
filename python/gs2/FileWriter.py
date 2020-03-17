@@ -11,7 +11,7 @@ class FileWriter:
             elementModels,
             multipliersModel,
             elementPropertiesModels,
-            nodesModel):
+            nodesModel,
             nodeTypesModels):
 
         self.materialModels = materialModels
@@ -281,8 +281,9 @@ class FileWriter:
         for materialGroup in elementPropertiesModels:
             group = "J-1"
             csvRow = [
-                group, materialGroups[materialGroup.materialGroupId][0],
-                materialGroups[materialGroup.materialGroupId][-1],
+                group, 
+                materialGroups[str(materialGroup.materialGroupId)][0],
+                materialGroups[str(materialGroup.materialGroupId)][-1],
                 materialGroup.materialGroupId
             ]
             csv.writerow(self._csvPad(csvRow))
