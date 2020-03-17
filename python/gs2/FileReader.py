@@ -9,6 +9,7 @@ from gui.material import MaterialModel
 from gui.multipliers import MultipliersModel
 from gui.seepage_face import SeepageFaceModel
 from gui.element_properties import ElementPropertiesModel
+from gui.nodes import NodeModel
 
 class FileReader:
     def __init__(self):
@@ -29,6 +30,8 @@ class FileReader:
         self.seepageFaces = []
 
         self.elementPropertiesModels = {}
+
+        self.nodeModels = {}
 
         self.csvRows = []
 
@@ -207,16 +210,69 @@ class FileReader:
             
 
     def _readGroupE(self):
-        pass
+        if self.csvRows[0][0] != "E":
+            return
+
+        while self.csvRows[0][0] == "E":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+
+            nodeModel = NodeModel(int(card[0]))
+            nodeModel.X = float(card[1])
+            nodeModel.Y = float(card[2])
+
+            self.nodeModels[card[0]] = nodeModel
+
+    
 
     def _readGroupF(self):
         pass
 
     def _readGroupG(self):
-        pass
+        if self.csvRows[0][0] != "G-1":
+            return
+
+        # don't care about g1 for GUI
+        g1Card = self.csvRows.pop(0)
+
+        while self.csvRows[0][0] == "G-2":
+            g2Card = self.csvRows.pop(0)
+            g2Card.pop(0)
+
+            while g2Card[0] != '':
+                nodeNum = g2Card.pop(0)
+                conci = float(g2Card.pop(0))
+
+                self.nodeModels[nodeNum].CONCI = conci
+
 
     def _readGroupH(self):
-        pass
+        if self.csvRows[0][0] != "H-1":
+            return 
+
+        # don't card about h1 for GUI
+        h1Card = self.csvRows.pop(0)
+
+        h2Card = self.csvRows.pop(0)
+        h2Card.pop(0)
+
+        hone = float(h2Card[0])
+
+        if hone != 9999.0:
+            for key in self.nodeModels:
+                self.nodeModels[key].PHII = hone - self.nodeModels[key].Y
+
+        while self.csvRows[0][0] == "H-3":
+            h3Card = self.csvRows.pop(0)
+            h3Card.pop(0)
+
+            while h3Card[0] != '':
+                nodeNum = h3Card.pop(0)
+                phii = float(h3Card.pop(0))
+
+                self.nodeModels[nodeNum].PHII = phii
+
 
     def _readGroupI(self):
         if self.csvRows[0][0] != "I":
@@ -289,10 +345,30 @@ class FileReader:
             
 
     def _readGroupK(self):
-        pass
+        if self.csvRows[0][0] != "K":
+            return
+        while self.csvRows[0][0] == "K":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while card[0] != '':
+                dirichletNode = card.pop(0)
+
+                self.nodeModels[dirichletNode].boundary = "Constant Head (Dirichlet)"
+
 
     def _readGroupL(self):
-        pass
+        if self.csvRows[0][0] != "L":
+            return
+
+        while self.csvRows[0][0] == "L":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while card[0] != '':
+                dirichletNode = card.pop(0)
+
+                self.nodeModels[dirichletNode].boundary = "Constant Concentration (Dirichlet)"
 
     def _readGroupM(self):
         pass

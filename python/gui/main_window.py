@@ -15,6 +15,7 @@ from .BasicParametersController import BasicParametersController
 from .ElementsController import ElementsController
 from .MeshViewController import MeshViewController
 from .ElementPropertiesController import ElementPropertiesController
+from .NodeTypesController import NodeTypesController
 
 class MainWindow(QMainWindow, IOListener):
     def __init__(self, config, *args, **kwargs):
@@ -98,6 +99,7 @@ class MainWindow(QMainWindow, IOListener):
             self.parametersPage.multipliersController.getElements(),
             self.parametersPage.elementPropertiesController.getElementProperties(),
             self.parametersPage.nodesController.getNodes()
+            self.parametersPage.nodeTypesController.getNodeTypes()
         )
 
         filePath = path.join(self.config['paths']['bundle'], self.config['paths']['data-out'])
@@ -119,7 +121,7 @@ class MainWindow(QMainWindow, IOListener):
         self.parametersPage.elementsController.updateView(list(fileReader.elementModels.values()))
         self.parametersPage.seepageFaceController.updateView(fileReader.seepageFaces)
         self.parametersPage.elementPropertiesController.updateView(list(fileReader.elementPropertiesModels.values()))
-
+        self.parametersPage.nodesController.updateView(list(fileReader.nodeModels.values()))
 
 
 

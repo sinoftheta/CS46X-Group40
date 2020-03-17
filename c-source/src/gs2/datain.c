@@ -703,7 +703,7 @@ void gs2ReadSubGroupH2(CSVRow** csvRow, gs2State* state, double* hone) {
 // the hone != 9999 is handled elsewhere
 void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, double aphii) {
 
-    fprintf(gs2stdout, "Initial Concentration\n");
+    fprintf(gs2stdout, "Initial Pressure\n");
     fprintf(gs2stdout, "Node\tValue\t\tNode\tValue\t\tNode\tValue\t\tNode\tValue\n");
 
     if ((*csvRow)->entryCount < 9)
