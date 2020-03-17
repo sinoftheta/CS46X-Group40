@@ -10,7 +10,7 @@ from .BasicParametersController import BasicParametersController
 from .BasicParametersController import BasicParameterChangeListener
 from .MultipliersController import MultipliersController
 from .nodes import Nodes
-from .nodeTypes import NodeTypes
+from .NodeTypesController import NodeTypesController
 from .ElementsController import ElementsController
 from .ElementPropertiesController import ElementPropertiesController
 from .MaterialsController import MaterialsController
@@ -47,7 +47,7 @@ class ParametersPage(QGroupBox):
         self.basicParametersController = BasicParametersController()
         self.multipliersController = MultipliersController()
         self.parametersPageNodes = Nodes()
-        self.parametersPageNodeTypes = NodeTypes()
+        self.nodeTypesController = NodeTypesController()
         self.elementsController = ElementsController()
         self.elementPropertiesController = ElementPropertiesController()
         self.materialsController = MaterialsController()
@@ -64,7 +64,7 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.addWidget(self.basicParametersController)
         self.parametersPageStack.addWidget(self.multipliersController)
         self.parametersPageStack.addWidget(self.parametersPageNodes)
-        self.parametersPageStack.addWidget(self.parametersPageNodeTypes)
+        self.parametersPageStack.addWidget(self.nodeTypesController)
         self.parametersPageStack.addWidget(self.elementsController)
         self.parametersPageStack.addWidget(self.elementPropertiesController)
         self.parametersPageStack.addWidget(self.materialsController)
@@ -153,8 +153,6 @@ class ParametersPage(QGroupBox):
         self.parametersPageStack.setCurrentIndex(3)
 
     def nodeTypesClick(self):
-        nodeTypes = self.parametersPageNodes.nodeTypeCounts()
-        self.parametersPageNodeTypes.setNodeTypes(nodeTypes)
         self.parametersPageStack.setCurrentIndex(4)
 
     def elementsClick(self):

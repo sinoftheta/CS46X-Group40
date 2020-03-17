@@ -10,7 +10,8 @@ class FileWriter:
             basicParametersModel,
             elementModels,
             multipliersModel,
-            elementPropertiesModels):
+            elementPropertiesModels,
+            nodeTypesModels):
         self.materialModels = materialModels
         self.simulationModel = simulationModel
         self.seepageFaceModels = seepageFaceModels
@@ -18,6 +19,7 @@ class FileWriter:
         self.elementModels = elementModels
         self.multipliersModel = multipliersModel
         self.elementPropertiesModels = elementPropertiesModels
+        self.nodeTypesModels = nodeTypesModels
 
     def write(self, filepath):
 
