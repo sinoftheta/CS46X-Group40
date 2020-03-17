@@ -21,6 +21,7 @@ class FileWriter:
         self.elementPropertiesModels = elementPropertiesModels
         self.nodeTypesModels = nodeTypesModels
 
+
     def write(self, filepath):
 
         with open(filepath, 'w', newline='') as csvfile:
