@@ -519,7 +519,15 @@ class FileReader:
         
 
     def _readGroupP(self):
-        pass
+        # I don't believe this is required for the GUI
+        # writing this group is important, but
+        # it should be derived from elements
+        #
+        # Skip so the next group can be read
+        while self.csvRows[0][0] == "P":
+            self.csvRows.pop(0)
+
+
 
     def _readGroupQ(self):
              
