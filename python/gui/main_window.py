@@ -123,6 +123,11 @@ class MainWindow(QMainWindow, IOListener):
         self.parametersPage.elementPropertiesController.updateView(list(fileReader.elementPropertiesModels.values()))
         self.parametersPage.nodesController.updateView(list(fileReader.nodeModels.values()))
 
+        self.parametersPage.nodeTypesController.updateView(
+            fileReader.sourceSinkModels,
+            fileReader.variableBCModels,
+            fileReader.mixedBCModels
+        )
 
 
 

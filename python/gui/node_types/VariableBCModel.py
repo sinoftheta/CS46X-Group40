@@ -1,6 +1,6 @@
 class VariableBCModel():
-    def __init__(self):
-        self.nodeID = Node
+    def __init__(self, nodeID=None):
+        self.nodeID = nodeID
 
         self.dirichlet = False
         self.neumann = False

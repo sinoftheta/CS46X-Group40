@@ -60,6 +60,8 @@ class ParametersPage(QGroupBox):
         self.basicParametersController.addBasicParameterListener(self.nodesController)
         self.basicParametersController.addBasicParameterListener(self.elementPropertiesController)
 
+        self.nodesController.addNodeBoundaryChangeListener(self.nodeTypesController)
+
         # Adds each class to stack layout
         self.parametersPageStack.addWidget(self.parametersPageHome)
         self.parametersPageStack.addWidget(self.basicParametersController)

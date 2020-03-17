@@ -1,6 +1,6 @@
 class MixedBCModel():
-    def __init__(self):
-        self.nodeID = None
+    def __init__(self, nodeID=None):
+        self.nodeID = nodeID
 
         self.CN = 0.0
 
