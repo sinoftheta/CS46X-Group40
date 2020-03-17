@@ -22,7 +22,6 @@ nodeTypeLabels = [
     "Constant Concentration (Dirichlet)",
     "Source/Sink",
     "Variable Boundary Condition (Flow)",
-    "Seepage Face",
     "Mixed Boundary Condition (Mass Transport)"
 ]
 
