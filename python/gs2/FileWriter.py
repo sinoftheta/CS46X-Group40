@@ -115,14 +115,14 @@ class FileWriter:
 
         # derived parameters
         # assume zeros for the time being; makes testing import do able
-        NS = '0'
-        KNS = '0'
-        NF = '0'
-        INC = '0'
-        NSDN = '0'
+        NS = len(list(filter(lambda node: node.dirichelt == True, self.nodeTypesModels['VariableBCNodes'])))
+        KNS = len(list(filter(lambda node: node.boundary.getData() == "Constant Concentration (Dirichlet)", self.nodeModels)))
+        NF = len(list(filter(lambda node: node.boundary.getData() == "Source/Sink", self.nodeModels)))
+        INC = max(map(lambda element: len(element.getIncidences()), self.elementModels))
+        NSDN = len(list(filter(lambda node: node.nuemann == True, self.nodeTypesModels['VariableBCNodes'])))
         MQ4 = '0'
-        KNSDN = '0'
-        COEFI = '0'
+        KNSDN =  len(self.nodeTypesModels['MixedBCNodes'])
+        COEFI = '1.0'
         NVS = '0'
         DPRDT = '0'
 
