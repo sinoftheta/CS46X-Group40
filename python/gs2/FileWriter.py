@@ -35,6 +35,8 @@ class FileWriter:
                 quoting=csv.QUOTE_MINIMAL #also unused
             )
 
+            print(self.nodeTypesModels)
+
             # write groups
             self._writeGroupA(writer, self.simulationModel)
             self._writeGroupB(writer, self.basicParametersModel)
@@ -312,6 +314,10 @@ class FileWriter:
             csv.writerow(self._csvPad(csvRow))
 
     def _writeGroupM(self, csv, variableBCNodes):
+
+        if len(variableBCNodes) == 0:
+            return
+
         group = "M-1"
         csvRow = [group]
         for vbcNode in variableBCNodes:
