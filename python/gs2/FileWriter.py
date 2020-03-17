@@ -11,7 +11,7 @@ class FileWriter:
             elementModels,
             multipliersModel,
             elementPropertiesModels,
-            nodesModel,
+            nodeModels,
             nodeTypesModels):
 
         self.materialModels = materialModels
@@ -21,7 +21,7 @@ class FileWriter:
         self.elementModels = elementModels
         self.multipliersModel = multipliersModel
         self.elementPropertiesModels = elementPropertiesModels
-        self.nodesModel = nodesModel
+        self.nodeModels = nodeModels
         self.nodeTypesModels = nodeTypesModels
 
 
@@ -40,14 +40,18 @@ class FileWriter:
             self._writeGroupB(writer, self.basicParametersModel)
             self._writeGroupC(writer, self.multipliersModel)
             self._writeGroupD(writer, self.simulationModel)
-            self._writeGroupE(writer, self.nodesModel)
+            self._writeGroupE(writer, self.nodeModels)
             self._writeGroupF(writer, self.nodeTypesModels['SSNodes'])
-            self._writeGroupG(writer, self.nodesModel)
+            self._writeGroupG(writer, self.nodeModels)
+            self._writeGroupH(writer, self.nodeModels)
             self._writeGroupI(writer, self.elementModels)
             self._writeGroupJ(writer, self.elementPropertiesModels)
+            self._writeGroupK(writer, self.nodeModels)
+            self._writeGroupL(writer, self.nodeModels)
             self._writeGroupM(writer, self.nodeTypesModels['VariableBCNodes'])
             self._writeGroupN(writer, self.nodeTypesModels['MixedBCNodes'])
             self._writeGroupO(writer, self.seepageFaceModels)
+            self._writeGroupP(writer, self.elementModels, self.nodeModels)
             self._writeGroupQ(writer, self.materialModels)
 
     def _csvPad(self, cols):
@@ -396,3 +400,99 @@ class FileWriter:
 
                 if len(csvRow) > 1:
                     csv.writerow(self._csvPad(csvRow))
+
+
+    def _writeGroupH(self, csv, nodeModels):
+        group = "H-1"
+        csvRow = [group, 0.0]
+
+        csv.writerow(self._csvPad(csvRow))
+
+
+        # we will support the other case for group H-2 later
+        group = "H-2"
+        csvRow = [group, 9999.0]
+
+
+        group = "H-3"
+        csvRow = [group]
+
+        for node in nodeModels:
+            csvRow.append(node.I)
+            csvRow.append(node.PHII)
+
+            # gorup + 5 pairs
+            if len(csvRow) == 11:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+
+
+    def _writeGroupK(self, csv, nodeModels):
+        group = "K"
+        csvRow = [group]
+
+        for node in nodeModels:
+            if node.boundary.getData() == "Constant Head (Dirichlet)":
+                csvRow.append(node.I)
+
+            if len(csvRow) == 21:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+    def _writeGroupL(self, csv, nodeModels):
+        group = "L"
+        csvRow = [group]
+
+        for node in nodeModels:
+            if node.boundary.getData() == "Constant Concentration (Dirichlet)":
+                csvRow.append(node.I)
+
+            if len(csvRow) == 21:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+    # really need to specifiy the correct indices for element incidence
+    def _writeGroupP(self, csv, elementModels, nodeModels):
+        group = "P"
+        csvRow = [group]
+
+        def isMixed(incidenceIndex):
+            node = list(filter(lambda n: n.I == element.incidences[incidenceIndex], nodeModels))
+            if not len(node):
+                return False
+            return node[0].boundary.getData() == "Mixed Boundary Condition (Mass Transport)"
+
+        for element in elementModels:
+            elementNum = element.elementNumber
+            kf = 0
+
+            if isMixed(0) and isMixed(1):
+                kf = 1
+            elif isMixed(1) and isMixed(2):
+                kf = 2
+            elif isMixed(2) and isMixed(3):
+                kf = 3
+            elif isMixed(3) and isMixed(0):
+                kf = 4
+
+            if kf != 0:
+                csvRow.append(elementNum)
+                csvRow.append(kf)
+
+                if len(csvRow) == 9:
+                    csv.writerow(self._csvPad(csvRow))
+                    csvRow = [group]
+        
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
