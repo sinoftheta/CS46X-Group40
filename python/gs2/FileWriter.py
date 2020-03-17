@@ -35,8 +35,6 @@ class FileWriter:
                 quoting=csv.QUOTE_MINIMAL #also unused
             )
 
-            print(self.nodeTypesModels)
-
             # write groups
             self._writeGroupA(writer, self.simulationModel)
             self._writeGroupB(writer, self.basicParametersModel)
@@ -228,17 +226,22 @@ class FileWriter:
 
     def _writeGroupG(self, csv, nodes):
         group = "G-1"
-        csv.writerow(self._csvPad([group]))
+        csv.writerow(self._csvPad([group, 0.0]))
+
+        
 
         group = "G-2"
-        for i in range(0, len(nodes), 3):
-            a = 0
-            row = []
-            while i + a < len(nodes) and a < 3:
-                row.append(nodes[i + a].I)
-                row.append(nodes[i + a].CONCI)
-                a += 1
-            csv.writerow(self._csvPad([group, *row]))
+        csvRow = [group]
+        for node in nodes:
+            csvRow.append(node.I)
+            csvRow.append(node.CONCI)
+
+            if len(csvRow) == 9:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
 
     def _writeGroupF(self, csv, ssModels):
         group = "F-1"
@@ -418,7 +421,7 @@ class FileWriter:
         # we will support the other case for group H-2 later
         group = "H-2"
         csvRow = [group, 9999.0]
-
+        csv.writerow(self._csvPad(csvRow))
 
         group = "H-3"
         csvRow = [group]
@@ -427,8 +430,8 @@ class FileWriter:
             csvRow.append(node.I)
             csvRow.append(node.PHII)
 
-            # gorup + 5 pairs
-            if len(csvRow) == 11:
+            # gorup + 4 pairs
+            if len(csvRow) == 9:
                 csv.writerow(self._csvPad(csvRow))
                 csvRow = [group]
 
