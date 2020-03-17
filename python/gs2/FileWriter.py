@@ -51,7 +51,7 @@ class FileWriter:
             self._writeGroupM(writer, self.nodeTypesModels['VariableBCNodes'])
             self._writeGroupN(writer, self.nodeTypesModels['MixedBCNodes'])
             self._writeGroupO(writer, self.seepageFaceModels)
-            self._writeGroupP(writer, self.elementModels, self.nodeModels)
+            self._writeGroupP(writer, self.elementModels, self.nodeTypesModels['MixedBCNodes'])
             self._writeGroupQ(writer, self.materialModels)
 
     def _csvPad(self, cols):
@@ -471,15 +471,15 @@ class FileWriter:
             csv.writerow(self._csvPad(csvRow))
 
     # really need to specifiy the correct indices for element incidence
-    def _writeGroupP(self, csv, elementModels, nodeModels):
+    def _writeGroupP(self, csv, elementModels, mixedBCModels):
         group = "P"
         csvRow = [group]
 
         def isMixed(incidenceIndex):
-            node = list(filter(lambda n: n.I == element.incidences[incidenceIndex], nodeModels))
+            node = list(filter(lambda n: str(n.nodeID) == str(element.incidences[incidenceIndex]), mixedBCModels))
             if not len(node):
                 return False
-            return node[0].boundary.getData() == "Mixed Boundary Condition (Mass Transport)"
+            return True
 
         for element in elementModels:
             elementNum = element.elementNumber

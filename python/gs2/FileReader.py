@@ -519,15 +519,9 @@ class FileReader:
         
 
     def _readGroupP(self):
-        # I don't believe this is required for the GUI
-        # writing this group is important, but
-        # it should be derived from elements
-        #
-        # Skip so the next group can be read
-        while self.csvRows[0][0] == "P":
-            self.csvRows.pop(0)
-
-
+       # skip through P
+       while self.csvRows[0][0] == "P":
+           self.csvRows.pop(0)
 
     def _readGroupQ(self):
              
@@ -550,36 +544,34 @@ class FileReader:
 
 
         for materialNumber in self.materialModels:
+            
+            pressureHeadIndex = 0
             while self.csvRows[0][0] == "Q-2":
                 q2Card = self.csvRows.pop(0)
                 q2Card.pop(0)
                 
-                for i in range(len(q2Card)):
-                    if q2Card[i] == '':
-                        break
+                while len(q2Card) and q2Card[0] != '':
+                    self.materialModels[materialNumber].pressureHead[pressureHeadIndex] = float(q2Card.pop(0))
+                    pressureHeadIndex += 1
 
-                    self.materialModels[materialNumber].pressureHead[i] = float(q2Card[i])
-
+            moistureContentIndex = 0
             while self.csvRows[0][0] == "Q-3":
                 q3Card = self.csvRows.pop(0)
                 q3Card.pop(0)
-                
-                for i in range(len(q3Card)):
-                    if q3Card[i] == '':
-                        break
-
-                    self.materialModels[materialNumber].moistureContent[i] = float(q3Card[i])
+               
+                while len(q3Card) and q3Card[0] != '':
+                    self.materialModels[materialNumber].moistureContent[moistureContentIndex] = float(q3Card.pop(0))
+                    moistureContentIndex += 1
 
             # include check for last csvrow, as Q4 will often be the final card
+            conductivityIndex = 0
             while len(self.csvRows) and self.csvRows[0][0] == "Q-4":
                 q4Card = self.csvRows.pop(0)
                 q4Card.pop(0)
-                
-                for i in range(len(q4Card)):
-                    if q4Card[i] == '':
-                        break
 
-                    self.materialModels[materialNumber].hydraulicConductivity[i] = float(q4Card[i])
+                while len(q4Card) and q4Card[0] != '':
+                    self.materialModels[materialNumber].hydraulicConductivity[conductivityIndex] = float(q4Card.pop(0))
+                    conductivityIndex += 1
             
         
     def _readGroupR(self):
