@@ -748,7 +748,7 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
         int activeNodesForElement = 0;
 
         for (int i = 0; i < state->inc; i++) {
-            // incidences start in the 3rd row
+            // incidences start in the 3rd column
             int incident;
             sscanf((*csvRow)->entries[i + 2], "%d", &incident);
             *matrixAt(&(state->in), i+1, elementIndex) = (double)incident;

@@ -77,7 +77,7 @@ class State(Structure):
         ('por', Array),
         ('rho', Array),
         ('tta', Array),
-        ('in', Matrix),
+        ('_in', Matrix),
         ('ie', Matrix),
         ('type', c_int),
         ('chng', c_double),

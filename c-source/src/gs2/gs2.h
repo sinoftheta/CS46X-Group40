@@ -141,7 +141,6 @@ typedef struct gs2State {
 typedef int (*gs2CallbackType)(gs2State);
 
 
-
 // This function exists as a convience for creating a memReqs
 // struct in python
 gs2MemoryRequirements gs2CreateMemoryRequirements(
