@@ -39,6 +39,8 @@ class NodesController(QGroupBox, BasicParameterChangeListener):
     def updateView(self, nodes):
         self.nodes.clear()
         self.nodes.extend(nodes)
+        for node in self.nodes:
+            node.boundary.connectObserver(lambda newData: self.notifyNodeBoundaryChanged(nodeModel.I, newData))
         self.view.populateTable()
         
     def onNodeCountChange(self, newNumNodes):
