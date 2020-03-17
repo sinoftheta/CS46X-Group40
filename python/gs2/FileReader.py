@@ -428,7 +428,7 @@ class FileReader:
 
             while len(card) and card[0] != '':
                 nodeNum = card.pop(0)
-                coef = card.pop(0)
+                coef = float(card.pop(0))
 
                 self.variableBCModels[nodeNum].COEF = coef
 
@@ -438,13 +438,35 @@ class FileReader:
 
             while len(card) and card[0] != '':
                 nodeNum = card.pop(0)
-                vn = card.pop(0)
+                vn = float(card.pop(0))
 
                 self.variableBCModels[nodeNum].VN = vn
             
 
     def _readGroupN(self):
-        pass
+        if self.csvRows[0][0] != "N-1":
+            return
+
+
+        # might be able to `skip` this section
+        # that is pop until N2
+        while self.csvRows[0][0] == "N-1":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                self.mixedBCModels[nodeNum] = MixedBCModel(nodeNum)
+
+        while self.csvRows[0][0] == "N-2":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                cn = float(card.pop(0))
+
+                self.mixedBCModels[nodeNum].CN = cn
 
     def _readGroupO(self):
         if self.csvRows[0][0] != "O-1":
