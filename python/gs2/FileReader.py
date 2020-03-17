@@ -354,7 +354,7 @@ class FileReader:
             while card[0] != '':
                 dirichletNode = card.pop(0)
 
-                self.nodeModels[dirichletNode].boundary = "Constant Head (Dirichlet)"
+                self.nodeModels[dirichletNode].boundary.setData("Constant Head (Dirichlet)")
 
 
     def _readGroupL(self):
@@ -368,7 +368,7 @@ class FileReader:
             while card[0] != '':
                 dirichletNode = card.pop(0)
 
-                self.nodeModels[dirichletNode].boundary = "Constant Concentration (Dirichlet)"
+                self.nodeModels[dirichletNode].boundary.setData("Constant Concentration (Dirichlet)")
 
     def _readGroupM(self):
         pass

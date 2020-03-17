@@ -11,6 +11,7 @@ from .node_types.VariableBCModel import VariableBCModel
 from .node_types.MixedBCView import MixedBCView
 from .node_types.MixedBCModel import MixedBCModel
 
+from .NodesController import NodeBoundaryChangeListener
 
 nodeTypeLabels = [
         "Source/Sink",
@@ -18,13 +19,13 @@ nodeTypeLabels = [
         "Mixed Boundary Condition (Mass Transport)"
 ]
 
-class NodeTypesController(QGroupBox):
+class NodeTypesController(QGroupBox, NodeBoundaryChangeListener):
     def __init__(self):
         super(NodeTypesController, self).__init__('Node Types')
 
-        self.ssModels = []
-        self.variableBCModels = []
-        self.mixedBCModels = []
+        self.ssModels = {}
+        self.variableBCModels = {}
+        self.mixedBCModels = {}
 
         self.currentNodeType = None
 
@@ -50,15 +51,15 @@ class NodeTypesController(QGroupBox):
             self.currentNodeType = None
 
         if index == 0:
-            pass
+            return
         elif index == 1:
-            self.currentNodeType = SourceSinkView(self.ssModels)
+            self.currentNodeType = SourceSinkView(list(self.ssModels.values()))
             self.layout.addWidget(self.currentNodeType)
         elif index == 2:
-            self.currentNodeType = VariableBCView(self.variableBCModels)
+            self.currentNodeType = VariableBCView(list(self.variableBCModels.values()))
             self.layout.addWidget(self.currentNodeType)
         elif index == 3:
-            self.currentNodeType = MixedBCView(self.mixedBCModels)
+            self.currentNodeType = MixedBCView(list(self.mixedBCModels.values()))
             self.layout.addWidget(self.currentNodeType)
 
     def getNodeTypes(self):
@@ -68,9 +69,31 @@ class NodeTypesController(QGroupBox):
         types['MixedBCNodes'] = self.mixedBCModels
         return types
 
-    #
-    # Need listener from nodes screen to know when a boundary type is set on a node
-    #
+   
+    def onNodeBoundaryChange(self, nodeNum, newType):
+        if nodeNum in self.ssModels:
+            del self.ssModels[nodeNum]
+        elif nodeNum in self.variableBCModels:
+            del self.variableBCModels[nodeNum]
+        elif nodeNum in self.mixedBCModels:
+            del self.mixedBCModels[nodeNum]
+
+
+        modelListChanged = True
+
+        if newType == "Source/Sink":
+            self.ssModels[nodeNum] = SourceSinkModel(nodeNum)        
+        elif newType == "Variable Boundary Condition (Flow)":
+            self.variableBCModels[nodeNum] = VariableBCModel(nodeNum)
+        elif newType == "Mixed Boundary Condition (Mass Transport)":
+            self.mixedBCModels[nodeNum] = MixedBCModel(nodeNum)
+        else:
+            modelListChanged = False
+
+        if modelListChanged:
+            # update the currently bound view
+            self.nodeTypeSelectionChanged(self.nodeTypeSelector.currentIndex())
+
 
 class TypeSelectorComboBox(QComboBox):
     def __init__(self):

@@ -1,3 +1,5 @@
+from gui.LiveData import LiveData
+
 class NodeModel():
     def __init__(self, nodeNum):
         self.I = nodeNum
@@ -6,10 +8,13 @@ class NodeModel():
         self.CONCI = 0.0
         self.PHII = 0.0
 
-        # during spring refactor to enum
-        self.boundary = "-Select Boundary Type-"
+
+        self.boundary = LiveData("-Select Boundary Type-")
 
     #generic mutator
+    # TODO: STRONGLY reconsider this setVal pattern
     def setVal(self, key, val):
-        if hasattr(self, key):
+        if key == "boundary":
+            self.boundary.setData(val)
+        elif hasattr(self, key):
             setattr(self, key, val)

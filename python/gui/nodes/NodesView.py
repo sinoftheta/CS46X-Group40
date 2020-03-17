@@ -27,7 +27,7 @@ class NodesView(QTableWidget):
 
             bComboBox = BoundaryComboBox(self.nodeTypes)
             try:
-                index = self.nodeTypes.index(self.nodes[row].boundary)
+                index = self.nodeTypes.index(self.nodes[row].boundary.getData())
                 # bComboBox.setCurrentIndex(index)
             except ValueError:
                 bComboBox.setCurrentIndex(0)
