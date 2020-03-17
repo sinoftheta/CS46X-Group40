@@ -11,7 +11,7 @@ class FileWriter:
             elementModels,
             multipliersModel,
             elementPropertiesModels,
-            nodesModel,
+            nodeModels,
             nodeTypesModels):
 
         self.materialModels = materialModels
@@ -21,7 +21,7 @@ class FileWriter:
         self.elementModels = elementModels
         self.multipliersModel = multipliersModel
         self.elementPropertiesModels = elementPropertiesModels
-        self.nodesModel = nodesModel
+        self.nodeModels = nodeModels
         self.nodeTypesModels = nodeTypesModels
 
 
@@ -40,14 +40,18 @@ class FileWriter:
             self._writeGroupB(writer, self.basicParametersModel)
             self._writeGroupC(writer, self.multipliersModel)
             self._writeGroupD(writer, self.simulationModel)
-            self._writeGroupE(writer, self.nodesModel)
+            self._writeGroupE(writer, self.nodeModels)
             self._writeGroupF(writer, self.nodeTypesModels['SSNodes'])
-            self._writeGroupG(writer, self.nodesModel)
+            self._writeGroupG(writer, self.nodeModels)
+            self._writeGroupH(writer, self.nodeModels)
             self._writeGroupI(writer, self.elementModels)
             self._writeGroupJ(writer, self.elementPropertiesModels)
+            self._writeGroupK(writer, self.nodeModels)
+            self._writeGroupL(writer, self.nodeModels)
             self._writeGroupM(writer, self.nodeTypesModels['VariableBCNodes'])
             self._writeGroupN(writer, self.nodeTypesModels['MixedBCNodes'])
             self._writeGroupO(writer, self.seepageFaceModels)
+            self._writeGroupP(writer, self.elementModels, self.nodeTypesModels['MixedBCNodes'])
             self._writeGroupQ(writer, self.materialModels)
 
     def _csvPad(self, cols):
@@ -222,17 +226,22 @@ class FileWriter:
 
     def _writeGroupG(self, csv, nodes):
         group = "G-1"
-        csv.writerow(self._csvPad([group]))
+        csv.writerow(self._csvPad([group, 0.0]))
+
+        
 
         group = "G-2"
-        for i in range(0, len(nodes), 3):
-            a = 0
-            row = []
-            while i + a < len(nodes) and a < 3:
-                row.append(nodes[i + a].I)
-                row.append(nodes[i + a].CONCI)
-                a += 1
-            csv.writerow(self._csvPad([group, *row]))
+        csvRow = [group]
+        for node in nodes:
+            csvRow.append(node.I)
+            csvRow.append(node.CONCI)
+
+            if len(csvRow) == 9:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
 
     def _writeGroupF(self, csv, ssModels):
         group = "F-1"
@@ -308,6 +317,10 @@ class FileWriter:
             csv.writerow(self._csvPad(csvRow))
 
     def _writeGroupM(self, csv, variableBCNodes):
+
+        if len(variableBCNodes) == 0:
+            return
+
         group = "M-1"
         csvRow = [group]
         for vbcNode in variableBCNodes:
@@ -396,3 +409,99 @@ class FileWriter:
 
                 if len(csvRow) > 1:
                     csv.writerow(self._csvPad(csvRow))
+
+
+    def _writeGroupH(self, csv, nodeModels):
+        group = "H-1"
+        csvRow = [group, 0.0]
+
+        csv.writerow(self._csvPad(csvRow))
+
+
+        # we will support the other case for group H-2 later
+        group = "H-2"
+        csvRow = [group, 9999.0]
+        csv.writerow(self._csvPad(csvRow))
+
+        group = "H-3"
+        csvRow = [group]
+
+        for node in nodeModels:
+            csvRow.append(node.I)
+            csvRow.append(node.PHII)
+
+            # gorup + 4 pairs
+            if len(csvRow) == 9:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+
+
+    def _writeGroupK(self, csv, nodeModels):
+        group = "K"
+        csvRow = [group]
+
+        for node in nodeModels:
+            if node.boundary.getData() == "Constant Head (Dirichlet)":
+                csvRow.append(node.I)
+
+            if len(csvRow) == 21:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+    def _writeGroupL(self, csv, nodeModels):
+        group = "L"
+        csvRow = [group]
+
+        for node in nodeModels:
+            if node.boundary.getData() == "Constant Concentration (Dirichlet)":
+                csvRow.append(node.I)
+
+            if len(csvRow) == 21:
+                csv.writerow(self._csvPad(csvRow))
+                csvRow = [group]
+
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+
+    # really need to specifiy the correct indices for element incidence
+    def _writeGroupP(self, csv, elementModels, mixedBCModels):
+        group = "P"
+        csvRow = [group]
+
+        def isMixed(incidenceIndex):
+            node = list(filter(lambda n: str(n.nodeID) == str(element.incidences[incidenceIndex]), mixedBCModels))
+            if not len(node):
+                return False
+            return True
+
+        for element in elementModels:
+            elementNum = element.elementNumber
+            kf = 0
+
+            if isMixed(0) and isMixed(1):
+                kf = 1
+            elif isMixed(1) and isMixed(2):
+                kf = 2
+            elif isMixed(2) and isMixed(3):
+                kf = 3
+            elif isMixed(3) and isMixed(0):
+                kf = 4
+
+            if kf != 0:
+                csvRow.append(elementNum)
+                csvRow.append(kf)
+
+                if len(csvRow) == 9:
+                    csv.writerow(self._csvPad(csvRow))
+                    csvRow = [group]
+        
+        if len(csvRow) > 1:
+            csv.writerow(self._csvPad(csvRow))
+

@@ -64,9 +64,9 @@ class NodeTypesController(QGroupBox, NodeBoundaryChangeListener):
 
     def getNodeTypes(self):
         types = {}
-        types['SSNodes'] = self.ssModels
-        types['VariableBCNodes'] = self.variableBCModels
-        types['MixedBCNodes'] = self.mixedBCModels
+        types['SSNodes'] = list(self.ssModels.values())
+        types['VariableBCNodes'] = list(self.variableBCModels.values())
+        types['MixedBCNodes'] = list(self.mixedBCModels.values())
         return types
 
     def updateView(self, sourceSinkModels, variableBCModels, mixedBCModels):
