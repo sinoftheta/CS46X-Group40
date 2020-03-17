@@ -10,6 +10,8 @@ from gui.multipliers import MultipliersModel
 from gui.seepage_face import SeepageFaceModel
 from gui.element_properties import ElementPropertiesModel
 from gui.nodes import NodeModel
+from gui.node_types import MixedBCModel, VariableBCModel, SourceSinkModel
+
 
 class FileReader:
     def __init__(self):
@@ -32,6 +34,10 @@ class FileReader:
         self.elementPropertiesModels = {}
 
         self.nodeModels = {}
+
+        self.sourceSinkModels = {}
+        self.mixedBCModels = {}
+        self.variableBCModels = {}
 
         self.csvRows = []
 
@@ -227,7 +233,30 @@ class FileReader:
     
 
     def _readGroupF(self):
-        pass
+        if self.csvRows[0][0] != "F-1":
+            return
+        
+        while self.csvRows[0][0] == "F-1":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                fq = float(card.pop(0))
+
+                self.sourceSinkModels[nodeNum] = SourceSinkModel(nodeNum)
+                self.sourceSinkModels[nodeNum].FQ = fq
+
+        while self.csvRows[0][0] == "F-2":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                qfq = float(card.pop(0))
+
+                self.sourceSinkModels[nodeNum].QFQ = qfq
+
 
     def _readGroupG(self):
         if self.csvRows[0][0] != "G-1":
@@ -354,7 +383,7 @@ class FileReader:
             while card[0] != '':
                 dirichletNode = card.pop(0)
 
-                self.nodeModels[dirichletNode].boundary = "Constant Head (Dirichlet)"
+                self.nodeModels[dirichletNode].boundary.setData("Constant Head (Dirichlet)")
 
 
     def _readGroupL(self):
@@ -368,13 +397,76 @@ class FileReader:
             while card[0] != '':
                 dirichletNode = card.pop(0)
 
-                self.nodeModels[dirichletNode].boundary = "Constant Concentration (Dirichlet)"
+                self.nodeModels[dirichletNode].boundary.setData("Constant Concentration (Dirichlet)")
 
     def _readGroupM(self):
-        pass
+        if self.csvRows[0][0] != "M-1":
+            return
+
+        while self.csvRows[0][0] == "M-1":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                self.variableBCModels[nodeNum] = VariableBCModel(nodeNum)
+                self.variableBCModels[nodeNum].dirichlet = True
+
+        while self.csvRows[0][0] == "M-2":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+
+                self.variableBCModels[nodeNum] = VariableBCModel(nodeNum)
+                self.variableBCModels[nodeNum].nuemann = True
+
+        while self.csvRows[0][0] == "M-3":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                coef = float(card.pop(0))
+
+                self.variableBCModels[nodeNum].COEF = coef
+
+        while self.csvRows[0][0] == "M-4":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                vn = float(card.pop(0))
+
+                self.variableBCModels[nodeNum].VN = vn
+            
 
     def _readGroupN(self):
-        pass
+        if self.csvRows[0][0] != "N-1":
+            return
+
+
+        # might be able to `skip` this section
+        # that is pop until N2
+        while self.csvRows[0][0] == "N-1":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                self.mixedBCModels[nodeNum] = MixedBCModel(nodeNum)
+
+        while self.csvRows[0][0] == "N-2":
+            card = self.csvRows.pop(0)
+            card.pop(0)
+
+            while len(card) and card[0] != '':
+                nodeNum = card.pop(0)
+                cn = float(card.pop(0))
+
+                self.mixedBCModels[nodeNum].CN = cn
 
     def _readGroupO(self):
         if self.csvRows[0][0] != "O-1":
@@ -427,7 +519,15 @@ class FileReader:
         
 
     def _readGroupP(self):
-        pass
+        # I don't believe this is required for the GUI
+        # writing this group is important, but
+        # it should be derived from elements
+        #
+        # Skip so the next group can be read
+        while self.csvRows[0][0] == "P":
+            self.csvRows.pop(0)
+
+
 
     def _readGroupQ(self):
              

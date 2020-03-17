@@ -711,6 +711,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
             }
         }
 
+        gs2Callback(*state);
+
     } while (state->it < state->itmax);
 
     fprintf(gs2stdout, "\n\n\n\n           **********EXECUTION TERMINATED ON TIME STEPS AT STEP%10d**********\n", state->it);

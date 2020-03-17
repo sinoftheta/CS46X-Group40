@@ -32,20 +32,25 @@ class NodesController(QGroupBox, BasicParameterChangeListener):
         self.layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(self.layout)
         self.nodes = []
+        self.nodeBoundaryChangeListeners = []
         self.view = NodesView(self.nodes, self.setTableVal, nodeTypeLabels, nodeTableLabels)
         self.layout.addWidget(self.view)
 
     def updateView(self, nodes):
         self.nodes.clear()
         self.nodes.extend(nodes)
+        for node in self.nodes:
+            node.boundary.connectObserver(lambda newData: self.notifyNodeBoundaryChanged(nodeModel.I, newData))
         self.view.populateTable()
         
     def onNodeCountChange(self, newNumNodes):
-        if newNumNodes > len(self.nodes) :
-            while len(self.nodes) != newNumNodes :
-                self.nodes.append(NodeModel(len(self.nodes) + 1))
-        elif newNumNodes < len(self.nodes) :
-            while len(self.nodes) != newNumNodes :
+        if newNumNodes > len(self.nodes):
+            while len(self.nodes) != newNumNodes:
+                nodeModel = NodeModel(len(self.nodes) + 1)
+                nodeModel.boundary.connectObserver(lambda newData: self.notifyNodeBoundaryChanged(nodeModel.I, newData))
+                self.nodes.append(nodeModel)
+        elif newNumNodes < len(self.nodes):
+            while len(self.nodes) != newNumNodes:
                 self.nodes.pop()
         self.view.populateTable()
     def getNodes(self):
@@ -54,3 +59,19 @@ class NodesController(QGroupBox, BasicParameterChangeListener):
     def setTableVal(self, i, key, val):
         #print("setting index " + str(i) + ", key: " + key + ", val: " + val)
         self.nodes[i].setVal(key, val)
+
+    def addNodeBoundaryChangeListener(self, listener):
+        if listener not in self.nodeBoundaryChangeListeners:
+            self.nodeBoundaryChangeListeners.append(listener)
+
+    def removeNodeBoundaryChangeListener(self, listener):
+        self.nodeBoundaryChangeListeners.remove(listener)
+
+    def notifyNodeBoundaryChanged(self, nodeNum, newData):
+        for listener in self.nodeBoundaryChangeListeners:
+            listener.onNodeBoundaryChange(nodeNum, newData)
+
+
+class NodeBoundaryChangeListener:
+    def onNodeBoundaryChange(self, nodeNum, newType):
+        pass
