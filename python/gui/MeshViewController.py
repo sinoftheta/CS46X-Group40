@@ -23,14 +23,14 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         self.frame1.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         self.plotter1 = pv.QtInteractor(self.frame1)
         self.plotter1.show_bounds(grid=True, location='back')
-        self.stack.addWidget(self.plotter1)
+        self.stack.addWidget(self.plotter1.interactor)
 
         # Plotter for Concentration
         self.frame2 = QFrame()
         self.frame2.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         self.plotter2 = pv.QtInteractor(self.frame2)
         self.plotter2.show_bounds(grid=True, location='back')
-        self.stack.addWidget(self.plotter2)
+        self.stack.addWidget(self.plotter2.interactor)
 
         # Set up navigation buttons
         self.setMeshPageButtons()
@@ -79,7 +79,7 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
 
         self.mesh1 = pv.PolyData(vertices, faces)
         self.mesh1.point_arrays['Pressure Head'] = np.array(state.phi.elements[:state.nn])
-        
+
         # second mesh, can look more in depth, but this is showing both inital meshse
         self.mesh2 = pv.PolyData(vertices, faces)
         self.mesh2.point_arrays['Concentration'] = np.array(state.conc.elements[:state.nn])
