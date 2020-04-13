@@ -23,14 +23,14 @@ class MeshViewController(QGroupBox, GS2CallbackListener):
         self.frame1.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         self.plotter1 = pv.QtInteractor(self.frame1)
         self.plotter1.show_bounds(grid=True, location='back')
-        self.stack.addWidget(self.plotter1.interactor)
+        self.stack.addWidget(self.plotter1)
 
         # Plotter for Concentration
         self.frame2 = QFrame()
         self.frame2.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         self.plotter2 = pv.QtInteractor(self.frame2)
         self.plotter2.show_bounds(grid=True, location='back')
-        self.stack.addWidget(self.plotter2.interactor)
+        self.stack.addWidget(self.plotter2)
 
         # Set up navigation buttons
         self.setMeshPageButtons()

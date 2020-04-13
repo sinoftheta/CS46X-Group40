@@ -15,7 +15,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
         cblasLibName="libgslcblas.so.0"
     else
         echo "Could not find libgsl.so.25.0.0"
-        exit 
+        exit
     fi
 else
     # assume mac
@@ -24,10 +24,10 @@ else
         gslLibName="libgsl.25.dylib"
 
         cblasLibPath="/usr/local/lib/libgslcblas.0.dylib"
-        cblasLibName="libgslcblas.0.dylib"    
+        cblasLibName="libgslcblas.0.dylib"
     else
         echo "Could not find libgsl.dylib"
-        exit 
+        exit
     fi
 fi
 
@@ -48,7 +48,7 @@ cd ..
 cd $pythonDir
 source env/bin/activate
 pip install -r requirements.txt
-pyinstaller main.py --onefile
+pyinstaller --hidden-import pkg_resources.py2_warn main.py --onefile
 deactivate
 cd ..
 
@@ -75,5 +75,3 @@ rm -r "$pythonDir/main.spec"
 
 cd $csourceDir
 make clean
-
-
