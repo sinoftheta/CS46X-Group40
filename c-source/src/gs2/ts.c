@@ -59,7 +59,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
     matrixAssertNotNull(in, "Matrix 'in' NULL in gs2Ts!");
     matrixAssertNotNull(ie, "Matrix 'ie' NULL in gs2Ts!");
     matrixAssertNotNull(nsp, "Matrix 'nsp' NULL in gs2Ts!");
-    
+
     int ktcal = 0;
     int advanc, i, j, k, l, nit, jtest, ui, kkk, icheck, nt, jj, isk, stop, kb1, iex, ier, jx;
     double deltgo, delt1, a3, pn, un, smin;
@@ -78,7 +78,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 for (i = 1; i <= state->nn; i++) {
                     if (*arrayAt(lr, i) != 1) {
                         j = i - *arrayAt(lc, i);
-                        state->delp = max(state->delp, abs(*arrayAt(phi, i) - *arrayAt(old, j)));
+                        state->delp = max(state->delp, fabs(*arrayAt(phi, i) - *arrayAt(old, j)));
                     }
                 }
             }
@@ -95,7 +95,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                     // Time step modification
                     state->delt *= state->chng;
-                    
+
                     if (state->delt <= 0.0) {
                         state->delt = state->initialDelt;
                     }
@@ -128,7 +128,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                     fprintf(gs2stdout, "\n\n           ESTIMATED HEAD\n           --------------\n");
                     fprintf(gs2stdout, "\n           NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE\n");
-                    
+
                     for (i = 1; i <= state->mm; i++) {
                         if (i % 6 == 1) {
                             fprintf(gs2stdout, "\n           ");
@@ -267,7 +267,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                             if (*arrayAt(lr, i) < 2) {
                                 *arrayAt(fm, j) += *arrayAt(rt, j) + *arrayAt(fx, j);
-                                
+
                                 if (*arrayAt(lr, i) < 0) {
                                     *arrayAt(fm, j) += *arrayAt(fq, i);
                                 }
@@ -299,7 +299,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                             fprintf(gs2stdout, "\n IEX = %5d      STOP\n\n", iex);
                             state->istop++;
                             return;
-                        } 
+                        }
                     }
 
                     kkk++;
@@ -308,7 +308,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                     // Determine boundary flux
                     if ((state->nsdn > 0 && state->coefi == 1) || state->nseep != 0) {
-                        
+
                         for (i = 1; i <= state->mm; i++) {
                             for (j = 1; j <= state->nb; j++) {
                                 *matrixAt(p, i, j) = *matrixAt(&(state->tape13), i, j);
@@ -319,7 +319,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                         // Modify surface flux boundaries
                         if (state->nsdn != 0 && state->coefi == 1) {
-                            
+
                             if ((state->it + 1) % state->kod9 == 0) {
                                 fprintf(gs2stdout, "\n\n           CURRENT BOUNDARY CONDITIONS AT NEUMANN NODES\n           --------------------------------------------\n");
                                 fprintf(gs2stdout, "           NODE   TYPE OF B.C.        HEAD IN       HEAD OUT        FLUX IN       FLUX OUT       FRACTION\n");
@@ -339,7 +339,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                                     if (!((state->ei < 0 && *arrayAt(fm, j) >= state->ei * *arrayAt(vn, k)) ||
                                         (state->ei >= 0 && *arrayAt(fm, j) <= state->ei * *arrayAt(vn, k)))) {
-                                        
+
                                         *arrayAt(lr, i) = -4;
                                         *arrayAt(fq, i) = state->ei * *arrayAt(vn, k);
                                     }
@@ -360,8 +360,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                                         } else {
 
-                                            if (abs(pn) > -0.001 * state->pl) {
-                                                *arrayAt(coef, k) *= abs(state->pl / pn);
+                                            if (fabs(pn) > -0.001 * state->pl) {
+                                                *arrayAt(coef, k) *= fabs(state->pl / pn);
                                             } else {
                                                 *arrayAt(coef, k) = 1.0;
                                             }
@@ -377,8 +377,8 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
                                     } else {
 
-                                        if (abs(pn - state->pl) > -0.001 * state->pl) {
-                                            *arrayAt(coef, k) *= abs(state->pl / (pn - state->pl));
+                                        if (fabs(pn - state->pl) > -0.001 * state->pl) {
+                                            *arrayAt(coef, k) *= fabs(state->pl / (pn - state->pl));
                                         } else {
                                             *arrayAt(coef, k) = 1.0;
                                         }
@@ -481,7 +481,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                             if (*arrayAt(est, i) != 0) {
                                 un = 0.5 * (state->tdr * *arrayAt(u, i) + (1.0 - state->tdr) * *arrayAt(old, i) + *arrayAt(old, i));
 
-                                if (abs((un - *arrayAt(est, i)) / *arrayAt(est, i)) > state->clos1) {
+                                if (fabs((un - *arrayAt(est, i)) / *arrayAt(est, i)) > state->clos1) {
                                     isk++;
                                 }
                             }
@@ -491,7 +491,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                         if (state->kod12 != 0) {
                             fprintf(gs2stdout, "\n\n\n\n           SOLUTION OF FLOW EQUATION AT ITERATION%5d     (ISK = %5d)\n           -------------------------------------------\n", nit, isk);
                             fprintf(gs2stdout, "\n           NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE     NODE     VALUE\n");
-                            
+
                             for (i = 1; i <= state->mm; i++) {
                                 if (i % 6 == 1) {
                                     fprintf(gs2stdout, "\n           ");
@@ -535,7 +535,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
         }
 
         if (!advanc || state->stat >= 0) {
-                
+
             // Select approximation for time derivative
             a3 = state->tdr / state->delt;
 
@@ -558,7 +558,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
 
             // Add time-dependent part
             if (advanc || state->it % state->itchng == 0) {
-                
+
                 if (state->stat != 0) {
                     if (jtest >= 0) {
                         kb1 = state->knb - state->kmb + 1;
@@ -579,7 +579,7 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                     gs2Sos(p, state->km, state->kmb, 1);
                 }
 
-                gs2Array(s, w, state->km, state->knb, state->kmb, state->kmb2, (state->memoryRequirements).maxbw2, 
+                gs2Array(s, w, state->km, state->knb, state->kmb, state->kmb2, (state->memoryRequirements).maxbw2,
                          (state->memoryRequirements).maxs, (state->memoryRequirements).mx, &jx);
 
                 for (i = 1; i <= jx; i++) {
@@ -591,13 +591,13 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 for (i = 1; i <= jx; i++) {
                     *arrayAt(w, i) = *arrayAt(&(state->tape4), i);
                 }
-            
+
             }
 
             if (state->stat != 0) {
-                
+
                 gs2Lrhs(s, p, cfm, cold, crt, klc, state->nn, state->knb, state->kmb, a3, 0.0, 1);
-                
+
                 if (state->kod7 >= 1) {
                     fprintf(gs2stdout, "\n           TIME-DEPENDENT PART OF RHS VECTOR\n           ---------------------------------\n");
                     for (i = 1; i <= state->km; i++) {
