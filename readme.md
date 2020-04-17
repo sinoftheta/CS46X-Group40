@@ -48,6 +48,10 @@ Running `build.sh` creates a top-level directory, `dist`. In dist there is an ex
 
 ## Building on Windows
 
+msys2
+https://github.com/orlp/dev-on-windows/wiki/Installing-GCC--&-MSYS2
+pacman -Ss gsl
+
 Just run the `build.bat` file.
 
 ## Compiling on Windows

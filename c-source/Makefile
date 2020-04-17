@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS := -pedantic -Wall -Werror -g -std=c99 # -DDO_DEBUG
+CFLAGS := -pedantic -Wall -g -std=c99 # -DDO_DEBUG
 CLIBS := -lgsl -lgslcblas -lm
 
 SRCDIR := src
@@ -29,7 +29,6 @@ $(LIBRARY): $(LIB_OBJS)
 	$(CC) $(CFLAGS) -shared $^ -o $@ $(CLIBS)
 
 $(BUILDDIR)/%.o: %.c
-	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@
  
 clean: 

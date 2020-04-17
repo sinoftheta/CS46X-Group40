@@ -84,6 +84,8 @@ int main(int argc, char** argv) {
         &maxdif
     );
 
+
+    return 0;
     gs2Ts(
         &state,
         &(state.s),
