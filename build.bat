@@ -7,10 +7,10 @@
 :: find dlls
 set dllsDir=""
 if exist D:\MinGW\bin (
-     set dllsDir="D:\MinGW\bin"
+     set dllsDir="D:\msys64\mingw64\bin"
 ) else (
     if exist C:\MinGW\bin (
-         set dllsDir="C:\MinGW\bin"
+         set dllsDir="C:\msys64\mingw64\bin"
     ) else (
         echo "gsl dlls not found!"
         exit
@@ -33,7 +33,7 @@ cd ..
 cd %pythonDir%
 call .\env\Scripts\activate.bat
 pip install -r requirements.txt
-pyinstaller main.py --onefile
+pyinstaller --hidden-import pkg_resources.py2_warn main.py --onefile
 call .\env\Scripts\deactivate.bat
 cd ..
 

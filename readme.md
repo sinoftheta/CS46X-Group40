@@ -1,6 +1,6 @@
 
-
 ## Virtual Env
+
 Setting up a virtual environment is something that each developer needs to do. This is done by moving into the python directory and running:
 
 ```$ python3 -m venv env```
@@ -8,6 +8,7 @@ Setting up a virtual environment is something that each developer needs to do. T
 This creates a directory called `env`. Note that this directory is in the `.gitignore`.
 
 After creating this directory the following workflow should be used:
+
 ```
 # enable vitual env
 # on mac/linux
@@ -35,41 +36,9 @@ $ git add/commit/push
 
 ```
 
+## Extra Notes On Windows
 
-## Building on Linux/Mac
-
-To build on Linux and presumably Mac, just:
-
-```
-$ bash build.sh
-```
-
-Running `build.sh` creates a top-level directory, `dist`. In dist there is an executable `main`. Running main should launch the application.
-
-## Building on Windows
-
-msys2
-https://github.com/orlp/dev-on-windows/wiki/Installing-GCC--&-MSYS2
-pacman -Ss gsl
-
-Just run the `build.bat` file.
-
-## Compiling on Windows
-
-Install MinGW by following the instructions [here](http://www.mingw.org/wiki/Getting_Started). 
-Assuming MinGW is installed to `C:\MinGW`, make sure to add `C:\MinGW\bin` to your path.
-After adding it to your path, open up a power shell and run:
-```
-$ mingw-get install gcc g++ mingw32-make
-```
-
-Install MSYS. A link to it can be found [here](http://www.mingw.org/wiki/MSYS).
-I put mine in `D:\MinGW\msys\`. Then add `D:\MinGW\msys\1.0\bin` to your path.
-
-At this point, move on to the Installing GSL section and return here after installing GSL.
-
-WIP.
-
+working on windows is a pain, I recommend using either linux or mac. Client has a mac, so windows comes 2nd or 3rd.
 
 ## Installing GSL
 
@@ -88,26 +57,49 @@ $ sudo make install
 
 ### Windows
 
-Download `gsl-2.6.tar.gz` into `C:/MinGW`.
+Windows is a touch more involved. Using msys2 as a build tool has worked the best.
 
+Follow [these](https://github.com/orlp/dev-on-windows/wiki/Installing-GCC--&-MSYS2) instructions for installing msys2 and c build tools. You do not need to install the boost library. You will, however, need to install GSL.
+
+In msys2 shell:
 ```
-$ # using msys launch a bash shell
-$ bash
-$ tar -xf gsl-2.6.tar.gz
-$ cd gsl-2.6.tar.gz
-$ ./configure
-$ make
+pacman -Ss gsl
+```
+Gives a list avalible gsl distros to install, find gsl-2.6 and install that one.
+
+## Compiling Standalone C Code
+
+Our C Code relies on the GSL library, so make sure that was installed. Note that the standalone C code exists as a means to debug the C library in C. 
+
+### Linux / Mac
+
+CD into the c-source directory and run the Makefile. To execute the code, run `make run`.
+
+### Windows
+
+Presuably the steps in the `Installing GSL` section were followed, so all tools should be avalible.
+
+CD into the c-source directory and run the Makefile using `mingw32-make.exe`. You might encouter an issue with the mkdir command. Its a dirty fix, but comment it out and create the following directory structure under c-source
+```
+c-source/
+    build/objs/src/
+        capstone/
+        gs2/
 ```
 
-At this point I think it is easiest to manually copy the libs to the correct location.
+## Building Standalone Application
 
-move `gsl-2.6/.libs/libgsl.dll.a` to `MinGW/lib/libgsl.a`.
+Running one of the build scripts creats a top-level directory, `dist`. In dist there is an executable `main`. Running main should launch the application.
 
-move `gsl-2.6/.libs/libgsl-25.dll` to `MinGW/bin/libgsl-25.dll`.
+### Linux / Mac
 
-move `gsl-2.6/gsl/` to `MinGW/include/gsl`.
+Running `$ bash build.sh` should be enough to produce an application.
 
-Should then be good to go.
+### Windows
+
+Running the `build.bat` file should be enough to produce an application.
 
 
+## Running Python by itself
 
+running `main.py` works just fine. It uses a different configuration file though.
