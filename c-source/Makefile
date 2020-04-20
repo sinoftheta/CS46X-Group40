@@ -29,6 +29,7 @@ $(LIBRARY): $(LIB_OBJS)
 	$(CC) $(CFLAGS) -shared $^ -o $@ $(CLIBS)
 
 $(BUILDDIR)/%.o: %.c
+	# mkdir -p $(@D)
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@
  
 clean: 
