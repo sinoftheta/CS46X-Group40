@@ -77,7 +77,7 @@ CD into the c-source directory and run the Makefile. To execute the code, run `m
 
 ### Windows
 
-Presuably the steps in the `Installing GSL` section were followed, so all tools should be avalible.
+Presumably the steps in the `Installing GSL` section were followed, so all tools should be avalible.
 
 CD into the c-source directory and run the Makefile using `mingw32-make.exe`. You might encouter an issue with the mkdir command. Its a dirty fix, but comment it out and create the following directory structure under c-source
 ```
