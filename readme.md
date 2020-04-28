@@ -1,5 +1,5 @@
 
-## Virtual Env
+# Virtual Env
 
 Setting up a virtual environment is something that each developer needs to do. This is done by moving into the python directory and running:
 
@@ -36,11 +36,11 @@ $ git add/commit/push
 
 ```
 
-## Extra Notes On Windows
+# Extra Notes On Windows
 
 working on windows is a pain, I recommend using either linux or mac. Client has a mac, so windows comes 2nd or 3rd.
 
-## Installing GSL
+# Installing GSL
 
 Main website [here](https://www.gnu.org/software/gsl/). On the downloads page look for version 2.6.
 
@@ -67,7 +67,7 @@ pacman -Ss gsl
 ```
 Gives a list avalible gsl distros to install, find gsl-2.6 and install that one.
 
-## Compiling Standalone C Code
+# Compiling Standalone C Code
 
 Our C Code relies on the GSL library, so make sure that was installed. Note that the standalone C code exists as a means to debug the C library in C. 
 
@@ -87,9 +87,15 @@ c-source/
         gs2/
 ```
 
-## Building Standalone Application
+# Building Standalone Application
+
+## Overview
 
 Running one of the build scripts creats a top-level directory, `dist`. In dist there is an executable `main`. Running main should launch the application.
+
+* Compile C library with `make library`
+* Bundle python code with `pyinstaller --hidden-import pkg_resources.py2_warn main.py --onefile`
+* Copy C dependecies and sim library into the `dist` folder created by pyinstaller. 
 
 ### Linux / Mac
 
@@ -100,6 +106,6 @@ Running `$ bash build.sh` should be enough to produce an application.
 Running the `build.bat` file should be enough to produce an application.
 
 
-## Running Python by itself
+# Running Python by itself
 
-running `main.py` works just fine. It uses a different configuration file though.
+running `main.py` works just fine. It uses a development config file. Requires that the code in c-source was built into a library. 
