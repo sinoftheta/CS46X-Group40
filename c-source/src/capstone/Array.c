@@ -6,7 +6,7 @@
 
 void arrayDimension(Array* array, int size) {
     arrayAssertNotNull(array, "array null in arrayDimension!");
-
+   
     array->elements = calloc(size, sizeof(double));
     if(array->elements == NULL){
         fprintf(gs2stderr, "Memory allocation failed in arrayDimension!\n");

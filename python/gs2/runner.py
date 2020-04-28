@@ -62,7 +62,6 @@ class Runner:
         msp = types.Array()
         nsp = types.Matrix()
 
-
         self.gs2.arrayDimension(byref(old), memReqs.maxm1)
         self.gs2.arrayDimension(byref(cold), memReqs.maxm2)
         self.gs2.arrayDimension(byref(cn), memReqs.maxm4)
