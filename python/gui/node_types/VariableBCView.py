@@ -40,10 +40,12 @@ class VariableBCView(QGroupBox):
             self.typeTable.setCellWidget(row, 0, nodeLabel)
             dirichletCB = QCheckBox()
             dirichletCB.setStyleSheet("margin-left: 50%; margin-right: 50%;")
+            dirichletCB.setChecked(node.dirichlet)
             dirichletCB.toggled.connect(lambda: self.updateNodeCondition(row, "HEAD"))
             self.typeTable.setCellWidget(row, 1, dirichletCB)
             neumannCB = QCheckBox()
             neumannCB.setStyleSheet("margin-left: 50%; margin-right: 50%;")
+            neumannCB.setChecked(node.neumann)
             neumannCB.toggled.connect(lambda: self.updateNodeCondition(row, "FLUX"))
             self.typeTable.setCellWidget(row, 2, neumannCB)
 
@@ -52,6 +54,7 @@ class VariableBCView(QGroupBox):
             COEF.setRange(-9999.9999, 9999.9999)
             COEF.setDecimals(4)
             COEF.setSingleStep(0.0001)
+            COEF.setValue(node.COEF)
             COEF.valueChanged.connect(lambda newVal: self.viewModels[row].setVal("COEF", newVal))
             self.typeTable.setCellWidget(row, 3, COEF)
 
@@ -60,6 +63,7 @@ class VariableBCView(QGroupBox):
             VN.setRange(-9999.9999, 9999.9999)
             VN.setDecimals(4)
             VN.setSingleStep(0.0001)
+            VN.setValue(node.VN)
             VN.valueChanged.connect(lambda newVal: self.viewModels[row].setVal("VN", newVal))
             self.typeTable.setCellWidget(row, 4, VN)
 
