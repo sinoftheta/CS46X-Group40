@@ -42,6 +42,7 @@ class SourceSinkView(QGroupBox):
             FQ.setRange(-99999.99999999, 99999.99999999)
             FQ.setDecimals(8)
             FQ.setSingleStep(0.00000001)
+            FQ.setValue(node.FQ)
             FQ.valueChanged.connect(self.updateModel(row, "FQ"))
             self.typeTable.setCellWidget(row, 1, FQ)
 
@@ -50,6 +51,7 @@ class SourceSinkView(QGroupBox):
             CFQ.setRange(-99999.99999999, 99999.99999999)
             CFQ.setDecimals(8)
             CFQ.setSingleStep(0.00000001)
+            CFQ.setValue(node.CFQ)
             CFQ.valueChanged.connect(self.updateModel(row, "CFQ"))
             self.typeTable.setCellWidget(row, 2, CFQ)
 

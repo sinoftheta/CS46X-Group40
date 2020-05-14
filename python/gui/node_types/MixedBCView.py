@@ -43,5 +43,6 @@ class MixedBCView(QGroupBox):
             CN.setSingleStep(0.0001)
             CN.valueChanged.connect(lambda newValue: self.viewModels[row].setVal("CN", newValue))
             self.typeTable.setCellWidget(row, 1, CN)
+            CN.setValue(node.CN)
 
             row += 1
