@@ -65,6 +65,9 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
     double deltgo, delt1, a3, pn, un, smin;
 
     do {
+
+        gs2Callback(*state);
+
         advanc = no;
         if (state->it % state->igo == 0) {
             advanc = yes;
@@ -710,9 +713,6 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
                 gs2Po(state, conc, phi, state->nn, state->it, state->stime, rdate, rtime);
             }
         }
-
-        gs2Callback(*state);
-
     } while (state->it < state->itmax);
 
     fprintf(gs2stdout, "\n\n\n\n           **********EXECUTION TERMINATED ON TIME STEPS AT STEP%10d**********\n", state->it);
