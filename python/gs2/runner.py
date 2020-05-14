@@ -77,6 +77,19 @@ class Runner:
 
         self.gs2.matrixDimension(byref(nsp), memReqs.maxm5, memReqs.maxeep)
 
+        fm = types.Array()
+        rt = types.Array()
+        cfm = types.Array()
+        crt = types.Array()
+        fx = types.Array()
+
+        self.gs2.arrayDimension(byref(fm), memReqs.maxm1)
+        self.gs2.arrayDimension(byref(rt), memReqs.maxm1)
+        self.gs2.arrayDimension(byref(cfm), memReqs.maxm2)
+        self.gs2.arrayDimension(byref(crt), memReqs.maxm2)
+        self.gs2.arrayDimension(byref(fx), memReqs.maxm1)
+
+
         state = types.State()
         state.memoryRequirements = memReqs
         state.istop = c_int(0)
@@ -121,6 +134,56 @@ class Runner:
             byref(nsp),
             byref(msp), 
             byref(maxdif)
+        )
+
+        self.gs2.gs2Ts(
+            byref(state),
+            byref(state.s),
+            byref(state.p),
+            byref(state.w),
+            byref(fm),
+            byref(rt),
+            byref(state.phi),
+            byref(state.phii),
+            byref(old),
+            byref(cfm),
+            byref(crt),
+            byref(state.conc),
+            byref(state.conci),
+            byref(cold),
+            byref(fx),
+            byref(cn),
+            byref(vn),
+            byref(coef),
+            byref(est),
+            byref(u),
+            byref(state.fq),
+            byref(state.cfq),
+            byref(state.x),
+            byref(state.y),
+            byref(state.fmobx),
+            byref(state.fmoby),
+            byref(state.elong),
+            byref(state.etrans),
+            byref(state.por),
+            byref(state.alpha),
+            byref(state.tta),
+            byref(state.kd),
+            byref(state._lambda),
+            byref(state.rho),
+            byref(state._in),
+            byref(state.kf),
+            byref(state.lr),
+            byref(state.klr),
+            byref(state.lc),
+            byref(state.klc),
+            byref(lp),
+            byref(nsf),
+            byref(state.ie),
+            byref(nsp),
+            byref(msp),
+            create_string_buffer("text".encode("utf-8")),
+            create_string_buffer("text2".encode("utf-8"))
         )
 
         self.gs2.arrayFree(byref(old))

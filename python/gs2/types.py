@@ -73,7 +73,7 @@ class State(Structure):
         ('fmoby', Array),
         ('kd', Array),
         ('kf', Array),
-        ('lambda', Array),
+        ('_lambda', Array),
         ('por', Array),
         ('rho', Array),
         ('tta', Array),
