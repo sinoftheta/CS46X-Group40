@@ -1,6 +1,14 @@
 #include "sos.h"
 #include <stdio.h>
 
+/*
+    Purpose:
+      Called to print the global coefficient matrices if print control
+      variables are set to 1.
+
+      Called from TS, Cogen
+*/
+
 void gs2Sos(Matrix* a, int neq, int iband, int istart) {
 
     matrixAssertNotNull(a, "Matrix 'a' NULL in gs2Sos!");
@@ -23,4 +31,3 @@ void gs2Sos(Matrix* a, int neq, int iband, int istart) {
         fprintf(gs2stdout, "\n\n\n");
     }
 }
-

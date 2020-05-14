@@ -4,9 +4,12 @@
 void gs2Po(gs2State* state, Array* conc, Array* phi, int nn, int it, double stime, char* rdate, char* rtime) {
 
     /*
-     * Purpose: To generate restart data files
-     *          Pressures are written to TAPE7
-     *          Concentrations are written to TAPE8
+     * Purpose:
+        To generate restart data files
+        Pressures are written to TAPE7
+        Concentrations are written to TAPE8
+
+        Called from TS
      */
 
     int i;
@@ -14,7 +17,7 @@ void gs2Po(gs2State* state, Array* conc, Array* phi, int nn, int it, double stim
     fprintf(state->tape8, "1 RUN IDENTIFICATION: %.10s %.10s\n", rdate, rtime);
     fprintf(state->tape8, " CONCENTRATION OUTPUT AT TIME STEP:%4d\n", it);
     fprintf(state->tape8, " TIME (HOURS):        %15.5G\n", stime);
-    
+
     for (i = 1; i <= nn; i++) {
         if (i % 4 == 1 && i != 1) {
             fprintf(state->tape8, "\n");

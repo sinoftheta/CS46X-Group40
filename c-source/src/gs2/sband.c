@@ -1,5 +1,12 @@
 #include "sband.h"
 
+/*
+    Purpose:
+      Solves the flow equation by using backsubstitution.
+
+      Called from TS
+*/
+
 void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
 
     matrixAssertNotNull(s, "matrix s in gs2Sband is null");
@@ -9,13 +16,13 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
     for(int i = 1; i <= n; i++){
 
         int j = i - nb + 1;
-        if((i  + 1) <= nb) 
+        if((i  + 1) <= nb)
             j = 1;
 
         double sum = *arrayAt(p, i);
         int k1 = i - 1;
 
-        if (j <= k1) { 
+        if (j <= k1) {
 
             for(int k = j; k <= k1; k++){
 
@@ -23,12 +30,12 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
                 double ski = *matrixAt(s, k, ii);
 
                 //10
-                if(ski != 0.0) 
+                if(ski != 0.0)
                     sum = sum - ski * *arrayAt(u, k);
             }
         }
         //20
-            
+
         *arrayAt(u, i) = sum* *matrixAt(s, i, 1);
     }
 
@@ -37,21 +44,21 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
         int i = n - i1 + 1;
         int j = i + nb - 1;
 
-        if(j > n) 
+        if(j > n)
             j = n;
 
         double sum = *arrayAt(u, i);
         int k2 = i + 1;
-        
-        if(k2 <= j){ 
+
+        if(k2 <= j){
 
             for(int k = k2; k <= j; k++){
 
                 int kk = k - i + 1;
                 double ski = *matrixAt(s, i, kk);
-                if(ski != 0.0) 
+                if(ski != 0.0)
                     sum = sum - ski * *arrayAt(u, k);
-                
+
             }
             *arrayAt(u, i) = sum * *matrixAt(s, i, 1);
         }

@@ -4,6 +4,15 @@
 
 #include "../capstone/Debug.h"
 
+/*
+    Purpose:
+      Generates global coefficient matrices for flow and mass transport equations. Directs program flow
+      to develop the required shape functions, contributions due to the element matrices and the
+      volume integrals.
+
+      Called from TS
+*/
+
 void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array* phi, Array* phii,
              Array* u, Array* old, Array* cfm, Array* crt, Array* conc, Array* conci, Array* fx,
              Array* cn, Array* est, Array* fq, Array* cfq, Array* x, Array* y, Array* fmobx,
@@ -98,7 +107,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
         }
 
         vmax = 0.0;
-    
+
     } else {
 
         for (i = 1; i <= state->mm; i++) {
@@ -133,7 +142,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
     l = 0;
     do {
-        
+
         l++;
         m = *matrixAt(in, state->me, l);
 
@@ -146,7 +155,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
 
         k = 0;
         for (i = 1; i <= m; i++) {
-            
+
             do {
                 k++;
             } while (*matrixAt(in, k, l) == 0);
@@ -157,7 +166,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
         /*
          * The array jd now contains the incidences
          * of the active nodes in element L.
-         * 
+         *
          * Shape functions for integration points
          * Integration by Gaussian quadrature
          * 2x2 rule for fully linear elements
@@ -328,7 +337,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
             }
 
             for (i = 2; i <= m; i++) {
-                
+
                 i1 = i - 1;
 
                 for (j = 1; j <= i1; j++) {
@@ -346,8 +355,8 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
             // Assembly
             gs2Asembl(s, p, &(state->se), &(state->pe), rt, fx, &(state->srcr), phii, lr, lc,
                       &jd, m, l, state->nb, state->nb, &(state->mb), &(state->mb2), &(state->istop));
-        
-        
+
+
         // Compute concentration coefficient matrices
         } else {
 
@@ -469,7 +478,7 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
                             vxsqrd = *arrayAt(&(state->vkx), k) * *arrayAt(&(state->vkx), k);
                             vysqrd = *arrayAt(&(state->vky), k) * *arrayAt(&(state->vky), k);
                             vsqrd = vxsqrd + vysqrd;
-                            
+
                             if (vsqrd == 0) {
                                 dispx = state->difusn;
                                 dispy = state->difusn;

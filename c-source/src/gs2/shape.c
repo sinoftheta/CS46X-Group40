@@ -1,9 +1,12 @@
 #include "shape.h"
 
+/*
+    Purpose:
+      Evaluates the 2-dimensional shape functions and determinants
+*/
+
 void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double yi, Array* f, double* det, Array* dgx, Array* dgy) {
 
-    // Purpose: To evaluate 2-D shape functions and determinant
-    
     arrayAssertNotNull(x, "Array 'x' NULL in gs2Shape!");
     arrayAssertNotNull(y, "Array 'y' NULL in gs2Shape!");
     arrayAssertNotNull(f, "Array 'f' NULL in gs2Shape!");
@@ -72,14 +75,14 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
             *arrayAt(&dbx, j2) = 0.0;
 
         } else if (*matrixAt(in, j3+1, l) == 0) {
-            
+
             *arrayAt(&btx, j1) = xq2;
             *arrayAt(&btx, j2) = xq1;
             *arrayAt(&dbx, j1) = -1.0;
             *arrayAt(&dbx, j2) = 1.0;
 
         } else {
-            
+
             *arrayAt(&btx, j1) = xc1;
             *arrayAt(&btx, j2) = xc1;
             *arrayAt(&dbx, j1) = xc2;
@@ -96,21 +99,21 @@ void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double y
     j3 = 7;
     for (i = 1; i <= 2; i++) {
         if (*matrixAt(in, j3, l) == 0) {
-            
+
             *arrayAt(&bty, j1) = 0.5;
             *arrayAt(&bty, j2) = 0.5;
             *arrayAt(&dby, j1) = 0.0;
             *arrayAt(&dby, j2) = 0.0;
 
         } else if (*matrixAt(in, j3+1, l) == 0) {
-            
+
             *arrayAt(&bty, j1) = yq2;
             *arrayAt(&bty, j2) = yq1;
             *arrayAt(&dby, j1) = -1.0;
             *arrayAt(&dby, j2) = 1.0;
 
         } else {
-            
+
             *arrayAt(&bty, j1) = yc1;
             *arrayAt(&bty, j2) = yc1;
             *arrayAt(&dby, j1) = yc2;

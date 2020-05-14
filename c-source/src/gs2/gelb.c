@@ -1,10 +1,18 @@
 #include "gelb.h"
 
-//label 47, error return 
+//label 47, error return
 #define ERR do { *ier = -1; return; } while(0)
 
+/*
+    Purpose:
+      Solves the mass transport equation by triangularizing the matrix and then
+      solve the equations by backsubstitution.
+
+      Called from TS
+*/
+
 void gs2Gelb(
-    Array* r, Array* a, int m, int n, 
+    Array* r, Array* a, int m, int n,
     int mud, int mld, double eps, int* ier
 ){
     double piv, tb, tol;
@@ -16,12 +24,12 @@ void gs2Gelb(
     //test wrong input params
     int mc, mu, ml, mr, mz, ma, nm;
 
-    if(mld < 0 || mud < 0) 
+    if(mld < 0 || mud < 0)
         ERR;
 
     mc = 1 + mld + mud;
 
-    if(mc + 1 - 2 * m > 0) 
+    if(mc + 1 - 2 * m > 0)
         ERR;
 
     //prep integer params
@@ -34,9 +42,9 @@ void gs2Gelb(
     * ma: total number of storage locations necessary for matrix a
     * nm: number of elements in matrix r
     */
-    if(mc - m > 0) 
+    if(mc - m > 0)
         mc = m;
-    
+
     mu = mc - mud - 1;
     ml = mc - mld - 1;
     mr = m - ml;
@@ -58,9 +66,9 @@ void gs2Gelb(
             tb = *arrayAt(a, j);
             *arrayAt(a, jj) = tb;
             tb = absd(tb);
-            if(tb - piv > 0) 
+            if(tb - piv > 0)
                 piv = tb;
-            
+
             jj--;
             j--;
         }
@@ -95,14 +103,14 @@ void gs2Gelb(
     ic = mc - 1;
 
     for(int k = 0; k <= m; ++k){
-        if(k - mr - 1 > 0 ) 
+        if(k - mr - 1 > 0 )
             idst--;
 
         id = idst;
         ilr = k + mld;
-        if(ilr - m > 0) 
+        if(ilr - m > 0)
             ilr = m;
-        
+
         ii = kst;
 
         // pivot search in first column (row indexes from i = k up to i = ilr)
@@ -110,13 +118,13 @@ void gs2Gelb(
 
         for(int i = k; i <= ilr; ++i){
             tb = absd(*arrayAt(a, ii));
-            if(tb - piv > 0){ 
+            if(tb - piv > 0){
                 piv = tb;
                 j = i;
-                jj = ii;    
+                jj = ii;
             }
 
-            if(i - mr > 0) 
+            if(i - mr > 0)
                 id--;
 
             ii += id;
@@ -124,11 +132,11 @@ void gs2Gelb(
         // 22
 
         // test on singularity
-        if(piv <= 0) 
+        if(piv <= 0)
             ERR;
 
-        
-        if(*ier == 0 && piv - tol <= 0.0) 
+
+        if(*ier == 0 && piv - tol <= 0.0)
             *ier = k - 1;
 
         piv = 1.0 / *arrayAt(a, jj);
@@ -136,7 +144,7 @@ void gs2Gelb(
         // pivot row reduction and row interchange in right hand side r
         id = j - k;
 
-        for(int i = k; i <= nm; i += m){ 
+        for(int i = k; i <= nm; i += m){
             ii = i + id;
             tb = piv * *arrayAt(r, ii);
             *arrayAt(r, ii) = *arrayAt(r, i);
@@ -165,9 +173,9 @@ void gs2Gelb(
                 // in matrix a
                 id += mc;
                 jj = i - mr - 1;
-                if(jj > 0) 
+                if(jj > 0)
                     id -= jj;
-                
+
                 piv = -1 * *arrayAt(a, id);
                 j = id + 1;
                 for(jj = mu; jj <= mz; jj++){
@@ -181,26 +189,26 @@ void gs2Gelb(
                 for(jj = i; jj <= nm; jj += m){
                     *arrayAt(r, jj) = *arrayAt(r, jj) + piv * *arrayAt(r, j);
                     j += m;
-                } 
+                }
             }
 
             // 34
             kst += mc;
-            if(ilr - mr >= 0) 
+            if(ilr - mr >= 0)
                 ic--;
 
             id = k - mr;
-            
-            if(id > 0) 
+
+            if(id > 0)
                 kst -= id;
         }
     }
     // 38
 
     // back substitution
-    if (mc - 1 <= 0) 
+    if (mc - 1 <= 0)
         return;
-    
+
     ic = 2;
     kst = ma + ml - mc + 2;
     ii = m;
@@ -208,9 +216,9 @@ void gs2Gelb(
         kst -= mc;
         ii--;
         j = ii - mr;
-        if (j > 0) 
+        if (j > 0)
             kst += j;
-        
+
         for (j = ii; j <= nm; j += m){
             tb = *arrayAt(r, j);
             mz = kst + ic - 2;
@@ -225,4 +233,3 @@ void gs2Gelb(
         }
     }
 }
-

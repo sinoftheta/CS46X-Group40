@@ -1,12 +1,18 @@
 #include "qz.h"
 #include <stdlib.h>
 
+/*
+    Purpose:
+      Calculate the fluxes across boundaries (line integrals)
+
+      Called from Cogen
+*/
+
 void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Array* fmoby, Matrix* f,
        Matrix* dx, Matrix* dy, Array* detj, Array* cphi, Array* vkx, Array* vky, Array* dgx, Array* dgy,
        Array* ff, Matrix* in, Array* kf, Array* jd, Array* ieq, Array* lc, Array* lr, int* ms, int* kase,
        int l, int m, int ik, int* ispk, int* ispm, double* psik, int* istop) {
 
-    // Purpose: To evaluate line integral terms
 
     arrayAssertNotNull(u, "Array 'u' NULL in gs2Qz!");
     arrayAssertNotNull(old, "Array 'old' NULL in gs2Qz!");
@@ -85,7 +91,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
         gs2Green(x, y, detj, &ag, in, kf, jd, ieq, ms, state->me, state->np, l, istop);
 
         for (k = 1; k <= state->np; k++) {
-            
+
             j1 = k;
             if (state->np == 4) {
                 j1 = k + 2;
@@ -113,9 +119,9 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
             *arrayAt(cphi, k) = 0.0;
 
             for (i = 1; i <= m; i++) {
-                
+
                 jdi = *arrayAt(jd, i);
-                
+
                 if (*arrayAt(lr, jdi) != 1) {
                     j = jdi - *arrayAt(lc, jdi);
                     phi = state->tdr * *arrayAt(u, j) + (1.0 - state->tdr) * *arrayAt(old, j);
@@ -160,7 +166,7 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
             ycond = -ppk * *arrayAt(fmoby, l);
 
             for (i = 1; i <= m; i++) {
-                
+
                 jdi = *arrayAt(jd, i);
 
                 if (*arrayAt(lr, jdi) != 1) {
@@ -186,4 +192,3 @@ void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* 
 
     return;
 }
-

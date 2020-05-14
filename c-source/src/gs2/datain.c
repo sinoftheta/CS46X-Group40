@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 
-#define DEFAULT(cond, data, value) do { if (cond <= 0) { data = value; } } while(0) 
+#define DEFAULT(cond, data, value) do { if (cond <= 0) { data = value; } } while(0)
 
 const char* gs2DataGroupNames[NUM_DATA_GROUP] = {
     "A",
@@ -48,11 +48,20 @@ const char* gs2DataGroupNames[NUM_DATA_GROUP] = {
     "R"
 };
 
+/*
+    Purpose:
+      Reads all simulation input data and checks for errors in input data.
+      Initializes all variable arrrays and matrices, codes individual nodes
+      for boundary conditions.
+
+      Called from Main
+*/
+
 void gs2Datain(
-    gs2State* state, 
+    gs2State* state,
     const char* csvPath,
     Array* old,
-    Array* cold, 
+    Array* cold,
     Array* cn,
     Array* vn,
     Array* coef,
@@ -122,7 +131,7 @@ void gs2Datain(
     arrayDimension(&(state->dh), state->memoryRequirements.mxt);
     arrayDimension(&(state->dk), state->memoryRequirements.mxt);
     arrayDimension(&(state->d0), state->memoryRequirements.mxt);
-   
+
     matrixDimension(&(state->in), state->me, state->memoryRequirements.maxne);
     matrixDimension(&(state->ie), 2, state->memoryRequirements.maxne);
     arrayDimension(&(state->kf), state->memoryRequirements.maxne);
@@ -149,7 +158,7 @@ void gs2Datain(
     int ns, kns, nf, mq4, knsdn, nvs;
 
     // group C extra parameters
-    double afmobx, afmoby, apor, aelong, aetran, aphii, 
+    double afmobx, afmoby, apor, aelong, aetran, aphii,
            aconci, xfact, yfact, ateta, aal, akd, alam, arho;
 
     // group H extra parameters
@@ -177,8 +186,8 @@ void gs2Datain(
     CSVRow* row = csvFile.currentRow;
     do {
         dataGroup = gs2GetGroup(row, dataGroup);
-        
-        switch (dataGroup) { 
+
+        switch (dataGroup) {
             case GROUP_A:
                 gs2ReadGroupA(&row, state);
                 break;
@@ -254,14 +263,14 @@ void gs2Datain(
                 break;
             case GROUP_M_3:
                 gs2ReadSubGroupM3(&row, state, nsf, coef);
-                break;    
+                break;
             case GROUP_M_4:
                 gs2ReadSubGroupM3(&row, state, nsf, vn);
                 gs2FinalizeGroupM(state, nsf, coef, vn);
-                break;   
+                break;
             case GROUP_N_1:
                 gs2ReadSubGroupN1(&row, state, knsdn);
-                break;  
+                break;
             case GROUP_N_2:
                 gs2ReadSubGroupN2(&row, state, nsk, cn, knsdn);
                 break;
@@ -347,11 +356,11 @@ void gs2ReadGroupA(CSVRow** csvRow, gs2State* state) {
 }
 
 void gs2ReadGroupB(
-    CSVRow** csvRow, 
-    gs2State* state, 
-    int* ns, 
-    int* kns, 
-    int* nf, 
+    CSVRow** csvRow,
+    gs2State* state,
+    int* ns,
+    int* kns,
+    int* nf,
     int* mq4,
     int* knsdn,
     int* nvs
@@ -375,7 +384,7 @@ void gs2ReadGroupB(
 
     // second row: group, nsdn, mq4, knsdn, pl, coefi, ei, nvs
     *csvRow = (*csvRow)->next;
-    if ((*csvRow)->entryCount < 8) 
+    if ((*csvRow)->entryCount < 8)
         croak("Group B Card 2, too few entries");
 
     DEFAULT(sscanf((*csvRow)->entries[1], "%d", &(state->nsdn)), state->nsdn, 0);
@@ -409,7 +418,7 @@ void gs2ReadGroupB(
     fprintf(gs2stdout, "\tboundary nodes with specified flux: %d\n", state->nsdn);
     fprintf(gs2stdout, "\tInitial value: %d\n", *mq4);
     fprintf(gs2stdout, "\tMinimum allowed pressure: %e\n", state->pl);
-    fprintf(gs2stdout, "\tMaximum flux: %e\n", state->ei);    
+    fprintf(gs2stdout, "\tMaximum flux: %e\n", state->ei);
     fprintf(gs2stdout, "\tboundary nodes with specified concentration flux: %d\n", *knsdn);
     fprintf(gs2stdout, "\tSeepage nodes: %d\n", state->nseep);
 
@@ -417,7 +426,7 @@ void gs2ReadGroupB(
     *csvRow = (*csvRow)->next;
     if ((*csvRow)->entryCount < 8)
         croak("Group B Card 3, too few entries");
-    
+
     DEFAULT(sscanf((*csvRow)->entries[1], "%lf", &(state->delt)), state->delt, 0.0);
     DEFAULT(sscanf((*csvRow)->entries[2], "%lf", &(state->chng)), state->chng, 0.0);
     DEFAULT(sscanf((*csvRow)->entries[3], "%d", &(state->itmax)), state->itmax, 0);
@@ -425,11 +434,11 @@ void gs2ReadGroupB(
     DEFAULT(sscanf((*csvRow)->entries[5], "%lf", &(state->pchng)), state->pchng, 0.0);
     DEFAULT(sscanf((*csvRow)->entries[6], "%lf", &(state->betap)), state->betap, 0.0);
 
-    if (!strcmp((*csvRow)->entries[7], "CENT")) 
+    if (!strcmp((*csvRow)->entries[7], "CENT"))
         state->type = CENT;
     else
         state->type = BACK;
-    
+
     // fourth row: group, difusn, dprdt, stat, statp, clos1, iter1, igo
     *csvRow = (*csvRow)->next;
     if ((*csvRow)->entryCount < 7)
@@ -471,7 +480,7 @@ void gs2ReadGroupB(
 
     if (state->stat == 0.0)
         fprintf(gs2stdout, "Steady-state mass transport equation\n");
-    
+
     if (state->statp == 0.0)
         fprintf(gs2stdout, "Steady-state flow quation\n");
 
@@ -498,7 +507,7 @@ void gs2ReadGroupC(
     // card 1: group, afmobx, afmoby, apor, aelong, aetrans, aphii, aconci, xfact
     if ((*csvRow)->entryCount < 9)
         croak("Group C, Card 1 too few entries");
-    
+
     sscanf((*csvRow)->entries[1], "%lf", afmobx);
     sscanf((*csvRow)->entries[2], "%lf", afmoby);
     sscanf((*csvRow)->entries[3], "%lf", apor);
@@ -570,11 +579,11 @@ void gs2ReadGroupD(CSVRow** csvRow, gs2State* state) {
 }
 
 void gs2ReadGroupE(CSVRow** csvRow, gs2State* state, double xfact, double yfact) {
-    if ((*csvRow)->entryCount < 4) 
+    if ((*csvRow)->entryCount < 4)
         croak("Group E, too few entries");
-    
+
     // card: group, index, X[index], Y[index]
-    
+
     int index;
     sscanf((*csvRow)->entries[1], "%d", &index);
 
@@ -585,9 +594,9 @@ void gs2ReadGroupE(CSVRow** csvRow, gs2State* state, double xfact, double yfact)
     *arrayAt(&(state->y), index) *= yfact;
 
     fprintf(
-        gs2stdout, 
-        "Node at: %16.4lf, %16.4lf\n", 
-        *arrayAt(&(state->x), index), 
+        gs2stdout,
+        "Node at: %16.4lf, %16.4lf\n",
+        *arrayAt(&(state->x), index),
         *arrayAt(&(state->y), index)
     );
 }
@@ -596,7 +605,7 @@ void gs2ReadSubGroupF1(CSVRow** csvRow, gs2State* state) {
     if ((*csvRow)->entryCount < 9)
         croak("SubGroup F1, too few entries");
 
-    int index[4];   
+    int index[4];
     sscanf((*csvRow)->entries[1], "%d", &index[0]);
     sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->fq), index[0]));
 
@@ -617,7 +626,7 @@ void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
     if ((*csvRow)->entryCount < 9)
         croak("SubGroup F2, too few entries");
 
-    int index[4];   
+    int index[4];
     sscanf((*csvRow)->entries[1], "%d", &index[0]);
     sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->cfq), index[0]));
 
@@ -636,13 +645,13 @@ void gs2ReadSubGroupF2(CSVRow** csvRow, gs2State* state) {
 
 void gs2ReadSubGroupG1(CSVRow** csvRow, gs2State* state) {
     if ((*csvRow)->entryCount < 2)
-        croak("Sub Group G1, too few entries!");   
+        croak("Sub Group G1, too few entries!");
 
     sscanf((*csvRow)->entries[1], "%lf", &(state->stime));
 }
 
 void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
-    
+
 
     fprintf(gs2stdout, "Initial Concentration\n");
     fprintf(gs2stdout, "Node\tValue\t\tNode\tValue\t\tNode\tValue\t\tNode\tValue\n");
@@ -650,9 +659,9 @@ void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
     do {
         if ((*csvRow)->entryCount < 9)
             croak("Sub Group G2, too few entries!");
-        
-        int index[4];   
-        
+
+        int index[4];
+
         sscanf((*csvRow)->entries[1], "%d", &index[0]);
         sscanf((*csvRow)->entries[2], "%lf", arrayAt(&(state->conci), index[0]));
 
@@ -673,7 +682,7 @@ void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
             for (int i = 0; i < 4; i++) {
                 state->conci.elements[index[i]] *= aconci;
             }
-        } 
+        }
         *csvRow = (*csvRow)->next;
     } while(gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_G_2);
     *csvRow = (*csvRow)->prev;
@@ -682,7 +691,7 @@ void gs2ReadSubGroupG2(CSVRow** csvRow, gs2State* state, double aconci) {
 void gs2ReadSubGroupH1(CSVRow** csvRow, gs2State* state) {
     if ((*csvRow)->entryCount < 2)
         croak("Sub Group H1, too few entries");
-    
+
     sscanf((*csvRow)->entries[1], "%lf", &(state->stime));
 }
 
@@ -731,7 +740,7 @@ void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, do
             for (int i = 0; i < 4; i++) {
                 state->phii.elements[index[i]] *= aphii;
             }
-        } 
+        }
         *csvRow = (*csvRow)->next;
     } while(gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_H_3);
     *csvRow = (*csvRow)->prev;
@@ -740,10 +749,10 @@ void gs2ReadSubGroupH3(CSVRow** csvRow, gs2State* state, double hone, int ns, do
 void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
     do {
         // group I: group, element index, n1, n2, n3, n4, n5, n6, n7, n8, 9n, n10, n11, n12
-      
+
         int elementIndex;
         sscanf((*csvRow)->entries[1], "%d", &elementIndex);
-        
+
 
         int activeNodesForElement = 0;
 
@@ -774,26 +783,26 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
         int m = (int)(*matrixAt(stateInRef, state->me, l));
         int m1 = m - 1;
         mnd = 0.0;
-        
+
         for (int i = 1; i <= m1; i++) {
             if (*matrixAt(stateInRef, i, l) == 0.0)
                 break;
-            
-           
+
+
             for (int j = i + 1; j <= m; j++) {
                 if (*matrixAt(stateInRef, j, l) == 0.0)
                     break;
-                
+
                 nd = abs( (int)*matrixAt(stateInRef, i, l) - (int)*matrixAt(stateInRef, j, l));
                 // printf("l = %d, i = %d, j = %d, nd = %lf\n", l, i, j, nd);
                 mnd = maxd(nd, mnd);
                 *maxdif = maxd(nd, *maxdif);
-                
+
             } // 202
         } // 205
 
         fprintf(gs2stdout, "\t%d\t\t%lf\t\t\t", l, mnd);
-        for (int i = 1; i <= state->inc; i++) 
+        for (int i = 1; i <= state->inc; i++)
             fprintf(gs2stdout, "%d  ", (int)(*matrixAt(stateInRef, i, l)));
         fprintf(gs2stdout, "\n");
     }  // 210
@@ -813,9 +822,9 @@ void gs2ReadGroupI(CSVRow** csvRow, gs2State* state, double* maxdif) {
 
     if (state->nb > state->memoryRequirements.maxbw || state->knb > state->memoryRequirements.maxbw) {
         croakf(
-            "Error: maximum half-bandwidth greater than estimate. nd = %lf, knb = %lf, maxbw = %lf", 
-             nd, 
-             state->knb, 
+            "Error: maximum half-bandwidth greater than estimate. nd = %lf, knb = %lf, maxbw = %lf",
+             nd,
+             state->knb,
              state->memoryRequirements.maxbw
         );
         state->istop++;
@@ -834,17 +843,17 @@ void gs2ReadSubGroupJ1(CSVRow** csvRow, gs2State* state, int* i1, int* i2, int* 
     // card 1: group, i1, i2, itype
     if ((*csvRow)->entryCount < 4)
         croak("Sub Group J1, too few entries");
-    
+
     sscanf((*csvRow)->entries[1], "%d", i1);
     sscanf((*csvRow)->entries[2], "%d", i2);
     sscanf((*csvRow)->entries[3], "%d", itype);
 }
 
 void gs2ReadSubGroupJ2(
-    CSVRow** csvRow, 
-    gs2State* state, 
-    int i1, 
-    int i2, 
+    CSVRow** csvRow,
+    gs2State* state,
+    int i1,
+    int i2,
     int itype,
     double afmobx,
     double afmoby,
@@ -876,7 +885,7 @@ void gs2ReadSubGroupJ2(
     *csvRow = (*csvRow)->next;
     if ((*csvRow)->entryCount < 3)
         croak("Sub Group J2, too few entries");
-   
+
     sscanf((*csvRow)->entries[1], "%lf", &decay);
     sscanf((*csvRow)->entries[2], "%lf", &dens);
 
@@ -907,8 +916,8 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
         for (int l = 1; l <= state->ne; l++) {
             if ((int)(*matrixAt(&(state->ie), 2, l)) != n)
                 continue;
-            
-            
+
+
             k++;
             *arrayAt(&(state->lr), k) = l;
             ll = l;
@@ -930,7 +939,7 @@ void gs2FinalizeGroupJ(CSVRow** csvRow, gs2State* state) {
             fprintf(gs2stdout, "%d\t", (int)(*arrayAt(&(state->lr), i)));
             if ((i+1) % 5 == 0)
                 fprintf(gs2stdout, "\n\t");
-        } 
+        }
         fprintf(gs2stdout, "\n");
     }
 }
@@ -955,14 +964,14 @@ void gs2ReadGroupK(CSVRow** csvRow, gs2State* state, int ns) {
         }
 
         gs2BoundaryCondition(
-            &(state->lr), 
-            &lrt, 
-            ns, 
-            1, 
-            state->nn, 
+            &(state->lr),
+            &lrt,
+            ns,
+            1,
+            state->nn,
             &(state->istop)
         );
-        
+
         *csvRow = (*csvRow)->next;
     } while (gs2GetGroup(*csvRow, GROUP_K) == GROUP_K);
 
@@ -990,14 +999,14 @@ void gs2ReadGroupL(CSVRow** csvRow, gs2State* state, int kns) {
         }
 
         gs2BoundaryCondition(
-            &(state->klr), 
-            &lrt, 
-            kns, 
-            1, 
-            state->nn, 
+            &(state->klr),
+            &lrt,
+            kns,
+            1,
+            state->nn,
             &(state->istop)
         );
-        
+
         *csvRow = (*csvRow)->next;
     } while (gs2GetGroup(*csvRow, GROUP_L) == GROUP_L);
 
@@ -1036,7 +1045,7 @@ void gs2FinalizeGroupsK_L(CSVRow** csvRow, gs2State* state, int ns, int kns) {
         }
        fprintf(gs2stderr, "\n");
        croak("Cannot proceed.");
-    } 
+    }
 
     if (state->km != state->nn - kns) {
         fprintf(gs2stderr, "Wrong number of equations for mass transport\n");
@@ -1045,8 +1054,8 @@ void gs2FinalizeGroupsK_L(CSVRow** csvRow, gs2State* state, int ns, int kns) {
             if ((i+1) % 5 == 0)
                 fprintf(gs2stderr, "\n");
         }
-       fprintf(gs2stderr, "\n");   
-       croak("Cannot proceed."); 
+       fprintf(gs2stderr, "\n");
+       croak("Cannot proceed.");
     }
 }
 
@@ -1117,7 +1126,7 @@ void gs2ReadSubGroupM2(CSVRow** csvRow, gs2State* state, int mq4) {
 void gs2ReadSubGroupM3(CSVRow** csvRow, gs2State* state, Array* nsf, Array* coef) {
     // card: group, nsf(i), coef(i), nsf(j), coef(j), nsf(k), coef(k), nsf(l), coef(l), nsf(m), coef(m)
     for (int i = 1; i < state->nsdn; i += 5) {
-        
+
         if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_M_3)
             croak("Attempted to read sub group m3 from a non-m3 card!");
 
@@ -1147,7 +1156,7 @@ void gs2ReadSubGroupM3(CSVRow** csvRow, gs2State* state, Array* nsf, Array* coef
 void gs2ReadSubGroupM4(CSVRow** csvRow, gs2State* state, Array* nsf, Array* vn) {
     // card: group, nsf(i), vn(i), nsf(j), vn(j), nsf(k), vn(k), nsf(l), vn(l), nsf(m), vn(m)
     for (int i = 1; i <= state->nsdn; i += 5) {
-        
+
         if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_M_4)
             croak("Attempted to read sub group m4 from a non-m4 card!");
 
@@ -1207,14 +1216,14 @@ void gs2ReadSubGroupN1(CSVRow** csvRow, gs2State* state, int knsdn) {
         }
 
         gs2BoundaryCondition(
-            &(state->klr), 
-            &lrt, 
-            knsdn, 
-            -4, 
-            state->nn, 
+            &(state->klr),
+            &lrt,
+            knsdn,
+            -4,
+            state->nn,
             &(state->istop)
         );
-        
+
         *csvRow = (*csvRow)->next;
     } while (gs2GetGroup(*csvRow, GROUP_N_1) == GROUP_N_1);
 
@@ -1225,11 +1234,11 @@ void gs2ReadSubGroupN1(CSVRow** csvRow, gs2State* state, int knsdn) {
 }
 
 void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, int knsdn) {
-    
+
     fprintf(gs2stdout, "Specified concentration flux\n");
     // card: group, nsk(i), cn(i), nsk(j), cn(j), nsk(k), cn(k), nsk(l), cn(l), nsk(m), cn(m)
     for (int i = 1; i <= knsdn; i += 5) {
-        
+
         if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_N_2)
             croak("Attempted to read sub group n2 from a non-n2 card!");
 
@@ -1244,7 +1253,7 @@ void gs2ReadSubGroupN2(CSVRow** csvRow, gs2State* state, Array* nsk, Array* cn, 
 
             fprintf(gs2stdout, "\tNode %d, Value %lf\n", (int)(*arrayAt(nsk, i)), *arrayAt(cn, i));
         }
-        
+
         if (i + 1 <= maxm4) {
             sscanf((*csvRow)->entries[3], "%lf", arrayAt(nsk, i + 1));
             sscanf((*csvRow)->entries[4], "%lf", arrayAt(cn, i + 1));
@@ -1287,9 +1296,9 @@ void gs2ReadGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
         int mp2;
         sscanf((*csvRow)->entries[1], "%lf", arrayAt(msp, k));
         sscanf((*csvRow)->entries[2], "%d", &mp2);
-        
+
         *csvRow = (*csvRow)->next;
-        if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_O_2) 
+        if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_O_2)
             croak("Group O-1 is not followed by Group O-2!");
 
         fprintf(gs2stdout, "Nodes on seepage face %d\n", k);
@@ -1316,10 +1325,10 @@ void gs2ReadGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
                 *csvRow = (*csvRow)->next;
             } while (gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_O_2);
 
-            if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_O_3) 
+            if (gs2GetGroup(*csvRow, NUM_DATA_GROUP) != GROUP_O_3)
                 croak("Group O-2 is not followed by Group O-3!");
 
-            for (int j = 1; j <= mp2; j++) 
+            for (int j = 1; j <= mp2; j++)
                 *arrayAt(&(state->lr), *matrixAt(nsp, j, k)) = 2.0;
 
             if (mq2 != 0) {
@@ -1340,7 +1349,7 @@ void gs2ReadGroupO(CSVRow** csvRow, gs2State* state, Array* msp, Matrix* nsp) {
                     *csvRow = (*csvRow)->next;
                 } while(gs2GetGroup(*csvRow, NUM_DATA_GROUP) == GROUP_O_3);
 
-                for (int j = jj; j <= mspk; j++) 
+                for (int j = jj; j <= mspk; j++)
                     *arrayAt(&(state->lr), *matrixAt(nsp, j, k)) = -2.0;
             }
         }
@@ -1372,7 +1381,7 @@ void gs2ReadGroupQ(
     for (int i = 1; i <= state->nk; i++) {
         sscanf((*csvRow)->entries[i], "%lf", arrayAt(&(state->ispl), i));
     }
-    
+
     *csvRow = (*csvRow)->next;
     int k = 0;
     do {
@@ -1432,7 +1441,7 @@ void gs2ReadGroupQ(
         // matrixPrint("ctt", &(state->ctt[0]));
         // matrixPrint("ctt", &(state->ctt[1]));
         // matrixPrint("ctt", &(state->ctt[2]));
-        
+
 
 
         gs2ICS1CU(wxk, wxpsi, ispk, ispm, cc, &ier);

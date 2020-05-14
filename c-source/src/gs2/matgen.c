@@ -2,7 +2,10 @@
 #include <stdio.h>
 
 /*
- * Purpose: To perform surface integrations
+    Purpose:
+      To develop element matrices and perform surface integrations.
+
+      Called from Cogen
  */
 
 void gs2Matgen1(gs2State* state, Matrix* pe, Matrix* se, Array* q, Array* qp, int i, int j) {
@@ -11,7 +14,7 @@ void gs2Matgen1(gs2State* state, Matrix* pe, Matrix* se, Array* q, Array* qp, in
     arrayAssertNotNull(qp, "Array 'qp' NULL in gs2Matgen!");
     matrixAssertNotNull(pe, "Matrix 'pe' NULL in gs2Shape!");
     matrixAssertNotNull(se, "Matrix 'se' NULL in gs2Shape!");
-    
+
     double h11, h12, h22;
 
     h11 = state->h1 * state->h1;
@@ -100,4 +103,3 @@ void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l) {
         fprintf(gs2stdout, "\n\n\n");
     }
 }
-
