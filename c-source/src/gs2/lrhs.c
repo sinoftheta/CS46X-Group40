@@ -5,10 +5,18 @@
 
 #include "../capstone/Debug.h"
 
+  /*
+    Purpose:
+      Used to form the right-hand side of the flow and mass transport
+      equations.
+
+      Called from TS
+  */
+
 void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
           Array* u, Array* lq, int m, int ib, int jb, double a3,
           double a2, int kk){
-          
+
    matrixAssertNotNull(a, "Matrix 'a' NULL in gs2Lrhs");
    matrixAssertNotNull(b, "Matrix 'b' NULL in gs2Lrhs");
    arrayAssertNotNull(r, "Array 'r' NULL in gs2Lrhs");
@@ -90,7 +98,7 @@ void gs2Lrhs(Matrix* a, Matrix* b, Array* r, Array* rold,
       *matrixAt(b, mq, 1) = (*matrixAt(a, 1, mq) + (*matrixAt(b, mq, 1) * a3));
 
       if(m2 > 0){
-        
+
         for(int iter = 1; iter <= m2; iter++){
           l1 = min(jb, mq + 1 - iter);
 

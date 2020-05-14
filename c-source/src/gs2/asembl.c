@@ -5,7 +5,10 @@
 #include "../capstone/Debug.h"
 
 /*
-  To assemble element matrices
+    Purpose
+      To assemble element matrices
+
+      Called from cogen
 */
 
 void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
@@ -32,8 +35,13 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
 
       for (int iter = 1; iter <= m; iter++){ //loop through all materials
 
+        // current node
         jdi = *arrayAt(jd, iter);
+
+        // index of equation for current node once deleted from flow system
         int temp = *arrayAt(lq, jdi);
+
+        // index for value in flow equation
         ir = (jdi - temp);
 
         if (*arrayAt(k0d, jdi) != 1){
@@ -77,13 +85,16 @@ void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
         } // end if (k0d[jdi] != 1)
         else if(*arrayAt(k0d, jdi) == 1){
 
-          for(int iter2 = 1; iter2 <= m; iter2++){ // inner loop if k0d(jdi) == 1
+          for(int iter2 = 1; iter2 <= m; iter2++){
+            // get current node
             jdj = *arrayAt(jd, iter2);
             if(*arrayAt(k0d, jdj) <= 0){
               jc = jdj - *arrayAt(lq, jdj);
               *arrayAt(u, jc) -= (*matrixAt(ea, iter2, iter) * *arrayAt(F, jdi));
             }
           } // 70
+
         }
+
       } // end outer loop through materials
 }

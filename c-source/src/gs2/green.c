@@ -2,6 +2,14 @@
 
 #include "../capstone/Debug.h"
 
+/*
+    Purpose:
+        Evaluates the one-dimensional shape functions and determinants for each element.
+        Determines if the side is linear, quadratic, or cubic.
+
+    Called from QZ
+*/
+
 void gs2Green(Array* x, Array* y, Array* detj, Array* ag, Matrix* in,
               Array* kf, Array* jd, Array* ieq, int* ms, int me, int np,
               int l, int* istop){
