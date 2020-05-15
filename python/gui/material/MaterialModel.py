@@ -1,7 +1,12 @@
 class MaterialModel:
+    """
+        Contains attribute values for material groups belonging to the flow
+        region specifying pressure head versus moisture content and
+        pressure head versus hydraulic conductivity.
+    """
     def __init__(self, group):
         self.materialGroup = group
-        
+
         # default to maximum supported number
         self._interpolationPointCount = 15
 
@@ -12,7 +17,7 @@ class MaterialModel:
 
     def setInterpolationPointCount(self, newCount):
         diff = newCount - self._interpolationPointCount
-        
+
         # remove the last points in the lists
         if diff < 0:
             self.pressureHead = self.pressureHead[:diff]
@@ -27,5 +32,3 @@ class MaterialModel:
 
     def getInterpolationPointCount(self):
         return self._interpolationPointCount
-
-    

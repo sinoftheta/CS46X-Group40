@@ -1,9 +1,12 @@
 
 
 class SeepageFaceModel:
+    """
+        Contains lists of nodes belonging to seepage faces in the
+        problem domain.
+    """
     def __init__(self, seepageFaceID = 0):
         self.seepageFaceID = seepageFaceID
-
 
         # both diricheltNodes and nuemannNodes should contain the number
         # of some node
@@ -46,6 +49,3 @@ class SeepageFaceModel:
             self.nuemannNodes = self.nuemannNodes[:diff]
         else:
             self.nuemannNodes.extend([0 for x in range(diff)])
-
-
-    
