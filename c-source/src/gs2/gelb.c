@@ -17,7 +17,7 @@ void gs2Gelb(
      * CALLED FROM: TS
      * SUBROUTINE CALLED: None
      */
-    
+
     double piv, tb, tol;
     int j, jj, kst, ic, idst, id, ilr, ii;
 
@@ -105,7 +105,7 @@ void gs2Gelb(
     idst = mc;
     ic = mc - 1;
 
-    for(int k = 0; k <= m; ++k){
+    for(int k = 1; k <= m; ++k){
         if(k - mr - 1 > 0 ) 
             idst--;
 
@@ -158,7 +158,7 @@ void gs2Gelb(
         //pivot row reduction and interchange in coefficent matrix a
         ii = kst;
         j = jj + ic;
-        for(int i = jj; i <= j; j++){
+        for(int i = jj; i <= j; i++){
             tb = piv * *arrayAt(a, i);
             *arrayAt(a, i) = *arrayAt(a, ii);
             *arrayAt(a, ii) = tb;
@@ -194,17 +194,17 @@ void gs2Gelb(
                     j += m;
                 } 
             }
-
-            // 34
-            kst += mc;
-            if(ilr - mr >= 0) 
-                ic--;
-
-            id = k - mr;
-            
-            if(id > 0) 
-                kst -= id;
         }
+
+        // 34
+        kst += mc;
+        if(ilr - mr >= 0) 
+            ic--;
+
+        id = k - mr;
+        
+        if(id > 0) 
+            kst -= id;
     }
     // 38
 
@@ -229,11 +229,12 @@ void gs2Gelb(
             for (jj = kst; jj <= mz; jj++){
                 id++;
                 tb -= *arrayAt(a, jj) * *arrayAt(r, id);
-                *arrayAt(r, j) = tb;
             }
-            if (ic - mc < 0)
-                ic++;
+            *arrayAt(r, j) = tb;
         }
+
+        if (ic - mc < 0)
+            ic++;
     }
 }
 
