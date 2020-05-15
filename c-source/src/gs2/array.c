@@ -20,14 +20,14 @@ void gs2Array(
 
     int j = 0, k, lim, k0, k1;
 
-    for(int n = 1; n < neq; n++){
+    for (int n = 1; n <= neq; n++){
         k = ib - n + 1;
         lim = ib - n + neq;
         k0 = max(ib - jb + 1, k);
-        k1 = min(jb2,lim);
-        for(int m = k0; m < k1; m++){
-            z->elements[j] = *matrixAt(a, m, n);
+        k1 = min(jb2, lim);
+        for (int m = k0; m <= k1; m++) {
             j++;
+            *arrayAt(z, j) = *matrixAt(a, m, n);
         }
     }
     *jx = j;

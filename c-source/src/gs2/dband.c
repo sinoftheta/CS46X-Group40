@@ -16,6 +16,7 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
      * SUBROUTINES CALLED: None 
      */
 
+    double temp;
     *iex = 0;
     for (int i = 1; i <= n; i++) {
         int ip = n - i + 1;
@@ -29,18 +30,20 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
 
             double sum = *matrixAt(s, i, j);
 
-            for (int k = 1; k <= iq; k++) {
-                int jz = j + k;
-                int ii = i - k;
-                double siik = *matrixAt(s, ii, k + 1);
-                double siijz = *matrixAt(s, ii, jz);
+            if (iq >= 1) {
+                for (int k = 1; k <= iq; k++) {
+                    int jz = j + k;
+                    int ii = i - k;
+                    double siik = *matrixAt(s, ii, k + 1);
+                    double siijz = *matrixAt(s, ii, jz);
 
-                if (siijz == 0.0)
-                    continue;
-                
-                sum -= siik*siijz;
-            } // end for k
-
+                    if (siijz == 0.0)
+                        continue;
+                    
+                    sum -= siik*siijz;
+                } // end for k
+            }
+            /*
             if (j == 1) {
                 DEBUG_LOG("here");
                 //matrixPrint("s", s);
@@ -54,10 +57,20 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
                     *iex = 1;
                     return;
                 }
+            }*/
 
-                double temp = 1.0 / sqrt(sum);
+            if (j != 1) {
                 *matrixAt(s, i, j) = sum * temp;
-                continue;
+            } else if (sum > 0) {
+                temp = 1.0 / sqrt(sum);
+                *matrixAt(s, i, j) = temp;
+            } else {
+                fprintf(gs2stderr, "Dband fails at row %d\n", i); 
+                fprintf(gs2stderr, "N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
+                    n, nb, ip, iq, i, j, sum
+                );
+                *iex = 1;
+                return;
             }
         } // end for j
     } // end for i
