@@ -65,8 +65,8 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
                 temp = 1.0 / sqrt(sum);
                 *matrixAt(s, i, j) = temp;
             } else {
-                fprintf(gs2stderr, "Dband fails at row %d\n", i); 
-                fprintf(gs2stderr, "N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
+                fprintf(gs2stdout, "1          DBAND FAILS AT ROW%4d\n", i); 
+                fprintf(gs2stdout, "0%5d%5d%5d%5d%5d%5d%20.8E\n",
                     n, nb, ip, iq, i, j, sum
                 );
                 *iex = 1;
