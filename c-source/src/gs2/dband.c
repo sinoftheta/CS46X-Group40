@@ -8,7 +8,13 @@
 
 void gs2Dband(Matrix* s, int n, int nb, int* iex){
 
-    //matrixPrint("s in dband", s);
+    /*
+     * DBAND is called to triangularize the flow equation prior to solution.
+     * It also sets a flag to abort execution if the triangularization fails.
+     * 
+     * CALLED FROM: TS
+     * SUBROUTINES CALLED: None 
+     */
 
     *iex = 0;
     for (int i = 1; i <= n; i++) {

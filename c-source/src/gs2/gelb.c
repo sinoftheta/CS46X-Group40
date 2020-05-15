@@ -7,6 +7,17 @@ void gs2Gelb(
     Array* r, Array* a, int m, int n, 
     int mud, int mld, double eps, int* ier
 ){
+    /*
+     * The mass transport equation is solved in GELB. It is designed for a
+     * nonsymmetric system of equations. In the three-dimensional version
+     * of the code, it is called twice, once to traignularize the matrix and
+     * then again to solve the equations by backsubstitution. In the two-dimensional
+     * model, both of these operations are performed in one step.
+     * 
+     * CALLED FROM: TS
+     * SUBROUTINE CALLED: None
+     */
+    
     double piv, tb, tol;
     int j, jj, kst, ic, idst, id, ilr, ii;
 

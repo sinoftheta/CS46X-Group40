@@ -2,6 +2,14 @@
 
 void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
 
+    /*
+     * The flow equation is solved, after triangularization by DBAND, in SBAND.
+     * Back substitution is used to obtain a solution.
+     * 
+     * CALLED FROM: TS
+     * SUBROUTINES CALLED: None
+     */
+
     matrixAssertNotNull(s, "matrix s in gs2Sband is null");
     arrayAssertNotNull(p, "array p in gs2Sband is null");
     arrayAssertNotNull(u, "array u in gs2Sband is null");
