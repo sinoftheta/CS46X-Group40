@@ -12,7 +12,6 @@ void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt
            Array* lambda, Array* rho, Matrix* in, Array* kf, Array* lr, Array* klr, Array* lc, Array* klc,
            Array* lp, Array* nsf, Matrix* ie, Matrix* nsp, Array* msp, char* rdate, char* rtime) {
 
-    // Purpose: To formulate and solve flow and mass-transport equations
 
     arrayAssertNotNull(w, "Array 'w' NULL in gs2Ts!");
     arrayAssertNotNull(fm, "Array 'fm' NULL in gs2Ts!");

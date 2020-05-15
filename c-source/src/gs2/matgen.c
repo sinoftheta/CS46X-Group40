@@ -1,12 +1,6 @@
 #include "matgen.h"
 #include <stdio.h>
 
-/*
-    Purpose:
-      To develop element matrices and perform surface integrations.
-
-      Called from Cogen
- */
 
 void gs2Matgen1(gs2State* state, Matrix* pe, Matrix* se, Array* q, Array* qp, int i, int j) {
 

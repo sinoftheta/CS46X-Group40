@@ -5,6 +5,11 @@
 #include "../capstone/Array.h"
 
 /**
+* Purpose:
+    Applies Dirichlet boundary conditions during assembly of global
+    coefficient matrix for flow.
+
+    Called from TS.
  * @param ui - temporary storage index
  * @param neq - number of equations
  * @param ib - half boundary

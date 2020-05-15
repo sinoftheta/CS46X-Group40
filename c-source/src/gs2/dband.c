@@ -6,13 +6,6 @@
 #include "../capstone/Matrix.h"
 #include "../capstone/Debug.h"
 
-/*
-    Purpose:
-      Triangularize the flow equation prior to solution or sets ISTOP if
-      the triangularization fails.
-
-      Called from TS
-*/
 
 void gs2Dband(Matrix* s, int n, int nb, int* iex){
 

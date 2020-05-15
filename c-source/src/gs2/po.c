@@ -2,16 +2,6 @@
 #include <stdio.h>
 
 void gs2Po(gs2State* state, Array* conc, Array* phi, int nn, int it, double stime, char* rdate, char* rtime) {
-
-    /*
-     * Purpose:
-        To generate restart data files
-        Pressures are written to TAPE7
-        Concentrations are written to TAPE8
-
-        Called from TS
-     */
-
     int i;
 
     fprintf(state->tape8, "1 RUN IDENTIFICATION: %.10s %.10s\n", rdate, rtime);

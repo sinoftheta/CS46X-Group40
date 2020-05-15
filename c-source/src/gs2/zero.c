@@ -1,12 +1,5 @@
 #include "zero.h"
 
-/*
-    Purpose:
-      Applies Dirichlet boundary conditions during assembly of global
-      coefficient matrix for flow.
-
-      Called from TS.
-*/
 
 void gs2Zero(Matrix* a, Array* v, int ui, int neq, int ib, int n) {
     matrixAssertNotNull(a, "matrix null in gs2Zero!");

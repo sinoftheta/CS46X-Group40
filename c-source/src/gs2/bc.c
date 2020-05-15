@@ -1,15 +1,8 @@
 #include "bc.h"
 #include "gs2.h"
 
-
 #include <stdio.h>
 
-/*
-    Purpose:
-      Sets values for boundary condition nodes and boundary condition variables.
-
-      Called from Datain
-*/
 
 void gs2BoundaryCondition(Array* lx, Array* lrt, int ln, double kbc, int neq, int* istop) {
     arrayAssertNotNull(lx, "lx NULL in gs2BoundaryCondition");

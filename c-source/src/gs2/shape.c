@@ -1,9 +1,5 @@
 #include "shape.h"
 
-/*
-    Purpose:
-      Evaluates the 2-dimensional shape functions and determinants
-*/
 
 void gs2Shape(Array* x, Array*  y, Matrix* in, int l, int m, double xi, double yi, Array* f, double* det, Array* dgx, Array* dgy) {
 

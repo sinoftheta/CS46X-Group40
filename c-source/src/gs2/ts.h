@@ -19,6 +19,11 @@
 #include "gelb.h"
 #include "po.h"
 
+/*
+ * Purpose:
+    To formulate and solve flow and mass-transport equations
+*/
+
 void gs2Ts(gs2State* state, Matrix* s, Matrix* p, Array* w, Array* fm, Array* rt, Array* phi, Array* phii, Array* old,
            Array* cfm, Array* crt, Array* conc, Array* conci, Array* cold, Array* fx, Array* cn, Array* vn,
            Array* coef, Array* est, Array* u, Array* fq, Array* cfq, Array* x, Array* y, Array* fmobx,

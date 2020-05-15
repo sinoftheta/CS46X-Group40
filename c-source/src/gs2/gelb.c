@@ -3,13 +3,6 @@
 //label 47, error return
 #define ERR do { *ier = -1; return; } while(0)
 
-/*
-    Purpose:
-      Solves the mass transport equation by triangularizing the matrix and then
-      solve the equations by backsubstitution.
-
-      Called from TS
-*/
 
 void gs2Gelb(
     Array* r, Array* a, int m, int n,

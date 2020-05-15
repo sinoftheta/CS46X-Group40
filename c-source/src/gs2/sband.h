@@ -7,7 +7,11 @@
 #include "../capstone/MathUtil.h"
 
 /**
-* @param s matrix 
+* Purpose:
+    Solves the flow equation by using backsubstitution.
+
+    Called from TS
+* @param s matrix
 * @param p array
 * @param u array
 * @param n iteration count
@@ -17,6 +21,6 @@
 * @param nu p and u dimension, unused
 */
 
-void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb); 
+void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb);
 
 #endif /*__CAP_GS2_SBAND_H__*/

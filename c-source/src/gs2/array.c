@@ -2,13 +2,6 @@
 
 #include "../capstone/Debug.h"
 
-/*
-    Purpose:
-      Converts the 2-dimensional global coefficient matrix for mass transport, S,
-      into its equivalent 1-dimensional matrix, W.
-
-      Called from TS
-*/
 
 void gs2Array(
     Matrix* a, Array* z, int neq, int ib, int jb,

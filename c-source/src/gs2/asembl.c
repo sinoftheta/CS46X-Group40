@@ -4,12 +4,6 @@
 
 #include "../capstone/Debug.h"
 
-/*
-    Purpose
-      To assemble element matrices
-
-      Called from cogen
-*/
 
 void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
               Array* u, Array* re, Array* F, Array* k0d, Array* lq,

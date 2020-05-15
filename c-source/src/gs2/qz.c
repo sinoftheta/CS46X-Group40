@@ -1,12 +1,6 @@
 #include "qz.h"
 #include <stdlib.h>
 
-/*
-    Purpose:
-      Calculate the fluxes across boundaries (line integrals)
-
-      Called from Cogen
-*/
 
 void gs2Qz(gs2State* state, Array* u, Array* old, Array* phii, Array* x, Array* y, Array* fmobx, Array* fmoby, Matrix* f,
        Matrix* dx, Matrix* dy, Array* detj, Array* cphi, Array* vkx, Array* vky, Array* dgx, Array* dgy,

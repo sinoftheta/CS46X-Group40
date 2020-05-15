@@ -1,11 +1,5 @@
 #include "sband.h"
 
-/*
-    Purpose:
-      Solves the flow equation by using backsubstitution.
-
-      Called from TS
-*/
 
 void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
 
