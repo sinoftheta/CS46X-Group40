@@ -11,6 +11,15 @@
 #include "qz.h"
 #include "sos.h"
 
+/*
+    Purpose:
+      Generates global coefficient matrices for flow and mass transport equations. Directs program flow
+      to develop the required shape functions, contributions due to the element matrices and the
+      volume integrals.
+
+      Called from TS
+*/
+
 void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array* phi, Array* phii,
              Array* u, Array* old, Array* cfm, Array* crt, Array* conc, Array* conci, Array* fx,
              Array* cn, Array* est, Array* fq, Array* cfq, Array* x, Array* y, Array* fmobx,
@@ -19,4 +28,3 @@ void gs2Cogen(gs2State* state, Matrix* s, Matrix* p, Array* fm, Array* rt, Array
              Array* lc, Array* klc, Matrix* ie, int jtest);
 
 #endif /* __GS2_COGEN_H__ */
-

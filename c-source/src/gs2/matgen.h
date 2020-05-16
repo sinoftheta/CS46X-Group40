@@ -5,9 +5,15 @@
 #include "../capstone/Array.h"
 #include "gs2.h"
 
+/*
+    Purpose:
+      To develop element matrices and perform surface integrations.
+
+      Called from Cogen
+ */
+
 void gs2Matgen1(gs2State* state, Matrix* pe, Matrix* se, Array* q, Array* qp, int i, int j);
 void gs2Matgen2(gs2State* state, Array* srcr, Array* srcrt, int i);
 void gs2Matgen3(Matrix* pe, Matrix* se, int m, int l);
 
 #endif /* __GS2_MATGEN_H__ */
-

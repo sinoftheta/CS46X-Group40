@@ -1,8 +1,8 @@
 #include "bc.h"
 #include "gs2.h"
 
-
 #include <stdio.h>
+
 
 void gs2BoundaryCondition(Array* lx, Array* lrt, int ln, double kbc, int neq, int* istop) {
     arrayAssertNotNull(lx, "lx NULL in gs2BoundaryCondition");
@@ -17,7 +17,7 @@ void gs2BoundaryCondition(Array* lx, Array* lrt, int ln, double kbc, int neq, in
         for (int i = 1; i <= 20; i++) {
             if (*arrayAt(lrt, i) == 0.0)
                 break;
-            
+
             ia = i;
             j = (int)(*arrayAt(lrt, i));
             nst++;
@@ -35,10 +35,10 @@ void gs2BoundaryCondition(Array* lx, Array* lrt, int ln, double kbc, int neq, in
                 break;
             fprintf(gs2stdout, "%4d ", (int)(lrt->elements[i]));
         }
-            
+
         fprintf(gs2stdout, "\n");
 
-        if (ia != 20) 
+        if (ia != 20)
             break;
     }
 
@@ -49,7 +49,7 @@ void gs2BoundaryCondition(Array* lx, Array* lrt, int ln, double kbc, int neq, in
     fprintf(
         gs2stderr,
         "Number of boundary nodes read %d, disagrees with number anitipated %d.\n",
-        nst, 
+        nst,
         ln
     );
 

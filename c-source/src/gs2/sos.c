@@ -1,6 +1,7 @@
 #include "sos.h"
 #include <stdio.h>
 
+
 void gs2Sos(Matrix* a, int neq, int iband, int istart) {
 
     matrixAssertNotNull(a, "Matrix 'a' NULL in gs2Sos!");
@@ -23,4 +24,3 @@ void gs2Sos(Matrix* a, int neq, int iband, int istart) {
         fprintf(gs2stdout, "\n\n\n");
     }
 }
-

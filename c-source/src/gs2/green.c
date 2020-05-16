@@ -2,6 +2,7 @@
 
 #include "../capstone/Debug.h"
 
+
 void gs2Green(Array* x, Array* y, Array* detj, Array* ag, Matrix* in,
               Array* kf, Array* jd, Array* ieq, int* ms, int me, int np,
               int l, int* istop){

@@ -4,9 +4,15 @@
 #include "../capstone/Array.h"
 
 /**
- * Differs from fortran source. lrt will be initallized and filled prior 
- * to calling this function. 
+    Purpose:
+      Sets values for boundary condition nodes and boundary condition variables.
+
+      Called from Datain
+
+      Differs from fortran source. lrt will be initallized and filled prior
+      to calling this function.
  */
+
 void gs2BoundaryCondition(Array* lx, Array* lrt, int ln, double kbc, int neq, int* istop);
 
 
