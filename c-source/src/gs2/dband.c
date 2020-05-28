@@ -9,8 +9,15 @@
 
 void gs2Dband(Matrix* s, int n, int nb, int* iex){
 
-    //matrixPrint("s in dband", s);
+    /*
+     * DBAND is called to triangularize the flow equation prior to solution.
+     * It also sets a flag to abort execution if the triangularization fails.
+     * 
+     * CALLED FROM: TS
+     * SUBROUTINES CALLED: None 
+     */
 
+    double temp;
     *iex = 0;
     for (int i = 1; i <= n; i++) {
         int ip = n - i + 1;
@@ -24,18 +31,20 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
 
             double sum = *matrixAt(s, i, j);
 
-            for (int k = 1; k <= iq; k++) {
-                int jz = j + k;
-                int ii = i - k;
-                double siik = *matrixAt(s, ii, k + 1);
-                double siijz = *matrixAt(s, ii, jz);
+            if (iq >= 1) {
+                for (int k = 1; k <= iq; k++) {
+                    int jz = j + k;
+                    int ii = i - k;
+                    double siik = *matrixAt(s, ii, k + 1);
+                    double siijz = *matrixAt(s, ii, jz);
 
-                if (siijz == 0.0)
-                    continue;
-
-                sum -= siik*siijz;
-            } // end for k
-
+                    if (siijz == 0.0)
+                        continue;
+                    
+                    sum -= siik*siijz;
+                } // end for k
+            }
+            /*
             if (j == 1) {
                 DEBUG_LOG("here");
                 //matrixPrint("s", s);
@@ -49,10 +58,20 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
                     *iex = 1;
                     return;
                 }
+            }*/
 
-                double temp = 1.0 / sqrt(sum);
+            if (j != 1) {
                 *matrixAt(s, i, j) = sum * temp;
-                continue;
+            } else if (sum > 0) {
+                temp = 1.0 / sqrt(sum);
+                *matrixAt(s, i, j) = temp;
+            } else {
+                fprintf(gs2stdout, "1          DBAND FAILS AT ROW%4d\n", i); 
+                fprintf(gs2stdout, "0%5d%5d%5d%5d%5d%5d%20.8E\n",
+                    n, nb, ip, iq, i, j, sum
+                );
+                *iex = 1;
+                return;
             }
         } // end for j
     } // end for i

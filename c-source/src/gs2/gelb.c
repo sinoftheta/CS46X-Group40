@@ -8,6 +8,17 @@ void gs2Gelb(
     Array* r, Array* a, int m, int n,
     int mud, int mld, double eps, int* ier
 ){
+    /*
+     * The mass transport equation is solved in GELB. It is designed for a
+     * nonsymmetric system of equations. In the three-dimensional version
+     * of the code, it is called twice, once to traignularize the matrix and
+     * then again to solve the equations by backsubstitution. In the two-dimensional
+     * model, both of these operations are performed in one step.
+     * 
+     * CALLED FROM: TS
+     * SUBROUTINE CALLED: None
+     */
+
     double piv, tb, tol;
     int j, jj, kst, ic, idst, id, ilr, ii;
 
@@ -95,8 +106,8 @@ void gs2Gelb(
     idst = mc;
     ic = mc - 1;
 
-    for(int k = 0; k <= m; ++k){
-        if(k - mr - 1 > 0 )
+    for(int k = 1; k <= m; ++k){
+        if(k - mr - 1 > 0 ) 
             idst--;
 
         id = idst;
@@ -148,7 +159,7 @@ void gs2Gelb(
         //pivot row reduction and interchange in coefficent matrix a
         ii = kst;
         j = jj + ic;
-        for(int i = jj; i <= j; j++){
+        for(int i = jj; i <= j; i++){
             tb = piv * *arrayAt(a, i);
             *arrayAt(a, i) = *arrayAt(a, ii);
             *arrayAt(a, ii) = tb;
@@ -184,17 +195,17 @@ void gs2Gelb(
                     j += m;
                 }
             }
-
-            // 34
-            kst += mc;
-            if(ilr - mr >= 0)
-                ic--;
-
-            id = k - mr;
-
-            if(id > 0)
-                kst -= id;
         }
+
+        // 34
+        kst += mc;
+        if(ilr - mr >= 0) 
+            ic--;
+
+        id = k - mr;
+        
+        if(id > 0) 
+            kst -= id;
     }
     // 38
 
@@ -219,10 +230,11 @@ void gs2Gelb(
             for (jj = kst; jj <= mz; jj++){
                 id++;
                 tb -= *arrayAt(a, jj) * *arrayAt(r, id);
-                *arrayAt(r, j) = tb;
             }
-            if (ic - mc < 0)
-                ic++;
+            *arrayAt(r, j) = tb;
         }
+
+        if (ic - mc < 0)
+            ic++;
     }
 }
