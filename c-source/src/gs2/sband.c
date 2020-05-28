@@ -1,5 +1,6 @@
 #include "sband.h"
 
+
 void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
 
     /*
@@ -17,13 +18,13 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
     for (int i = 1; i <= n; i++){
 
         int j = i - nb + 1;
-        if ((i + 1) <= nb) 
+        if((i  + 1) <= nb)
             j = 1;
 
         double sum = *arrayAt(p, i);
         int k1 = i - 1;
 
-        if (j <= k1) { 
+        if (j <= k1) {
 
             for (int k = j; k <= k1; k++){
 
@@ -31,7 +32,7 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
                 double ski = *matrixAt(s, k, ii);
 
                 //10
-                if (ski != 0.0) 
+                if(ski != 0.0)
                     sum = sum - ski * *arrayAt(u, k);
             }
         }
@@ -44,7 +45,7 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
         int i = n - i1 + 1;
         int j = i + nb - 1;
 
-        if (j > n) 
+        if(j > n)
             j = n;
 
         double sum = *arrayAt(u, i);
@@ -56,10 +57,9 @@ void gs2Sband(Matrix* s, Array* p, Array* u, int n, int nb) {
                 
                 int kk = k - i + 1;
                 double ski = *matrixAt(s, i, kk);
-
-                //40
-                if (ski != 0.0) 
+                if(ski != 0.0)
                     sum = sum - ski * *arrayAt(u, k);
+
             }
         }
         //50

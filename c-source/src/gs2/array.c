@@ -2,8 +2,9 @@
 
 #include "../capstone/Debug.h"
 
+
 void gs2Array(
-    Matrix* a, Array* z, int neq, int ib, int jb, 
+    Matrix* a, Array* z, int neq, int ib, int jb,
     int jb2, int mdim, int ndim, int mx, int* jx ){
 
     /*
@@ -32,4 +33,3 @@ void gs2Array(
     }
     *jx = j;
 }
-

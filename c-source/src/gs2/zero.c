@@ -1,5 +1,6 @@
 #include "zero.h"
 
+
 void gs2Zero(Matrix* a, Array* v, int ui, int neq, int ib, int n) {
     matrixAssertNotNull(a, "matrix null in gs2Zero!");
     arrayAssertNotNull(v, "array null in gs2Zero!");
@@ -7,7 +8,7 @@ void gs2Zero(Matrix* a, Array* v, int ui, int neq, int ib, int n) {
     for (int m = 2; m < ib; m++) {
         int k = n - m;
         if (k > 0) {
-            *arrayAt(v, k) -= *matrixAt(a, k, m) * ui; 
+            *arrayAt(v, k) -= *matrixAt(a, k, m) * ui;
             *matrixAt(a, k, m) = 0.0;
         }
 

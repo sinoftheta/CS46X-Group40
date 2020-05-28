@@ -5,6 +5,13 @@
 #include "../capstone/Array.h"
 #include "../capstone/MathUtil.h"
 
+/*
+    Purpose
+      To assemble element matrices
+
+      Called from cogen
+*/
+
 void gs2Asembl(Matrix* a, Matrix* b, Matrix* ea, Matrix* eb, Array* r,
               Array* u, Array* re, Array* F, Array* k0d, Array* lq,
               Array* jd, int m, int l, int ib, int ib2, int* jb,

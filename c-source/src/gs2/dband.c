@@ -6,6 +6,7 @@
 #include "../capstone/Matrix.h"
 #include "../capstone/Debug.h"
 
+
 void gs2Dband(Matrix* s, int n, int nb, int* iex){
 
     /*
@@ -48,11 +49,11 @@ void gs2Dband(Matrix* s, int n, int nb, int* iex){
                 DEBUG_LOG("here");
                 //matrixPrint("s", s);
                 if (sum <= 0) {
-                    fprintf(gs2stderr, "Dband fails at row %d\n", i); 
+                    fprintf(gs2stderr, "Dband fails at row %d\n", i);
                     fprintf(gs2stderr, "N: %d, NB: %d, IP: %d, IQ: %d, I: %d, J: %d, SUM: %f\n",
                         n, nb, ip, iq, i, j, sum
                     );
-                    
+
                     //iex = (int*)0;
                     *iex = 1;
                     return;
